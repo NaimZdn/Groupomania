@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Roboto:wght@300;400&family=Shrikhand&display=swap");
+body {
+  font-family: "Lato";
+}
+
+h1 {
+  border: 1px solid blue;
+}
+
+.header-flex {
+  display: flex;
+  margin: 30px 0 0 100px;
+}
+.header-flex img {
+  height: 40px;
+}
+
+.nav-flex {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  margin: 20px 80px 0 0;
+}
+.nav-flex a {
+  text-decoration: none;
+  font-size: 20px;
+  margin-left: 50px;
+  color: #821007;
+  padding: 5px 30px 5px 30px;
+}
+.nav-flex a:hover {
+  border-radius: 53px;
+  background-color: #FEE5E0;
+}
+
+.main-flex {
+  display: flex;
+  margin: 90px 30px 0px 30px;
+}
+
+.illustration-signup img {
+  height: 700px;
+}
+
+/*# sourceMappingURL=style.css.map */
