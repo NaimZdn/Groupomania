@@ -1,10 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Roboto:wght@300;400&family=Shrikhand&display=swap');
+@import './mixin.scss';
+@import './variables.scss';
 
-$color-primary: #9A3926; 
-$color-secondary: #FEE5E0;
-$font: 'Lato';
-
-*{
+*{ 
     box-sizing: border-box;
     font-family: $font;
 }
@@ -14,8 +12,6 @@ body {
     background-image: url('../images/Background-groupomania.png');
 }
 
-
-
 .container{
 
     max-width: 1440px;
@@ -24,15 +20,35 @@ body {
 }
 
 
+header {
+    @include break-mobile {
+        display: flex;
+        justify-content: center;
+    }
+}
+
 .header-flex {
     display: flex;
-    margin: 30px 0 0 100px; 
+    margin: 30px 0 0 0px; 
     align-items: center;
-    
+
+        @include break-mobile {
+            display: block; 
+        }
 
     & img {
         height: 40px;
 
+        @include break-mobile {
+            height: 50px; 
+        }
+    }
+}
+
+.logo-flex {
+    @include break-mobile { 
+        display: flex;
+        justify-content: center;
     }
 }
 
@@ -40,14 +56,24 @@ body {
     display: flex;
     flex: 1;
     justify-content: flex-end;
-    
+
+        @include break-mobile { 
+            justify-content: center;
+            margin-top: 50px;
+            gap: 50px;
+        }
         & a {
+           
             text-decoration: none;
             font-weight: bold;
             font-size: 17px;
             margin-left: 50px;
             color: $color-primary;
             padding: 5px 30px 5px 30px;
+
+                @include break-mobile {
+                    margin: 0px;
+                }
 
             &:hover {
                 border-radius: 53px;
@@ -61,7 +87,14 @@ body {
     display: flex;
     width: 100%;
     margin: 90px 30px 0px 0px;
-    
+
+    @include break-tablet {      
+        justify-content: center; 
+    }
+
+    @include break-mobile {
+        margin-top: 0px;
+    }
 }
 
 .illustration-signup {
@@ -70,43 +103,93 @@ body {
     align-items: center;
     height: 600px;
     
-    
     & img {
-        
         max-width: 100%;
         max-height: 100%;
-    
         
-   
     }
 
+    @include break-tablet {
+            display: none;
+        }
 }
 
 .form-signup {
-    
     flex-direction: column;
     margin-left: 70px;
     position: relative;
     width: 50%;
-    
-    
-    
-    
-    
+
+    @include break-tablet {
+        display: flex;
+        justify-content: center;
+        margin: 0px;
+        width: 70%;    
+    }
+
+    @include break-mobile {
+        width: 100%;
+    }
+   
     & h1 {
         text-align: center;
         color: $color-primary;
         font-size: 48px;
         margin-bottom: 50px;
-        
-        
-        
+
+        @include break-mobile {
+            font-size: 38px ;
+        }
+  
     }
     
     & .input-icon {
+
+        & .icon-pseudo {
+            position: absolute; 
+            left: 20px; 
+            top: 166px;
+            height: 40px;
+
+            @include break-mobile {
+                position: absolute; 
+                left: 20px; 
+                top: 146px;
+                height: 40px;
+            
+            }
+        }
+
+        & .icon-envelope {
+            position: absolute; 
+            left: 20px; 
+            top: 274px;
+            height: 40px;
+
+            @include break-mobile {
+                position: absolute; 
+                left: 20px; 
+                top: 254px;
+                height: 40px;
+            
+            }
+        }
+
+        & .icon-key {
+            position: absolute; 
+            left: 20px; 
+            top: 380px;
+            height: 40px;
+
+            @include break-mobile {
+                position: absolute; 
+                left: 20px; 
+                top: 360px;
+                height: 40px;
+            }
+        } 
         
         & input {
-  
             width: 100%;
             height: 75px;
             margin-bottom: 32px;
@@ -115,10 +198,20 @@ body {
             background-color: transparent;
             font-size: 20px;
             color: $color-primary;
-            
-            
-            &::placeholder{
-                
+
+            &[type="pseudo"] {
+                padding-left: 70px;
+            }
+
+            &[type="mail"] {
+                padding-left: 70px;
+            }
+
+            &[type="password"] {
+                padding-left: 70px;
+            }
+
+            &::placeholder{   
                 font-size: 20px;
                 font-weight: bold;
                 color: $color-primary;
@@ -134,167 +227,92 @@ body {
         }
     }
 
-}
-
-
-.input-icon .icon-pseudo {
+    & .checkbox-cgu {
+        display: flex;
+        align-items: center;
     
-    position: absolute; 
-    left: 20px; 
-    top: 166px;
-    height: 40px;
-
-}
-
-.input-icon .icon-envelope {
-    
-    position: absolute; 
-    left: 20px; 
-    top: 274px;
-    height: 40px;
-
-}
-
-.input-icon .icon-key {
-    
-    position: absolute; 
-    left: 20px; 
-    top: 380px;
-    height: 40px;
-
-}
-
-.input-icon input[type="pseudo"] {
-    padding-left: 70px;
-}
-
-.input-icon input[type="mail"] {
-    padding-left: 70px;
-}
-
-.input-icon input[type="password"] {
-    padding-left: 70px;
-}
-
-.checkbox-cgu {
-    display: flex;
-    align-items: center;
-
-    & input[type="checkbox"] {
-
-        
-        width: 20px;
-        height: 20px;
-        margin-left: 0px;
-        appearance: none;
-        background-color: none; 
-        font: inherit;
-        color: $color-primary;
-        border: 2px solid currentColor;
-        border-radius: 5px;
-        transform: translateY(-0.075em);
-        display: grid;
-        place-content: center;
-
-
-            &::before {
-
-                content: "";
-                width: 0.65em;
-                height: 0.65em;
-                clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-                transform: scale(0);
-                transform-origin: bottom left;
-                transition: 120ms transform ease-in-out;         
-                background-color: $color-primary;
-
-                
-            }
-
-            &:checked::before {
-                transform: scale(1);
-
-            }
-
-    }
-
-    & .cgu {
-        
-        padding-left: 10px;
-        color: $color-primary;
-
-        & a {
-
+        & input[type="checkbox"] { 
+            width: 20px;
+            height: 20px;
+            margin-left: 0px;
+            appearance: none;
+            background-color: none; 
+            font: inherit;
             color: $color-primary;
+            border: 2px solid currentColor;
+            border-radius: 5px;
+            transform: translateY(-0.075em);
+            display: grid;
+            place-content: center;
+    
+                &::before {
+                    content: "";
+                    width: 0.65em;
+                    height: 0.65em;
+                    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+                    transform: scale(0);
+                    transform-origin: bottom left;
+                    transition: 120ms transform ease-in-out;         
+                    background-color: $color-primary;      
+                }
+    
+                &:checked::before {
+                    transform: scale(1);
+                }
+        }
+    
+        & .cgu { 
+            padding-left: 10px;
+            color: $color-primary;
+
+            & a {
+                color: $color-primary;
+            }
         }
     }
 
-}
-
-.button-sign {
-    display: flex;
-    justify-content: center;
-    margin-top: 32px;
-
-    & button {
-
-            width: 75%;
-            height: 75px;
-            font-weight: bold;
-            font-size: 22px;
-            color: white;
-            background-color: $color-primary;
-            border: none; 
-            border-radius: 16px; 
-            cursor: pointer;
-            margin-bottom: 120px;
-            
-        &:hover {
-
-            background-color: #821007;
-
-
+    & .button-sign {
+        display: flex;
+        justify-content: center;
+        margin-top: 32px;
+    
+        & button {
+                width: 75%;
+                height: 75px;
+                font-weight: bold;
+                font-size: 22px;
+                color: white;
+                background-color: $color-primary;
+                border: none; 
+                border-radius: 16px; 
+                cursor: pointer;
+                margin-bottom: 120px;
+                
+            &:hover {
+                background-color: #821007;
+            }
         }
     }
 }
 
 footer {
     margin-top: 100px;
-
 }
-
 
 .footer-flex {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 50px
+    gap: 50px;
+
+    & .footer-icon {
+        & .icon {
+            height: 30px;
     
-
-}
-
-
-
-.footer-icon {
-    
-
-    & .icon {
-        height: 30px;
-
-        &:hover {
-            filter: grayscale(100%);
-           
+            &:hover {
+                filter: grayscale(100%);
+                // filter: saturate(180%);
+            }
         }
     }
-
-}
-
-
-
-  
-  
-  
-  
-
-  
-  
+}  

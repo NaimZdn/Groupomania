@@ -1,0 +1,11 @@
+@mixin break-tablet {
+    @media (max-width: $tablet){
+        @content
+    }
+};
+
+@mixin break-mobile {
+    @media (max-width: $mobile){
+        @content
+    }
+}

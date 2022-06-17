@@ -6,7 +6,9 @@
 <body>
   <header class="container"> 
     <div class="header-flex"> 
+      <div class="logo-flex">
       <img src="./images/Logo_red.png" alt="Groupomania logo">
+      </div>
       <nav class="nav-flex">
         <a href=""> Se connecter </a> 
         <a href=""> S'inscrire </a>
