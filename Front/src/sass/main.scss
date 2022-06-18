@@ -8,7 +8,7 @@
 }
 
 body {
-
+    margin: 0;
     background-image: url('../images/Background-groupomania.png');
 }
 
@@ -458,3 +458,60 @@ footer {
             display: none;
         }
 }
+
+
+// Main page 
+
+
+.user-picture {
+
+    height: 50px;
+    width: 50px;
+    border-radius: 30px;
+    margin-right: 150px;
+    margin-left: 70px;
+
+}
+
+.header-flex-main {
+    display: flex;
+    align-items: center;
+
+
+}
+
+.nav-flex-main {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+    align-items: center;
+
+    & p {
+        color: $color-primary; 
+        font-weight: bold;
+        padding: 10px 20px 10px 20px; 
+
+        &:hover {
+            background-color: $color-secondary;
+            border-radius: 53px;
+
+
+        }
+    }
+
+
+}
+
+.logo-flex-main {
+    & img {
+        height: 40px;
+        margin-left: 150px;
+    }
+}
+
+.bg-main {
+    background-color: white;
+    padding: 15px 0 15px 0;
+    box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
+}
+
