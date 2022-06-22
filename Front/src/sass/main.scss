@@ -468,7 +468,7 @@ footer {
     height: 50px;
     width: 50px;
     border-radius: 30px;
-    margin-right: 150px;
+    margin-right: 50px;
     margin-left: 70px;
 
 }
@@ -517,13 +517,152 @@ footer {
 
 
 
-.post {
+.make-post {
     
     background-color: white;
-    margin: 60px 200px 0 200px;
+    margin: 60px 0 0 0;
     box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
-    border-radius: 40px;
+    border-radius: 20px;
+    padding-bottom: 30px;
+    max-width: 620px;
+    width: 100%;
+    
+    
+    
+     
+    
+}
 
+
+.post-form-flex {
+    display: flex;
+    flex-basis: 100%;
+}
+
+
+
+.make-comment {
+
+  display: block;
+  width: 70%;
+  overflow: hidden;
+  min-height: 40px;
+  line-height: 20px;
+  resize: none;
+  border: none;
+  flex-basis: 70%;
+  margin: 40px 0 0 30px;
+  border-bottom: 2px solid $color-primary ;
+  padding-bottom: 5px;
+
+    &:focus {
+    outline: none;
+  }
+
+  &[contenteditable]:empty::before{
+    content: "Ajoutez un post";
+    color: $color-primary;
+    font-weight: bold;
+
+
+  }
+    
+}
+
+.make-post-button {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 44px 0 0 ;
+
+    
+}
+
+
+.import-file {
+
+    & img {
+        height: 30px;
+    }
+}
+
+label[for="file-upload"] {
+    
+    cursor: pointer;
+    margin-right: 20px;
+    padding: 5px 8px 3px 8px; 
+
+    &:hover {
+        background-color: rgb($color-secondary, 0.5);
+        border-radius: 30px;
+  
+    }
+    
+}
+
+#file-upload {
+    display: none; 
+}
+
+.post-button{
+
+    width: 20%;
+    height: 40px;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    background-color: $color-primary;
+    border: none; 
+    border-radius: 16px; 
+    cursor: pointer;
+    
+                
+    &:hover {
+        background-color: #821007; 
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.container-flex {
+    display: flex;
+    justify-content: center;
+    
+}
+
+.post {
+    
+    
+    background-color: white;
+    margin: 60px 0 0 0;
+    box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
+    border-radius: 20px;
+   // width: 40%;
+    
+
+}
+
+.post-picture {
+    flex-basis: 15%;
 }
 
 
@@ -533,13 +672,12 @@ footer {
     border-radius: 30px;
     margin-left: 40px;
     margin-top: 30px;
-    
-
 }
 
 .post-text {
     margin-top: 30px;
     padding-left: 20px;
+    flex: 75%;
 
     & h2 {
         font-size: 17px ;
@@ -574,7 +712,19 @@ footer {
 
 .post-header-flex {
     display: flex;
-    flex-basis: 30%;
+    flex-basis: 100%;
+    position: relative;
+    
+       /* &:after {
+            content: ""; 
+            height: 3px ;
+            width: 300px ;
+            background-color: $color-primary;
+            position: absolute;
+            top: 90px; 
+            left: 40px; 
+        }*/
+        
     
 
 }
@@ -583,8 +733,8 @@ footer {
 .post-image {
     display: flex;
     justify-content: center;
-    margin: 40px 130px 0 130px;
-    height: 450px;
+    margin: 10px 80px 0 80px;
+    height: 300px;
     
     
     
@@ -600,15 +750,22 @@ footer {
 
 }
 
+.post-text-content {
+    display: flex;
+    justify-content: flex-start;
+    margin: 30px 80px 0 80px;
+}
+
 .post-footer-flex {
     display: flex;
-    flex-basis: 40%;
-    margin-bottom: 60px;
+    flex-basis: 100%;
+   
     
         & .post-comment {
             
             margin: 25px 0 25px 20px;
             padding: 5px 20px 0 20px;
+            flex-basis: 60%;
             
      
             &:hover {
@@ -619,7 +776,7 @@ footer {
     
             & .post-comment-text {
                 color: $color-primary;
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: bold;
           
             }
@@ -634,7 +791,7 @@ footer {
 
         & .post-like {
             display: flex;
-            flex-basis: 70%;
+            flex-basis: 50%;
             justify-content: flex-end;
             
             & .like-number {
@@ -681,5 +838,14 @@ footer {
             }
         }
     
+}
+
+.button-disconnect {
+    height: 50px;
+    margin-right: 150px;
+    
+        &:hover {
+            filter: grayscale(100%)
+        }
 }
 

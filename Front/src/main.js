@@ -1,5 +1,12 @@
 import { createApp } from 'vue'
+import {createRouter, createWebHistory} from "vue-router"
+
+
+
 import App from './App.vue'
+import Login from './components/Login.vue'
+import SignUp from './components/SignUp.vue'
+import MainPage from './components/Mainpage.vue'
 
 
 
@@ -10,7 +17,18 @@ import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'*/
 
 import './sass/main.scss';
 
+const routes = [
+    { path: '/', component: App},
+    { path: "/login", component: Login },
+    { path: "/sign-up", component: SignUp },
+    { path: "/mainpage", component: MainPage },
+]
+
+const router = createRouter({ history: createWebHistory(), routes});
+
+
 const app = createApp(App)
+app.use(router)
 // app.use(BootstrapVue3)
 
 

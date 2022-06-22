@@ -1,4 +1,7 @@
-<script setup>
+<script>
+export default {
+  name: "SignUp"
+}
 
 </script>
 
@@ -7,7 +10,7 @@
   <header class="container"> 
     <div class="header-flex"> 
       <div class="logo-flex">
-      <img src="./images/Logo_red.png" alt="Groupomania logo">
+      <img src="../images/Logo_red.png" alt="Groupomania logo">
       </div>
       <nav class="nav-flex">
         <a href=""> Se connecter </a> 
@@ -19,24 +22,24 @@
   <main class="container" > 
     <section class="main-flex">
       <div class="illustration-signup"> 
-          <img src="./images/Illustration-sign-up.png" alt="Illustration Sign-Up">
+          <img src="../images/Illustration-sign-up.png" alt="Illustration Sign-Up">
       </div> 
       
       <div class="form-signup"> 
         <h1> Créez votre compte</h1>
           <div class="input-icon"> 
             <input type="pseudo" placeholder="Pseudo">  
-            <img class="icon-pseudo" src="./images/Icon-user.png"> 
+            <img class="icon-pseudo" src="../images/Icon-user.png"> 
           </div>
 
            <div class="input-icon"> 
             <input type="mail" placeholder="Email"> 
-            <img class="icon-envelope" src="./images/Icon-envelope.png"> 
+            <img class="icon-envelope" src="../images/Icon-envelope.png"> 
           </div>
 
           <div class="input-icon"> 
             <input type ='password' placeholder="Mot de passe" > 
-            <img class="icon-key" src="./images/Icon-key.png"> 
+            <img class="icon-key" src="../images/Icon-key.png"> 
           </div>
 
           <div class="checkbox-cgu"> 
@@ -57,25 +60,25 @@
   <footer class="container footer-flex"> 
     <div class="footer-icon">
       <a href="">
-        <img class="icon" src="./images/Icon-facebook.png">
+        <img class="icon" src="../images/Icon-facebook.png">
       </a>
     </div> 
 
     <div class="footer-icon">
       <a href="">
-        <img class="icon" src="./images/Icon-linkedin.png">
+        <img class="icon" src="../images/Icon-linkedin.png">
       </a>
     </div> 
 
     <div class="footer-icon">
       <a href="">
-        <img class="icon" src="./images/Icon-twitter.png">
+        <img class="icon" src="../images/Icon-twitter.png">
       </a>
     </div> 
 
     <div class="footer-icon">
       <a href="">
-        <img class="icon" src="./images/Icon-mail.png">
+        <img class="icon" src="../images/Icon-mail.png">
       </a>
     </div> 
 
