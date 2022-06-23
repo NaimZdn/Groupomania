@@ -7,9 +7,11 @@ export default {
 <template>
   <header class="bg-main">
     <div class="header-flex-main">
+
       <div class="logo-flex-main">
         <img src="../images/Logo_red.png" alt="Groupomania logo">
       </div>
+
       <nav class="nav-flex-main">
         <a href=""> <img class="user-picture" src="../images/Photo CV.jpg"> </a>
         <div class="bg-disconnect">
@@ -18,12 +20,12 @@ export default {
           </a>
         </div>
       </nav>
+      
     </div>
   </header>
 
   <main>
     <section class="container-flex">
-
       <div class="make-post">
 
         <div class="post-form-flex">
