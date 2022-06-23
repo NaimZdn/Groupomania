@@ -15,7 +15,7 @@ export default {
       <nav class="nav-flex-main">
         <a href=""> <img class="user-picture" src="../images/Photo CV.jpg"> </a>
         <div class ="bg-disconnect"> 
-          <a href=""> <img class="button-disconnect" src="../images/Icon-power.png"> </a>
+          <a class="button-disconnect"> <fa icon="fa-solid fa-power-off" /> </a>
         </div>
      </nav>
     </div>
@@ -41,14 +41,6 @@ export default {
 
       </div>
     </section>
-
-
-
-
-
-
-
-
     <section class="container-flex">
       <div class="post">
       <div class="post-header-flex"> 
@@ -83,9 +75,57 @@ export default {
            <i class="fa-solid fa-heart"></i>
           <span class="like-number"> 5 </span>
         </div>
+
+        
       </div>
+          <div class="all-comment"> 
+            <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
+            <div class="comment-flex">
+              <p id="pseudo"> Pseudo</p>
+              <p id="comment"> Voici mon commentaire </p>
+            </div> 
+          </div>
+
+          <div class="all-comment"> 
+            <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
+            <div class="comment-flex">
+              <p id="pseudo"> Pseudo</p>
+              <p id="comment"> Voici mon commentaire </p>
+            </div> 
+          </div>
+
+          <div class="all-comment"> 
+            <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
+            <div class="comment-flex">
+              <p id="pseudo"> Pseudo</p>
+              <p id="comment"> Voici mon commentaire </p>
+            </div> 
+          </div>
+
+          <div class="all-comment"> 
+            <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
+            <div class="comment-flex">
+              <p id="pseudo"> Pseudo</p>
+              <p id="comment"> Voici mon commentaireVoici mon commentaireVoici mon commentaireVoici mon commentaireVoici mon commentaire </p>
+            </div> 
+          </div>
+
+          <div class="all-comment"> 
+            <div class="comment-picture">
+              <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
+            </div>
+            <span class="create-comment" role="textbox" contenteditable></span>
+            
+          </div>
+          <div class="button-flex"> 
+            <button class="comment-button">PUBLIER</button>
+          </div>
       </div>
+      
+      
+      
     </section>
+    
   </main>
 </template>
 

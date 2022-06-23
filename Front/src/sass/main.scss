@@ -656,6 +656,7 @@ label[for="file-upload"] {
     margin: 60px 0 0 0;
     box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
     border-radius: 20px;
+    flex-direction: column;
    // width: 40%;
     
 
@@ -702,7 +703,7 @@ label[for="file-upload"] {
     & img {
         
         margin: 30px 40px 0 0; 
-        height: 50px;
+        height: 30px;
         
 
     }
@@ -844,8 +845,123 @@ label[for="file-upload"] {
     height: 50px;
     margin-right: 150px;
     
-        &:hover {
-            filter: grayscale(100%)
-        }
 }
 
+
+.all-comment{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    
+    & > .comment-flex {
+        margin-bottom: 15px;
+
+    }
+}
+
+.comment-flex {
+    display: flex;
+    flex-direction: column;
+    margin: 0px 40px 0px 0;
+    padding: 10px 10px 0 10px; 
+    background-color: lightgrey; 
+    border-radius: 10px;
+    width: 100%;
+    max-width: 481px;
+
+    & p {
+        margin: 0 0 10px 0;
+
+        &:nth-child(1){
+            font-weight: 600;
+
+
+        }
+ 
+    }
+
+}
+
+.user-comment-picture {
+    height: 40px;
+    width: 40px;
+    border-radius: 30px;
+    margin-left: 40px;
+    margin-top: 5px;
+}
+
+.create-comment {
+
+    display: block;
+    width: 70%;
+    overflow: hidden;
+    min-height: 40px;
+    line-height: 20px;
+    resize: none;
+    border: none;
+    flex-basis: 77%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid $color-primary ;
+    padding-bottom: 5px;
+  
+      &:focus {
+      outline: none;
+    }
+  
+    &[contenteditable]:empty::before{
+      content: "Ajoutez un commentaire";
+      color: $color-primary;
+      font-weight: bold;
+  
+  
+    }
+      
+  }
+
+  .comment-picture {
+    margin-top: 20px;
+  }
+
+  .comment-button {
+   
+    width: 15%;
+    height: 40px;
+    font-weight: bold;
+    font-size: 16px;
+    color: white;
+    background-color: $color-primary;
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer;
+    
+                
+    &:hover {
+        background-color: #821007; 
+    }
+}
+
+.button-flex {
+
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 40px;
+    margin-bottom: 20px;
+}
+
+
+.button-disconnect {
+    padding: 10px;
+    padding-top: 18px;
+    border-radius: 30px;
+    
+    & .fa-power-off {
+        font-size: 28px;
+        cursor: pointer; 
+        color: $color-primary; 
+    }
+
+    &:hover {
+        background-color: rgb($color-secondary, 0.5);
+    }
+}
