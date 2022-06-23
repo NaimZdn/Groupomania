@@ -15,7 +15,7 @@ export default {
 
         <nav class="nav-flex-login">
           <p> Se connecter </p>
-          <router-link class="anim" to="/sign-up"> S'inscrire </router-link>
+          <router-link to="/sign-up"> S'inscrire </router-link>
         </nav>
 
       </div>
@@ -33,12 +33,12 @@ export default {
 
           <div class="input-icon">
             <input type="mail" placeholder="Email">
-            <fa icon="fa-solid fa-at" />
+            <fa icon="fa-solid fa-at"/>
           </div>
 
           <div class="input-icon">
             <input type='password' placeholder="Mot de passe">
-            <fa class="icon-key-login" icon="fa-solid fa-lock" />
+            <fa class="icon-key-login" icon="fa-solid fa-lock"/>
           </div>
 
           <div class="button-sign-login">

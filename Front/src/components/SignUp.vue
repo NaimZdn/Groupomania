@@ -17,7 +17,7 @@ export default {
 
         <nav class="nav-flex-signup">
           <router-link to="/login"> Se connecter </router-link>
-          <p> S'inscrire </p>
+          <h1> S'inscrire </h1>
         </nav>
 
       </div>
@@ -31,21 +31,21 @@ export default {
         </div>
 
         <div class="form-signup">
-          <h1> Créez votre compte</h1>
+          <h2> Créez votre compte</h2>
 
           <div class="input-icon">
             <input type="pseudo" placeholder="Pseudo">
-            <img class="icon-pseudo" src="../images/Icon-user.png">
+            <fa class="icon-user-signup" icon="fa-solid fa-user"/>
           </div>
 
           <div class="input-icon">
             <input type="mail" placeholder="Email">
-            <img class="icon-envelope" src="../images/Icon-envelope.png">
+            <fa class="icon-at-signup" icon="fa-solid fa-at"/>
           </div>
 
           <div class="input-icon">
             <input type='password' placeholder="Mot de passe">
-            <img class="icon-key" src="../images/Icon-key.png">
+            <fa class="icon-key-signup" icon="fa-solid fa-lock"/>
           </div>
 
           <div class="checkbox-cgu">

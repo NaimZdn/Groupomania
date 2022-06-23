@@ -3,7 +3,7 @@
 @import './variables.scss';
 @import './keyframes.scss';
 
-*{ 
+* {
     box-sizing: border-box;
     font-family: $font;
 }
@@ -13,19 +13,17 @@ body {
     margin: 0;
 }
 
-.container{
+.margin {
+    margin: 0 30px 0 30px;
 
+}
+
+.container {
     max-width: 1440px;
     margin: auto;
     width: 100%;
-    
+
 }
-
-
-.margin {
-    margin: 0 30px 0 30px;
-}
-
 
 header {
     @include break-mobile {
@@ -36,26 +34,28 @@ header {
 
 .header-flex {
     display: flex;
-    margin: 30px 0 0 0px; 
+    margin: 30px 0 0 0px;
     align-items: center;
 
-        @include break-mobile {
-            display: block; 
-        }
+    @include break-mobile {
+        display: block;
+    }
+}
+
+.logo-flex {
+    @include break-mobile {
+        display: flex;
+        justify-content: center;
+
+    }
 
     & img {
         height: 40px;
 
         @include break-mobile {
-            height: 50px; 
-        }
-    }
-}
+            height: 40px;
 
-.logo-flex {
-    @include break-mobile { 
-        display: flex;
-        justify-content: center;
+        }
     }
 }
 
@@ -65,56 +65,55 @@ header {
     justify-content: flex-end;
     align-items: center;
 
-        @include break-mobile { 
-            justify-content: center;
-            margin-top: 50px;
-            gap: 50px;
-        }
-        & a {
-           
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 17px;
-            margin-right: 50px;
-            color: $color-primary;
-            padding: 5px 30px 5px 30px;
-        
-                @include break-mobile {
-                    margin: 0px;
-                }
+    @include break-mobile {
+        justify-content: center;
+        margin-top: 50px;
+        gap: 10px;
+    }
 
-            &:hover {
-                border-radius: 53px;
-                background-color: $color-secondary;
-                animation: bubble 0.5s, appear 0.2s;
+    & a {
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 17px;
+        margin-right: 50px;
+        color: $color-primary;
+        padding: 5px 30px 5px 30px;
 
-            }
+        @include break-mobile {
+            margin: 0px;
         }
 
-        & p {
-
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 17px;
-            color: $color-primary;
-            padding: 5px 30px 5px 30px;
+        &:hover {
             border-radius: 53px;
-            background-color: $color-secondary !important;
-            cursor: pointer;
+            background-color: $color-secondary;
+            animation: bubble 0.5s, appear 0.2s;
 
-            @include break-mobile {
-                margin: 0px;
-            }
         }
+    }
+
+    & h1 {
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 17px;
+        color: $color-primary;
+        padding: 5px 30px 5px 30px;
+        border-radius: 53px;
+        background-color: $color-secondary  !important;
+        cursor: pointer;
+
+        @include break-mobile {
+            margin: 0px;
+        }
+    }
 }
 
-.main-flex {    
+.main-flex {
     display: flex;
     width: 100%;
     margin: 90px 30px 0px 0px;
 
-    @include break-tablet {      
-        justify-content: center; 
+    @include break-tablet {
+        justify-content: center;
     }
 
     @include break-mobile {
@@ -127,21 +126,20 @@ header {
     display: flex;
     align-items: center;
     height: 600px;
-    
+
     & img {
-        max-width: 100%;
+        max-width: 95%;
         max-height: 100%;
-        
+
     }
 
     @include break-tablet {
-            display: none;
-        }
+        display: none;
+    }
 }
 
 .form-signup {
     flex-direction: column;
-    
     position: relative;
     width: 50%;
 
@@ -149,190 +147,197 @@ header {
         display: flex;
         justify-content: center;
         margin: 0px;
-        width: 70%;    
+        width: 70%;
     }
 
     @include break-mobile {
         width: 100%;
     }
-   
-    & h1 {
+
+    & h2 {
         text-align: center;
         color: $color-primary;
         font-size: 48px;
         margin-bottom: 50px;
 
         @include break-mobile {
-            font-size: 38px ;
+            font-size: 30px;
         }
-  
+
     }
-    
-    & .input-icon {
+}
 
-        
+.input-icon {
+    & .icon-user-signup {
+        position: absolute;
+        left: 27px;
+        top: 171px;
+        height: 30px;
+        color: $color-primary;
 
-        & .icon-pseudo {
-            position: absolute; 
-            left: 20px; 
-            top: 166px;
-            height: 40px;
+        @include break-mobile {
+            position: absolute;
+            left: 27px;
+            top: 136px;
+            height: 30px;
 
-            @include break-mobile {
-                position: absolute; 
-                left: 20px; 
-                top: 146px;
-                height: 40px;
-            
-            }
-
-            &:hover {
-                animation: bubble 0.5s;
-                
-            }
         }
 
-        & .icon-envelope {
-            position: absolute; 
-            left: 20px; 
-            top: 274px;
-            height: 40px;
+        &:hover {
+            animation: bubble 0.5s;
 
-            @include break-mobile {
-                position: absolute; 
-                left: 20px; 
-                top: 254px;
-                height: 40px;
-            
-            }
+        }
+    }
+
+    & .icon-at-signup {
+        position: absolute;
+        left: 26px;
+        top: 279px;
+        height: 33px;
+
+        @include break-mobile {
+            position: absolute;
+            left: 27px;
+            top: 244px;
+            height: 30px;
+
         }
 
-        & .icon-key {
-            position: absolute; 
-            left: 20px; 
-            top: 380px;
-            height: 40px;
+        &:hover {
+            animation: bubble 0.5s;
 
-            @include break-mobile {
-                position: absolute; 
-                left: 20px; 
-                top: 360px;
-                height: 40px;
-            }
-        } 
-        
-        & input {
-            width: 100%;
-            height: 75px;
-            margin-bottom: 32px;
-            border: 2px solid $color-primary;
-            border-radius: 16px;
-            background-color: transparent;
+        }
+    }
+
+    & .icon-key-signup {
+        position: absolute;
+        left: 27px;
+        top: 384px;
+        height: 30px;
+        color: $color-primary;
+
+        @include break-mobile {
+            position: absolute;
+            left: 27px;
+            top: 348px;
+            height: 30px;
+        }
+
+        &:hover {
+            animation: bubble 0.5s;
+
+        }
+    }
+
+    & input {
+        width: 100%;
+        height: 75px;
+        margin-bottom: 32px;
+        border: 2px solid $color-primary;
+        border-radius: 16px;
+        background-color: transparent;
+        font-size: 20px;
+        color: $color-primary;
+
+        &[type="pseudo"] {
+            padding-left: 70px;
+        }
+
+        &[type="mail"] {
+            padding-left: 70px;
+        }
+
+        &[type="password"] {
+            padding-left: 70px;
+        }
+
+        &::placeholder {
             font-size: 20px;
+            font-weight: bold;
             color: $color-primary;
-
-            &[type="pseudo"] {
-                padding-left: 70px;
-            }
-
-            &[type="mail"] {
-                padding-left: 70px;
-            }
-
-            &[type="password"] {
-                padding-left: 70px;
-            }
-
-            &::placeholder{   
-                font-size: 20px;
-                font-weight: bold;
-                color: $color-primary;
-                opacity: 60%;
-            }
-
-            &:focus {
-                outline: none !important;
-                border-color: $color-primary;
-                box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
-            
-            }
+            opacity: 60%;
         }
-    }
 
-    & .checkbox-cgu {
-        display: flex;
-        align-items: center;
-    
-        & input[type="checkbox"] { 
-            width: 20px;
-            height: 20px;
-            margin-left: 0px;
-            appearance: none;
-            background-color: none; 
-            font: inherit;
-            color: $color-primary;
-            border: 2px solid currentColor;
-            border-radius: 5px;
-            transform: translateY(-0.075em);
-            display: grid;
-            place-content: center;
-    
-                &::before {
-                    content: "";
-                    width: 0.65em;
-                    height: 0.65em;
-                    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-                    transform: scale(0);
-                    transform-origin: bottom left;
-                    transition: 120ms transform ease-in-out;         
-                    background-color: $color-primary;      
-                }
-    
-                &:checked::before {
-                    transform: scale(1);
-                }
-        }
-    
-        & .cgu { 
-            padding-left: 10px;
-            color: $color-primary;
+        &:focus {
+            outline: none !important;
+            border-color: $color-primary;
+            box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
 
-            & a {
-                color: $color-primary;
-            }
-        }
-    }
-
-    & .button-sign {
-        display: flex;
-        justify-content: center;
-        margin-top: 32px;
-    
-        & button {
-                width: 75%;
-                height: 75px;
-                font-weight: bold;
-                font-size: 22px;
-                color: white;
-                background-color: $color-primary;
-                border: none; 
-                border-radius: 16px; 
-                cursor: pointer;
-                margin-bottom: 99px;
-
-                @include break-mobile {
-                    margin-bottom: 142px;
-
-                } 
-                
-            &:hover {
-                background-color: #821007;
-            }
         }
     }
 }
 
+.checkbox-cgu {
+    display: flex;
+    align-items: center;
 
+    & input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-left: 0px;
+        appearance: none;
+        background-color: none;
+        font: inherit;
+        color: $color-primary;
+        border: 2px solid currentColor;
+        border-radius: 5px;
+        transform: translateY(-0.075em);
+        display: grid;
+        place-content: center;
+
+        &::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+            transform: scale(0);
+            transform-origin: bottom left;
+            transition: 120ms transform ease-in-out;
+            background-color: $color-primary;
+        }
+
+        &:checked::before {
+            transform: scale(1);
+        }
+    }
+
+    & .cgu {
+        padding-left: 10px;
+        color: $color-primary;
+
+        & a {
+            color: $color-primary;
+        }
+    }
+}
+
+.button-sign {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+
+    & button {
+        width: 75%;
+        height: 75px;
+        font-weight: bold;
+        font-size: 22px;
+        color: white;
+        background-color: $color-primary;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        margin-bottom: 99px;
+
+        @include break-mobile {
+            margin-bottom: 142px;
+
+        }
+
+        &:hover {
+            background-color: #821007;
+        }
+    }
+}
 
 .footer-flex {
     display: flex;
@@ -340,13 +345,17 @@ header {
     justify-content: center;
     gap: 70px;
 
+    @include break-mobile {
+        gap: 40px;
+
+    }
+
     & .footer-icon {
         & .icon {
             height: 40px;
             padding: 5px;
-            
-    
-            &:hover {     
+
+            &:hover {
                 background-color: $color-secondary;
                 clip-path: circle(50% at 50% 50%);
                 animation: bubble 0.5s;
@@ -354,23 +363,20 @@ header {
             }
         }
     }
-}  
+}
 
-
-
-
-// Sign Up 
+// Login
 
 .icon-key-login {
-    position: absolute; 
-    left: 27px; 
+    position: absolute;
+    left: 27px;
     top: 276px;
     height: 30px;
     color: $color-primary;
 
     @include break-mobile {
-        position: absolute; 
-        left: 27px; 
+        position: absolute;
+        left: 27px;
         top: 257px;
         height: 30px;
     }
@@ -378,23 +384,20 @@ header {
 }
 
 .fa-at {
-    position: absolute; 
-    left: 20px; 
+    position: absolute;
+    left: 20px;
     top: 170px;
     font-size: 35px;
     color: $color-primary;
 
     @include break-mobile {
-        position: absolute; 
-        left: 20px; 
+        position: absolute;
+        left: 20px;
         top: 150px;
         height: 35px;
-        
+
     }
 
-    
-
-   
 }
 
 .button-sign-login {
@@ -403,22 +406,22 @@ header {
     margin-top: 12px;
 
     & button {
-            width: 75%;
-            height: 75px;
-            font-weight: bold;
-            font-size: 22px;
-            color: white;
-            background-color: $color-primary;
-            border: none; 
-            border-radius: 16px; 
-            cursor: pointer;
-            margin-bottom: 252px;
+        width: 75%;
+        height: 75px;
+        font-weight: bold;
+        font-size: 22px;
+        color: white;
+        background-color: $color-primary;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        margin-bottom: 252px;
 
-            @include break-mobile{
-                margin-bottom: 295px;
-                
-            }
-            
+        @include break-mobile {
+            margin-bottom: 295px;
+
+        }
+
         &:hover {
             background-color: #821007;
         }
@@ -428,19 +431,19 @@ header {
 
 .header-flex-login {
     display: flex;
-    margin: 30px 0 0 0px; 
+    margin: 30px 0 0 0px;
     align-items: center;
     flex-direction: row-reverse;
 
-        @include break-mobile {
-            display: block; 
-        }
+    @include break-mobile {
+        display: block;
+    }
 
     & img {
         height: 40px;
 
         @include break-mobile {
-            height: 50px; 
+            height: 50px;
         }
     }
 }
@@ -451,59 +454,60 @@ header {
     justify-content: flex-start;
     align-items: center;
 
-        @include break-mobile { 
-            justify-content: center;
-            margin-top: 50px;
-            gap: 50px;
-        }
-        & a {
-           
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 17px;
-            margin-left: 50px;
-            color: $color-primary;
-            padding: 5px 30px 5px 30px;
+    @include break-mobile {
+        justify-content: center;
+        margin-top: 50px;
+        gap: 50px;
+    }
 
-                @include break-mobile {
-                    margin: 0px;
-                }
+    & a {
 
-            &:hover {
-                border-radius: 53px;
-                background-color: $color-secondary;
-                animation: bubble 0.5s, appear 0.2s;
-                
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 17px;
+        margin-left: 50px;
+        color: $color-primary;
+        padding: 5px 30px 5px 30px;
 
-            }
+        @include break-mobile {
+            margin: 0px;
         }
 
-        & p {
-
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 17px;
-            color: $color-primary;
-            padding: 5px 30px 5px 30px;
+        &:hover {
             border-radius: 53px;
-            background-color: $color-secondary !important;
-            cursor: pointer;
+            background-color: $color-secondary;
+            animation: bubble 0.5s, appear 0.2s;
 
-            @include break-mobile {
-                margin: 0px;
-            }
 
         }
+    }
+
+    & p {
+
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 17px;
+        color: $color-primary;
+        padding: 5px 30px 5px 30px;
+        border-radius: 53px;
+        background-color: $color-secondary  !important;
+        cursor: pointer;
+
+        @include break-mobile {
+            margin: 0px;
+        }
+
+    }
 }
 
-.main-flex-login {    
+.main-flex-login {
     display: flex;
     width: 100%;
     margin: 90px 30px 0px 0px;
     flex-direction: row-reverse;
 
-    @include break-tablet {      
-        justify-content: center; 
+    @include break-tablet {
+        justify-content: center;
     }
 
     @include break-mobile {
@@ -520,19 +524,19 @@ header {
     align-items: center;
     height: 600px;
     justify-content: flex-end;
-    
-    
+
+
     & img {
         max-width: 100%;
         max-height: 100%;
 
-       
-        
+
+
     }
 
     @include break-tablet {
-            display: none;
-        }
+        display: none;
+    }
 }
 
 
@@ -563,9 +567,9 @@ header {
     align-items: center;
 
     & p {
-        color: $color-primary; 
+        color: $color-primary;
         font-weight: bold;
-        padding: 10px 20px 10px 20px; 
+        padding: 10px 20px 10px 20px;
 
         &:hover {
             background-color: $color-secondary;
@@ -594,7 +598,7 @@ header {
 
 
 .make-post {
-    
+
     background-color: white;
     margin: 60px 0 0 0;
     box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
@@ -602,11 +606,11 @@ header {
     padding-bottom: 30px;
     max-width: 620px;
     width: 100%;
-    
-    
-    
-     
-    
+
+
+
+
+
 }
 
 
@@ -619,38 +623,38 @@ header {
 
 .make-comment {
 
-  display: block;
-  width: 70%;
-  overflow: hidden;
-  min-height: 40px;
-  line-height: 20px;
-  resize: none;
-  border: none;
-  flex-basis: 70%;
-  margin: 40px 0 0 30px;
-  border-bottom: 2px solid $color-primary ;
-  padding-bottom: 5px;
+    display: block;
+    width: 70%;
+    overflow: hidden;
+    min-height: 40px;
+    line-height: 20px;
+    resize: none;
+    border: none;
+    flex-basis: 70%;
+    margin: 40px 0 0 30px;
+    border-bottom: 2px solid $color-primary ;
+    padding-bottom: 5px;
 
     &:focus {
-    outline: none;
-  }
+        outline: none;
+    }
 
-  &[contenteditable]:empty::before{
-    content: "Ajoutez un post";
-    color: $color-primary;
-    font-weight: bold;
+    &[contenteditable]:empty::before {
+        content: "Ajoutez un post";
+        color: $color-primary;
+        font-weight: bold;
 
 
-  }
-    
+    }
+
 }
 
 .make-post-button {
     display: flex;
     justify-content: flex-end;
-    margin: 20px 44px 0 0 ;
+    margin: 20px 44px 0 0;
 
-    
+
 }
 
 
@@ -662,24 +666,24 @@ header {
 }
 
 label[for="file-upload"] {
-    
+
     cursor: pointer;
     margin-right: 20px;
-    padding: 5px 8px 3px 8px; 
+    padding: 5px 8px 3px 8px;
 
     &:hover {
         background-color: rgb($color-secondary, 0.5);
         border-radius: 30px;
-  
+
     }
-    
+
 }
 
 #file-upload {
-    display: none; 
+    display: none;
 }
 
-.post-button{
+.post-button {
 
     width: 20%;
     height: 40px;
@@ -687,13 +691,13 @@ label[for="file-upload"] {
     font-size: 16px;
     color: white;
     background-color: $color-primary;
-    border: none; 
-    border-radius: 16px; 
+    border: none;
+    border-radius: 16px;
     cursor: pointer;
-    
-                
+
+
     &:hover {
-        background-color: #821007; 
+        background-color: #821007;
     }
 
 
@@ -722,19 +726,19 @@ label[for="file-upload"] {
 .container-flex {
     display: flex;
     justify-content: center;
-    
+
 }
 
 .post {
-    
-    
+
+
     background-color: white;
     margin: 60px 0 0 0;
     box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
     border-radius: 20px;
     flex-direction: column;
-   // width: 40%;
-    
+    // width: 40%;
+
 
 }
 
@@ -757,13 +761,14 @@ label[for="file-upload"] {
     flex: 75%;
 
     & h2 {
-        font-size: 17px ;
+        font-size: 17px;
         margin: 0px;
 
     }
+
     & p {
-        margin: 8px 0 0 0 ;
-        color: rgba(0, 0, 0, 0.54);  
+        margin: 8px 0 0 0;
+        color: rgba(0, 0, 0, 0.54);
     }
 }
 
@@ -774,25 +779,25 @@ label[for="file-upload"] {
     display: flex;
     flex-basis: 70%;
     justify-content: flex-end;
-    
+
 
     & img {
-        
-        margin: 30px 40px 0 0; 
+
+        margin: 30px 40px 0 0;
         height: 30px;
-        
+
 
     }
 
-    
+
 }
 
 .post-header-flex {
     display: flex;
     flex-basis: 100%;
     position: relative;
-    
-       /* &:after {
+
+    /* &:after {
             content: ""; 
             height: 3px ;
             width: 300px ;
@@ -801,8 +806,8 @@ label[for="file-upload"] {
             top: 90px; 
             left: 40px; 
         }*/
-        
-    
+
+
 
 }
 
@@ -812,12 +817,12 @@ label[for="file-upload"] {
     justify-content: center;
     margin: 10px 80px 0 80px;
     height: 300px;
-    
-    
-    
+
+
+
 
     & img {
-        
+
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -836,100 +841,100 @@ label[for="file-upload"] {
 .post-footer-flex {
     display: flex;
     flex-basis: 100%;
-   
-    
-        & .post-comment {
-            
-            margin: 25px 0 25px 20px;
-            padding: 5px 20px 0 20px;
-            flex-basis: 60%;
-            
-     
-            &:hover {
-                background-color: $color-secondary;
-                border-radius: 30px;
-                
-            }
-    
-            & .post-comment-text {
-                color: $color-primary;
-                font-size: 16px;
-                font-weight: bold;
-          
-            }
 
-            & img {
-                height: 40px;
-                padding-right: 10px;
-                vertical-align: middle;          
-               
-            }
-        }
 
-        & .post-like {
-            display: flex;
-            flex-basis: 50%;
-            justify-content: flex-end;
-            
-            & .like-number {
-                color: $color-primary;
-                font-size: 18px;
-                font-weight: bold;
-                margin: 30px 40px 0 0;
-            }
+    & .post-comment {
+
+        margin: 25px 0 25px 20px;
+        padding: 5px 20px 0 20px;
+        flex-basis: 60%;
+
+
+        &:hover {
+            background-color: $color-secondary;
+            border-radius: 30px;
 
         }
+
+        & .post-comment-text {
+            color: $color-primary;
+            font-size: 16px;
+            font-weight: bold;
+
+        }
+
+        & img {
+            height: 40px;
+            padding-right: 10px;
+            vertical-align: middle;
+
+        }
+    }
+
+    & .post-like {
+        display: flex;
+        flex-basis: 50%;
+        justify-content: flex-end;
+
+        & .like-number {
+            color: $color-primary;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 30px 40px 0 0;
+        }
+
+    }
 }
 
 
 .post-like {
     position: relative;
 
-    & i{
+    & i {
 
-        font-size: 30px; 
-        position: absolute; 
+        font-size: 30px;
+        position: absolute;
         right: 65px;
-        top: 26px; 
-        
-        }
+        top: 26px;
 
-        & .fa-regular {
-            color: $color-primary;
+    }
+
+    & .fa-regular {
+        color: $color-primary;
+    }
+
+    & .fa-solid {
+
+        opacity: 0;
+
+        &:hover {
+
+            opacity: 1;
+            color: transparent;
+            background: $color-primary;
+            background-clip: text;
+            -webkit-background-clip: text;
+            transition: 200ms;
+            transform: scale(1.03);
+            cursor: pointer;
         }
-    
-        & .fa-solid {
-    
-            opacity: 0;
-    
-            &:hover{
-    
-                opacity: 1;    
-                color:transparent;
-                background: $color-primary; 
-                background-clip: text;
-                -webkit-background-clip: text;
-                transition: 200ms;
-                transform: scale(1.03);
-                cursor: pointer;
-            }
-        }
-    
+    }
+
 }
 
 .button-disconnect {
     height: 50px;
     margin-right: 150px;
-    
+
 }
 
 
-.all-comment{
+.all-comment {
     display: flex;
     flex-direction: row;
     gap: 20px;
-    
-    & > .comment-flex {
+
+    &>.comment-flex {
         margin-bottom: 15px;
 
     }
@@ -939,8 +944,8 @@ label[for="file-upload"] {
     display: flex;
     flex-direction: column;
     margin: 0px 40px 0px 0;
-    padding: 10px 10px 0 10px; 
-    background-color: lightgrey; 
+    padding: 10px 10px 0 10px;
+    background-color: lightgrey;
     border-radius: 10px;
     width: 100%;
     max-width: 481px;
@@ -948,12 +953,12 @@ label[for="file-upload"] {
     & p {
         margin: 0 0 10px 0;
 
-        &:nth-child(1){
+        &:nth-child(1) {
             font-weight: 600;
 
 
         }
- 
+
     }
 
 }
@@ -980,40 +985,40 @@ label[for="file-upload"] {
     margin-bottom: 20px;
     border-bottom: 2px solid $color-primary ;
     padding-bottom: 5px;
-  
-      &:focus {
-      outline: none;
-    }
-  
-    &[contenteditable]:empty::before{
-      content: "Ajoutez un commentaire";
-      color: $color-primary;
-      font-weight: bold;
-  
-  
-    }
-      
-  }
 
-  .comment-picture {
+    &:focus {
+        outline: none;
+    }
+
+    &[contenteditable]:empty::before {
+        content: "Ajoutez un commentaire";
+        color: $color-primary;
+        font-weight: bold;
+
+
+    }
+
+}
+
+.comment-picture {
     margin-top: 20px;
-  }
+}
 
-  .comment-button {
-   
+.comment-button {
+
     width: 15%;
     height: 40px;
     font-weight: bold;
     font-size: 16px;
     color: white;
     background-color: $color-primary;
-    border: none; 
-    border-radius: 10px; 
+    border: none;
+    border-radius: 10px;
     cursor: pointer;
-    
-                
+
+
     &:hover {
-        background-color: #821007; 
+        background-color: #821007;
     }
 }
 
@@ -1030,11 +1035,11 @@ label[for="file-upload"] {
     padding: 10px;
     padding-top: 18px;
     border-radius: 30px;
-    
+
     & .fa-power-off {
         font-size: 28px;
-        cursor: pointer; 
-        color: $color-primary; 
+        cursor: pointer;
+        color: $color-primary;
     }
 
     &:hover {
