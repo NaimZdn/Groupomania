@@ -20,7 +20,7 @@ export default {
           </a>
         </div>
       </nav>
-      
+
     </div>
   </header>
 
@@ -71,13 +71,12 @@ export default {
 
         <div class="post-footer-flex">
           <div class="post-comment">
-            <img src="../images/Icon-chat.png">
+            <fa class="icon-comment-feed" icon="fa-solid fa-comment-dots" />
             <span class="post-comment-text"> 7 commentaires </span>
           </div>
 
           <div class="post-like">
-            <i class="fa-regular fa-heart"></i>
-            <i class="fa-solid fa-heart"></i>
+            <fa class="icon-thumb-feed" icon="fa-solid fa-thumbs-up" />
             <span class="like-number"> 5 </span>
           </div>
         </div>

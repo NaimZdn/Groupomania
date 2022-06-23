@@ -158,10 +158,11 @@ header {
         text-align: center;
         color: $color-primary;
         font-size: 48px;
-        margin-bottom: 50px;
+        margin: 30px 0 50px 0; 
 
         @include break-mobile {
             font-size: 30px;
+            margin-bottom: 30px
         }
 
     }
@@ -171,14 +172,14 @@ header {
     & .icon-user-signup {
         position: absolute;
         left: 27px;
-        top: 171px;
+        top: 161px;
         height: 30px;
         color: $color-primary;
 
         @include break-mobile {
             position: absolute;
             left: 27px;
-            top: 136px;
+            top: 121px;
             height: 30px;
 
         }
@@ -192,13 +193,14 @@ header {
     & .icon-at-signup {
         position: absolute;
         left: 26px;
-        top: 279px;
+        top: 269px;
         height: 33px;
+        color: $color-primary;
 
         @include break-mobile {
             position: absolute;
             left: 27px;
-            top: 244px;
+            top: 229px;
             height: 30px;
 
         }
@@ -212,14 +214,14 @@ header {
     & .icon-key-signup {
         position: absolute;
         left: 27px;
-        top: 384px;
+        top: 374px;
         height: 30px;
         color: $color-primary;
 
         @include break-mobile {
             position: absolute;
             left: 27px;
-            top: 348px;
+            top: 333px;
             height: 30px;
         }
 
@@ -377,13 +379,7 @@ header {
         display: block;
     }
 
-    & img {
-        height: 40px;
 
-        @include break-mobile {
-            height: 50px;
-        }
-    }
 }
 
 .nav-flex-login {
@@ -395,7 +391,7 @@ header {
     @include break-mobile {
         justify-content: center;
         margin-top: 50px;
-        gap: 50px;
+        gap: 10px;
     }
 
     & a {
@@ -466,35 +462,35 @@ header {
     }
 }
 
-.icon-key-login {
-    position: absolute;
-    left: 27px;
-    top: 276px;
-    height: 30px;
-    color: $color-primary;
-
-    @include break-mobile {
-        position: absolute;
-        left: 27px;
-        top: 257px;
-        height: 30px;
-    }
-
-}
-
 .icon-at-login {
     position: absolute;
     left: 20px;
-    top: 170px;
+    top: 162px;
     font-size: 35px;
     color: $color-primary;
 
     @include break-mobile {
         position: absolute;
         left: 20px;
-        top: 150px;
+        top: 120px;
         height: 35px;
 
+    }
+
+}
+
+.icon-key-login {
+    position: absolute;
+    left: 27px;
+    top: 268px;
+    height: 30px;
+    color: $color-primary;
+
+    @include break-mobile {
+        position: absolute;
+        left: 27px;
+        top: 227px;
+        height: 30px;
     }
 
 }
@@ -574,7 +570,7 @@ header {
 
 .logo-flex-main {
     & img {
-        height: 40px;
+        height: 30px;
         margin-left: 150px;
     }
 }
@@ -588,7 +584,6 @@ header {
 
 
 .make-post {
-
     background-color: white;
     margin: 60px 0 0 0;
     box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
@@ -612,7 +607,6 @@ header {
 
 
 .make-comment {
-
     display: block;
     width: 70%;
     overflow: hidden;
@@ -805,18 +799,15 @@ label[for="file-upload"] {
 .post-image {
     display: flex;
     justify-content: center;
-    margin: 10px 80px 0 80px;
     height: 300px;
-
-
-
 
     & img {
 
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 30px;
+        border: 1px solid rgb($color-secondary, 0.5);
+        
 
     }
 
@@ -825,92 +816,85 @@ label[for="file-upload"] {
 .post-text-content {
     display: flex;
     justify-content: flex-start;
-    margin: 30px 80px 0 80px;
+    margin: 10px 0 0 30px;
 }
 
 .post-footer-flex {
     display: flex;
     flex-basis: 100%;
+    margin: 15px 0 15px 0;
+    justify-content: center;
+    
+   
+
+
 
 
     & .post-comment {
-
-        margin: 25px 0 25px 20px;
-        padding: 5px 20px 0 20px;
-        flex-basis: 60%;
-
+        display: flex;
+        justify-content: center;
+        flex-basis: 50%;
+        margin-left: 40px;
+        align-items: center;
+        padding: 5px 35px 5px 35px;
+        cursor: pointer;
+     //   border: 1px solid whitesmoke;
 
         &:hover {
-            background-color: $color-secondary;
-            border-radius: 30px;
-
+            background-color: whitesmoke;
+            border-radius: 6px;
+            
+            
         }
+        
+        
 
         & .post-comment-text {
             color: $color-primary;
             font-size: 16px;
             font-weight: bold;
-
         }
 
-        & img {
-            height: 40px;
-            padding-right: 10px;
-            vertical-align: middle;
+        & .icon-comment-feed {
+            height: 25px;
+            padding-right: 15px;
+            color: $color-primary;
+    
 
         }
     }
 
     & .post-like {
         display: flex;
-        flex-basis: 50%;
-        justify-content: flex-end;
-
-        & .like-number {
-            color: $color-primary;
-            font-size: 18px;
-            font-weight: bold;
-            margin: 30px 40px 0 0;
-        }
-
-    }
-}
-
-
-.post-like {
-    position: relative;
-
-    & i {
-
-        font-size: 30px;
-        position: absolute;
-        right: 65px;
-        top: 26px;
-
-    }
-
-    & .fa-regular {
+        justify-content: center;
+        align-items: center;
         color: $color-primary;
-    }
-
-    & .fa-solid {
-
-        opacity: 0;
+        padding: 0 35px 0 35px;
+        margin-right: 40px;
+        cursor: pointer;
+       // border: 1px solid whitesmoke;
+        flex-basis: 50%;
 
         &:hover {
-
-            opacity: 1;
-            color: transparent;
-            background: $color-primary;
-            background-clip: text;
-            -webkit-background-clip: text;
-            transition: 200ms;
-            transform: scale(1.03);
-            cursor: pointer;
+            background-color: whitesmoke;
+            border-radius: 6px;
+           
         }
-    }
 
+        & .icon-thumb-feed {
+            font-size: 25px;
+        }
+    
+        & .like-number {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 3px 0 0 10px;
+            
+        }
+
+    }
 }
+
 
 .button-disconnect {
     height: 50px;
@@ -935,7 +919,7 @@ label[for="file-upload"] {
     flex-direction: column;
     margin: 0px 40px 0px 0;
     padding: 10px 10px 0 10px;
-    background-color: lightgrey;
+    background-color: whitesmoke;
     border-radius: 10px;
     width: 100%;
     max-width: 481px;

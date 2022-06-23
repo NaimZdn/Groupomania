@@ -173,18 +173,19 @@ body {
   text-align: center;
   color: #9A3926;
   font-size: 48px;
-  margin-bottom: 50px;
+  margin: 30px 0 50px 0;
 }
 @media (max-width: 768px) {
   .form-signup h2 {
     font-size: 30px;
+    margin-bottom: 30px;
   }
 }
 
 .input-icon .icon-user-signup {
   position: absolute;
   left: 27px;
-  top: 171px;
+  top: 161px;
   height: 30px;
   color: #9A3926;
 }
@@ -192,7 +193,7 @@ body {
   .input-icon .icon-user-signup {
     position: absolute;
     left: 27px;
-    top: 136px;
+    top: 121px;
     height: 30px;
   }
 }
@@ -202,14 +203,15 @@ body {
 .input-icon .icon-at-signup {
   position: absolute;
   left: 26px;
-  top: 279px;
+  top: 269px;
   height: 33px;
+  color: #9A3926;
 }
 @media (max-width: 768px) {
   .input-icon .icon-at-signup {
     position: absolute;
     left: 27px;
-    top: 244px;
+    top: 229px;
     height: 30px;
   }
 }
@@ -219,7 +221,7 @@ body {
 .input-icon .icon-key-signup {
   position: absolute;
   left: 27px;
-  top: 384px;
+  top: 374px;
   height: 30px;
   color: #9A3926;
 }
@@ -227,7 +229,7 @@ body {
   .input-icon .icon-key-signup {
     position: absolute;
     left: 27px;
-    top: 348px;
+    top: 333px;
     height: 30px;
   }
 }
@@ -362,14 +364,6 @@ body {
     display: block;
   }
 }
-.header-flex-login img {
-  height: 40px;
-}
-@media (max-width: 768px) {
-  .header-flex-login img {
-    height: 50px;
-  }
-}
 
 .nav-flex-login {
   display: flex;
@@ -381,7 +375,7 @@ body {
   .nav-flex-login {
     justify-content: center;
     margin-top: 50px;
-    gap: 50px;
+    gap: 10px;
   }
 }
 .nav-flex-login a {
@@ -452,26 +446,10 @@ body {
   }
 }
 
-.icon-key-login {
-  position: absolute;
-  left: 27px;
-  top: 276px;
-  height: 30px;
-  color: #9A3926;
-}
-@media (max-width: 768px) {
-  .icon-key-login {
-    position: absolute;
-    left: 27px;
-    top: 257px;
-    height: 30px;
-  }
-}
-
 .icon-at-login {
   position: absolute;
   left: 20px;
-  top: 170px;
+  top: 162px;
   font-size: 35px;
   color: #9A3926;
 }
@@ -479,8 +457,24 @@ body {
   .icon-at-login {
     position: absolute;
     left: 20px;
-    top: 150px;
+    top: 120px;
     height: 35px;
+  }
+}
+
+.icon-key-login {
+  position: absolute;
+  left: 27px;
+  top: 268px;
+  height: 30px;
+  color: #9A3926;
+}
+@media (max-width: 768px) {
+  .icon-key-login {
+    position: absolute;
+    left: 27px;
+    top: 227px;
+    height: 30px;
   }
 }
 
@@ -540,7 +534,7 @@ body {
 }
 
 .logo-flex-main img {
-  height: 40px;
+  height: 30px;
   margin-left: 150px;
 }
 
@@ -693,81 +687,71 @@ label[for=file-upload]:hover {
 .post-image {
   display: flex;
   justify-content: center;
-  margin: 10px 80px 0 80px;
   height: 300px;
 }
 .post-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 30px;
+  border: 1px solid rgba(254, 229, 224, 0.5);
 }
 
 .post-text-content {
   display: flex;
   justify-content: flex-start;
-  margin: 30px 80px 0 80px;
+  margin: 10px 0 0 30px;
 }
 
 .post-footer-flex {
   display: flex;
   flex-basis: 100%;
+  margin: 15px 0 15px 0;
+  justify-content: center;
 }
 .post-footer-flex .post-comment {
-  margin: 25px 0 25px 20px;
-  padding: 5px 20px 0 20px;
-  flex-basis: 60%;
+  display: flex;
+  justify-content: center;
+  flex-basis: 50%;
+  margin-left: 40px;
+  align-items: center;
+  padding: 5px 35px 5px 35px;
+  cursor: pointer;
 }
 .post-footer-flex .post-comment:hover {
-  background-color: #FEE5E0;
-  border-radius: 30px;
+  background-color: whitesmoke;
+  border-radius: 6px;
 }
 .post-footer-flex .post-comment .post-comment-text {
   color: #9A3926;
   font-size: 16px;
   font-weight: bold;
 }
-.post-footer-flex .post-comment img {
-  height: 40px;
-  padding-right: 10px;
-  vertical-align: middle;
+.post-footer-flex .post-comment .icon-comment-feed {
+  height: 25px;
+  padding-right: 15px;
+  color: #9A3926;
 }
 .post-footer-flex .post-like {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #9A3926;
+  padding: 0 35px 0 35px;
+  margin-right: 40px;
+  cursor: pointer;
   flex-basis: 50%;
-  justify-content: flex-end;
+}
+.post-footer-flex .post-like:hover {
+  background-color: whitesmoke;
+  border-radius: 6px;
+}
+.post-footer-flex .post-like .icon-thumb-feed {
+  font-size: 25px;
 }
 .post-footer-flex .post-like .like-number {
-  color: #9A3926;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  margin: 30px 40px 0 0;
-}
-
-.post-like {
-  position: relative;
-}
-.post-like i {
-  font-size: 30px;
-  position: absolute;
-  right: 65px;
-  top: 26px;
-}
-.post-like .fa-regular {
-  color: #9A3926;
-}
-.post-like .fa-solid {
-  opacity: 0;
-}
-.post-like .fa-solid:hover {
-  opacity: 1;
-  color: transparent;
-  background: #9A3926;
-  background-clip: text;
-  -webkit-background-clip: text;
-  transition: 200ms;
-  transform: scale(1.03);
-  cursor: pointer;
+  padding: 3px 0 0 10px;
 }
 
 .button-disconnect {
@@ -789,7 +773,7 @@ label[for=file-upload]:hover {
   flex-direction: column;
   margin: 0px 40px 0px 0;
   padding: 10px 10px 0 10px;
-  background-color: lightgrey;
+  background-color: whitesmoke;
   border-radius: 10px;
   width: 100%;
   max-width: 481px;
