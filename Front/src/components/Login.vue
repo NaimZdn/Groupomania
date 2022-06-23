@@ -16,7 +16,7 @@ export default {
 
         <nav class="nav-flex-login">
           <p> Se connecter </p>
-          <router-link to="/sign-up"> S'inscrire </router-link>
+          <router-link class="anim" to="/sign-up"> S'inscrire </router-link>
         </nav>
 
       </div>
@@ -25,7 +25,7 @@ export default {
     <main class="container">
       <section class="main-flex-login">
 
-        <div class="illustration-login">
+        <div class="illustration-login ">
           <img src="../images/Illustration-login.png" alt="Illustration Login">
         </div>
 

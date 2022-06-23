@@ -6,7 +6,7 @@ export default {
 </script>
 
 <template>
-
+<body>
   <header class="bg-main">
     <div class="header-flex-main"> 
       <div class="logo-flex-main">
@@ -127,6 +127,7 @@ export default {
     </section>
     
   </main>
+  </body>
 </template>
 
 <style></style>
