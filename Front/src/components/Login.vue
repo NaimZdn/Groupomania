@@ -14,7 +14,7 @@ export default {
         </div>
 
         <nav class="nav-flex-login">
-          <p> Se connecter </p>
+          <h1> Se connecter </h1>
           <router-link to="/sign-up"> S'inscrire </router-link>
         </nav>
 
@@ -29,11 +29,11 @@ export default {
         </div>
 
         <div class="form-signup">
-          <h1> S'identifier </h1>
+          <h2> S'identifier </h2>
 
           <div class="input-icon">
             <input type="mail" placeholder="Email">
-            <fa icon="fa-solid fa-at"/>
+            <fa class="icon-at-login" icon="fa-solid fa-at"/>
           </div>
 
           <div class="input-icon">

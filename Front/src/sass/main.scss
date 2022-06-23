@@ -367,6 +367,105 @@ header {
 
 // Login
 
+.header-flex-login {
+    display: flex;
+    margin: 30px 0 0 0px;
+    align-items: center;
+    flex-direction: row-reverse;
+
+    @include break-mobile {
+        display: block;
+    }
+
+    & img {
+        height: 40px;
+
+        @include break-mobile {
+            height: 50px;
+        }
+    }
+}
+
+.nav-flex-login {
+    display: flex;
+    flex: 1;
+    justify-content: flex-start;
+    align-items: center;
+
+    @include break-mobile {
+        justify-content: center;
+        margin-top: 50px;
+        gap: 50px;
+    }
+
+    & a {
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 17px;
+        margin-left: 50px;
+        color: $color-primary;
+        padding: 5px 30px 5px 30px;
+
+        @include break-mobile {
+            margin: 0px;
+        }
+
+        &:hover {
+            border-radius: 53px;
+            background-color: $color-secondary;
+            animation: bubble 0.5s, appear 0.2s;
+
+        }
+    }
+
+    & h1 {
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 17px;
+        color: $color-primary;
+        padding: 5px 30px 5px 30px;
+        border-radius: 53px;
+        background-color: $color-secondary  !important;
+        cursor: pointer;
+
+        @include break-mobile {
+            margin: 0px;
+        }
+    }
+}
+
+.main-flex-login {
+    display: flex;
+    width: 100%;
+    margin: 90px 30px 0px 0px;
+    flex-direction: row-reverse;
+
+    @include break-tablet {
+        justify-content: center;
+    }
+
+    @include break-mobile {
+        margin-top: 0px;
+    }
+}
+
+.illustration-login {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    height: 600px;
+    justify-content: flex-end;
+
+    & img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    @include break-tablet {
+        display: none;
+    }
+}
+
 .icon-key-login {
     position: absolute;
     left: 27px;
@@ -383,7 +482,7 @@ header {
 
 }
 
-.fa-at {
+.icon-at-login {
     position: absolute;
     left: 20px;
     top: 170px;
@@ -429,115 +528,6 @@ header {
 }
 
 
-.header-flex-login {
-    display: flex;
-    margin: 30px 0 0 0px;
-    align-items: center;
-    flex-direction: row-reverse;
-
-    @include break-mobile {
-        display: block;
-    }
-
-    & img {
-        height: 40px;
-
-        @include break-mobile {
-            height: 50px;
-        }
-    }
-}
-
-.nav-flex-login {
-    display: flex;
-    flex: 1;
-    justify-content: flex-start;
-    align-items: center;
-
-    @include break-mobile {
-        justify-content: center;
-        margin-top: 50px;
-        gap: 50px;
-    }
-
-    & a {
-
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 17px;
-        margin-left: 50px;
-        color: $color-primary;
-        padding: 5px 30px 5px 30px;
-
-        @include break-mobile {
-            margin: 0px;
-        }
-
-        &:hover {
-            border-radius: 53px;
-            background-color: $color-secondary;
-            animation: bubble 0.5s, appear 0.2s;
-
-
-        }
-    }
-
-    & p {
-
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 17px;
-        color: $color-primary;
-        padding: 5px 30px 5px 30px;
-        border-radius: 53px;
-        background-color: $color-secondary  !important;
-        cursor: pointer;
-
-        @include break-mobile {
-            margin: 0px;
-        }
-
-    }
-}
-
-.main-flex-login {
-    display: flex;
-    width: 100%;
-    margin: 90px 30px 0px 0px;
-    flex-direction: row-reverse;
-
-    @include break-tablet {
-        justify-content: center;
-    }
-
-    @include break-mobile {
-        margin-top: 0px;
-    }
-}
-
-
-
-
-.illustration-login {
-    width: 50%;
-    display: flex;
-    align-items: center;
-    height: 600px;
-    justify-content: flex-end;
-
-
-    & img {
-        max-width: 100%;
-        max-height: 100%;
-
-
-
-    }
-
-    @include break-tablet {
-        display: none;
-    }
-}
 
 
 // Main page 
