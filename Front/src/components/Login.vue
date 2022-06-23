@@ -5,7 +5,6 @@ export default {
 </script>
 
 <template>
-
   <body class="margin">
     <header class="container">
       <div class="header-flex-login">
@@ -79,8 +78,3 @@ export default {
     </footer>
   </body>
 </template>
-
-<style>
-</style>
-
-
