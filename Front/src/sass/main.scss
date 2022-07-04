@@ -477,6 +477,11 @@ header {
 
     }
 
+    &:hover {
+        animation: bubble 0.5s
+
+    }
+
 }
 
 .icon-key-login {
@@ -491,6 +496,11 @@ header {
         left: 27px;
         top: 227px;
         height: 30px;
+    }
+
+    &:hover {
+        animation: bubble 0.5s
+
     }
 
 }
@@ -529,20 +539,28 @@ header {
 // Main page 
 
 
-.user-picture {
-
+.profil-menu {
     height: 50px;
     width: 50px;
-    border-radius: 30px;
-    margin-right: 50px;
-    margin-left: 70px;
+    margin-right: 20px;
+    
+
+    & img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        
+
+    }
 
 }
+
 
 .header-flex-main {
     display: flex;
     align-items: center;
-
+    flex-basis: 100%;
 
 }
 
@@ -551,27 +569,44 @@ header {
     justify-content: flex-end;
     flex: 1;
     align-items: center;
+    flex-basis: 50%;
 
-    & p {
-        color: $color-primary;
-        font-weight: bold;
-        padding: 10px 20px 10px 20px;
-
-        &:hover {
-            background-color: $color-secondary;
-            border-radius: 53px;
-
-
-        }
+    & a {
+        
+        text-decoration: none;        
     }
-
-
 }
 
 .logo-flex-main {
-    & img {
+    flex-basis: 50%;
+    
+    & .logo_desktop {
         height: 30px;
-        margin-left: 150px;
+        margin-left: 50px;
+         
+        @include break-mobile {
+                display: none;
+            
+        }
+    }
+    
+    & .logo_mobile {
+        display: none;
+
+        @include break-mobile {
+        height: 40px;
+        margin-left: 20px;
+        display: block;
+
+        }
+        
+    }
+    
+
+    & .fa-house {
+        color: $color-primary; 
+        font-size: 25px;
+        
     }
 }
 
@@ -585,15 +620,12 @@ header {
 
 .make-post {
     background-color: white;
-    margin: 60px 0 0 0;
+    margin: 60px 0 30px 0;
     box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
-    border-radius: 20px;
+    border-radius: 12px;
     padding-bottom: 30px;
-    max-width: 620px;
+    max-width: 748px;
     width: 100%;
-
-
-
 
 
 }
@@ -602,20 +634,20 @@ header {
 .post-form-flex {
     display: flex;
     flex-basis: 100%;
+    align-items: center;
 }
 
 
 
 .make-comment {
     display: block;
-    width: 70%;
     overflow: hidden;
+    width: 100%;
     min-height: 40px;
     line-height: 20px;
     resize: none;
     border: none;
-    flex-basis: 70%;
-    margin: 40px 0 0 30px;
+    margin: 30px 40px 0 30px;
     border-bottom: 2px solid $color-primary ;
     padding-bottom: 5px;
 
@@ -643,9 +675,12 @@ header {
 
 
 .import-file {
+    display: flex;
+    align-items: center;
 
-    & img {
-        height: 30px;
+    & .fa-image {
+        font-size: 25px;
+        color: $color-primary;
     }
 }
 
@@ -658,6 +693,7 @@ label[for="file-upload"] {
     &:hover {
         background-color: rgb($color-secondary, 0.5);
         border-radius: 30px;
+        animation: bubble 0.5s;
 
     }
 
@@ -669,15 +705,14 @@ label[for="file-upload"] {
 
 .post-button {
 
-    width: 20%;
-    height: 40px;
     font-weight: bold;
     font-size: 16px;
     color: white;
     background-color: $color-primary;
     border: none;
-    border-radius: 16px;
+    border-radius: 6px;
     cursor: pointer;
+    padding: 10px;
 
 
     &:hover {
@@ -715,28 +750,39 @@ label[for="file-upload"] {
 
 .post {
 
-
     background-color: white;
-    margin: 60px 0 0 0;
+    margin: 30px 0 30px 0;
     box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
-    border-radius: 20px;
+    border-radius: 12px;
     flex-direction: column;
-    // width: 40%;
-
-
+    max-width: 748px;
+    width: 100%;
+    
 }
 
+
+
 .post-picture {
-    flex-basis: 15%;
+    margin-left: 30px;
+    margin-top: 34px;
+    height: 50px;
+    width: 50px;
+    
+    @include break-mobile {
+        margin-left: 20px;
+    }
+
 }
 
 
 .user-post-picture {
-    height: 50px;
-    width: 50px;
-    border-radius: 30px;
-    margin-left: 40px;
-    margin-top: 30px;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    min-height: 50px;
+    min-width: 50px;
+    border-radius: 50%;
+    
 }
 
 .post-text {
@@ -745,7 +791,7 @@ label[for="file-upload"] {
     flex: 75%;
 
     & h2 {
-        font-size: 17px;
+        font-size: 16px;
         margin: 0px;
 
     }
@@ -753,6 +799,7 @@ label[for="file-upload"] {
     & p {
         margin: 8px 0 0 0;
         color: rgba(0, 0, 0, 0.54);
+        font-size: 14px;
     }
 }
 
@@ -761,18 +808,25 @@ label[for="file-upload"] {
 
 .post-option {
     display: flex;
-    flex-basis: 70%;
     justify-content: flex-end;
+    align-items: center;
 
 
-    & img {
+    & .fa-gear {
 
-        margin: 30px 40px 0 0;
-        height: 30px;
+        margin: 0 40px 0 0;
+        font-size: 20px;
+        color: $color-primary;
 
+        @include break-mobile {
+            margin: 0 20px 0 10px;
+        }
 
+        &:hover {
+            animation: bubble 0.5s;
+            cursor: pointer;
+        }
     }
-
 
 }
 
@@ -817,12 +871,17 @@ label[for="file-upload"] {
     display: flex;
     justify-content: flex-start;
     margin: 10px 0 0 30px;
+
+    @include break-mobile {
+        margin: 10px 0 0 20px;
+    }
 }
+
 
 .post-footer-flex {
     display: flex;
     flex-basis: 100%;
-    margin: 15px 0 15px 0;
+    margin: 15px 0 20px 0;
     justify-content: center;
     
    
@@ -840,9 +899,14 @@ label[for="file-upload"] {
         cursor: pointer;
      //   border: 1px solid whitesmoke;
 
+     @include break-mobile {
+        margin-left: 20px;
+    }
+
         &:hover {
             background-color: whitesmoke;
             border-radius: 6px;
+            
             
             
         }
@@ -875,6 +939,10 @@ label[for="file-upload"] {
        // border: 1px solid whitesmoke;
         flex-basis: 50%;
 
+        @include break-mobile {
+            margin-right: 20px;
+        }
+
         &:hover {
             background-color: whitesmoke;
             border-radius: 6px;
@@ -896,17 +964,16 @@ label[for="file-upload"] {
 }
 
 
-.button-disconnect {
-    height: 50px;
-    margin-right: 150px;
-
-}
 
 
 .all-comment {
     display: flex;
     flex-direction: row;
     gap: 20px;
+    @include break-mobile {
+
+        margin: 0 20px 0 20px;
+    }
 
     &>.comment-flex {
         margin-bottom: 15px;
@@ -914,15 +981,32 @@ label[for="file-upload"] {
     }
 }
 
+.post-comment-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    @include break-mobile {
+        .create-comment {
+            margin-right: 20px;
+
+        }
+    }
+}
+
+
 .comment-flex {
     display: flex;
     flex-direction: column;
-    margin: 0px 40px 0px 0;
     padding: 10px 10px 0 10px;
     background-color: whitesmoke;
     border-radius: 10px;
     width: 100%;
-    max-width: 481px;
+    max-width: 628px;
+
+    @include break-mobile {
+        max-width: 669px;
+    }
 
     & p {
         margin: 0 0 10px 0;
@@ -937,28 +1021,74 @@ label[for="file-upload"] {
 
 }
 
-.user-comment-picture {
+.profil-menu {
+    margin-left: 50px;
+    
+    
+}
+
+.user-comment-picture-container {
+    min-width: 40px;
+    min-height: 40px;
     height: 40px;
     width: 40px;
-    border-radius: 30px;
-    margin-left: 40px;
-    margin-top: 5px;
+    margin-left: 30px;
+
+    @include break-mobile{
+        margin-left: 0;
+    }
+    
+}
+
+.user-comment-picture {
+    object-fit: cover;  
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+
+}
+
+.user-post-comment-picture-container {
+    height: 50px;
+    width: 50px;
+    margin-left: 30px;
+    margin-top: 23px;
+    
+    @include break-mobile {
+        margin-left: 10px;
+    }
+    
+}
+
+.user-post-comment-picture {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    min-height: 50px;
+    min-width: 50px;
+
+    
+    
+
 }
 
 .create-comment {
 
     display: block;
-    width: 70%;
+    width: 100%;
     overflow: hidden;
     min-height: 40px;
     line-height: 20px;
     resize: none;
     border: none;
-    flex-basis: 77%;
-    margin-top: 30px;
-    margin-bottom: 20px;
+    margin: 30px 40px 20px 0; 
     border-bottom: 2px solid $color-primary ;
     padding-bottom: 5px;
+   
+    
+
+    
 
     &:focus {
         outline: none;
@@ -980,15 +1110,15 @@ label[for="file-upload"] {
 
 .comment-button {
 
-    width: 15%;
-    height: 40px;
+    
     font-weight: bold;
     font-size: 16px;
     color: white;
     background-color: $color-primary;
     border: none;
-    border-radius: 10px;
+    border-radius: 6px;
     cursor: pointer;
+    padding: 10px;
 
 
     &:hover {
@@ -1002,21 +1132,9 @@ label[for="file-upload"] {
     justify-content: flex-end;
     margin-right: 40px;
     margin-bottom: 20px;
-}
-
-
-.button-disconnect {
-    padding: 10px;
-    padding-top: 18px;
-    border-radius: 30px;
-
-    & .fa-power-off {
-        font-size: 28px;
-        cursor: pointer;
-        color: $color-primary;
-    }
-
-    &:hover {
-        background-color: rgb($color-secondary, 0.5);
+    
+    @include break-mobile {
+        margin-right: 20px;
     }
 }
+

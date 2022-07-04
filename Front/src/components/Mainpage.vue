@@ -9,16 +9,17 @@ export default {
     <div class="header-flex-main">
 
       <div class="logo-flex-main">
-        <img src="../images/Logo_red.png" alt="Groupomania logo">
+        <img class="logo_desktop" src="../images/Logo_red.png" alt="Groupomania logo">
+        <img class="logo_mobile" src="../images/Groupomania-logo_mobile.png" alt="Groupomania logo">
+        
+        
       </div>
 
       <nav class="nav-flex-main">
-        <a href=""> <img class="user-picture" src="../images/Photo CV.jpg"> </a>
-        <div class="bg-disconnect">
-          <a class="button-disconnect">
-            <fa icon="fa-solid fa-power-off" />
-          </a>
-        </div>
+        <a class="profil-menu" href=""> 
+          <img class="user-picture" src="../images/Photo CV.jpg">
+        </a>
+       
       </nav>
 
     </div>
@@ -36,7 +37,7 @@ export default {
         </div>
 
         <div class="make-post-button">
-          <label for="file-upload" class="import-file"> <img src="../images/Icon-image.png"></label>
+          <label for="file-upload" class="import-file"> <fa icon="fa-solid fa-image" /> </label>
           <input id="file-upload" type="file">
           <button class="post-button">PUBLIER</button>
         </div>
@@ -57,7 +58,7 @@ export default {
           </div>
 
           <div class="post-option">
-            <img src="../images/Icon-option.png">
+            <fa icon="fa-solid fa-gear"/>
           </div>
         </div>
 
@@ -72,7 +73,7 @@ export default {
         <div class="post-footer-flex">
           <div class="post-comment">
             <fa class="icon-comment-feed" icon="fa-solid fa-comment-dots" />
-            <span class="post-comment-text"> 7 commentaires </span>
+            <span class="post-comment-text"> 7 </span>
           </div>
 
           <div class="post-like">
@@ -82,41 +83,48 @@ export default {
         </div>
 
         <div class="all-comment">
-          <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
-          <div class="comment-flex">
-            <p id="pseudo"> Pseudo</p>
-            <p id="comment"> Voici mon commentaire </p>
-          </div>
-        </div>
-
-        <div class="all-comment">
-          <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
-          <div class="comment-flex">
-            <p id="pseudo"> Pseudo</p>
-            <p id="comment"> Voici mon commentaire </p>
-          </div>
-        </div>
-
-        <div class="all-comment">
-          <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
-          <div class="comment-flex">
-            <p id="pseudo"> Pseudo</p>
-            <p id="comment"> Voici mon commentaire </p>
-          </div>
-        </div>
-
-        <div class="all-comment">
-          <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
-          <div class="comment-flex">
-            <p id="pseudo"> Pseudo</p>
-            <p id="comment"> Voici mon commentaireVoici mon commentaireVoici mon commentaireVoici mon commentaireVoici
-              mon commentaire </p>
-          </div>
-        </div>
-
-        <div class="all-comment">
-          <div class="comment-picture">
+          <div class="user-comment-picture-container"> 
             <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
+          </div>
+          <div class="comment-flex">
+            <p id="pseudo"> Pseudo</p>
+            <p id="comment"> Voici mon commentaire </p>
+          </div>
+        </div>
+
+        <div class="all-comment">
+          <div class="user-comment-picture-container"> 
+            <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
+          </div>
+          <div class="comment-flex">
+            <p id="pseudo"> Pseudo</p>
+            <p id="comment"> Voici mon commentaire </p>
+          </div>
+        </div>
+
+        <div class="all-comment">
+          <div class="user-comment-picture-container"> 
+            <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
+          </div>
+          <div class="comment-flex">
+            <p id="pseudo"> Pseudo</p>
+            <p id="comment"> Voici mon commentaire </p>
+          </div>
+        </div>
+
+        <div class="all-comment">
+          <div class="user-comment-picture-container"> 
+            <a href=""> <img class="user-comment-picture" src="../images/Photo CV.jpg"> </a>
+          </div>
+          <div class="comment-flex">
+            <p id="pseudo"> Pseudo</p>
+            <p id="comment"> Voici mon commentaire </p>
+          </div>
+        </div>
+
+        <div class="post-comment-container">
+           <div class="user-post-comment-picture-container"> 
+            <a href=""> <img class="user-post-comment-picture" src="../images/Photo CV.jpg"> </a>
           </div>
           <span class="create-comment" role="textbox" contenteditable></span>
         </div>
