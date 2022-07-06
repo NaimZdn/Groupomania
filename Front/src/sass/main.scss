@@ -542,7 +542,11 @@ header {
 .profil-menu {
     height: 50px;
     width: 50px;
-    margin-right: 20px;
+    margin-right: 50px;
+
+    @include break-mobile {
+        margin-right: 20px;
+    }
     
 
     & img {
@@ -757,7 +761,7 @@ label[for="file-upload"] {
     flex-direction: column;
     max-width: 748px;
     width: 100%;
-    
+
 }
 
 
@@ -1137,4 +1141,270 @@ label[for="file-upload"] {
         margin-right: 20px;
     }
 }
+
+// User page 
+
+.user-information-container {
+    margin-top: 80px;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0px 3px 8px rgb(154, 57, 38, 40%);
+    max-width: 748px;
+    width: 100%;
+    
+}
+
+.user-picture-container {
+    margin: 30px 0 30px 30px;
+    height: 200px;
+    width: 200px;
+    min-height: 200px;
+    min-width: 200px;
+
+    @include break-mobile {
+        margin-left: 0; 
+        }
+    
+    
+    & .user-picture_profil {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 100%;
+        border: 4px solid $color-primary;
+
+    }
+
+}
+
+.user-information {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    @include break-mobile{
+        flex-direction: column;
+
+    }
+}
+
+.user-pseudo_profil {
+    font-size: 40px;
+    margin-left: 40px;   
+
+    @include break-mobile {
+        font-size: 30px;
+        margin: 0;
+                    
+    }
+
+    & p {
+
+    @include break-mobile {
+        margin-top: 0;
+                        
+    }   
+    }
+}
+
+.information-modification-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 30px 30px 0; 
+
+    @include break-mobile {
+        justify-content: center;
+        margin: 10px 0 30px 0;
+        
+        
+    }
+    
+    & button {
+        font-weight: bold;
+        font-size: 16px;
+        color: white;
+        background-color: $color-primary;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 10px;
+
+        @include break-mobile {
+            width: 100%;
+            margin: 0 15px 0 15px;
+        }
+    
+    
+        &:hover {
+            background-color: #821007;
+        }
+    }
+}
+
+.user-tabs-container {
+    display: flex;
+    flex-direction: row;
+    margin-left: 30px; 
+
+    @include break-mobile {
+        margin-left: 15px;
+    }
+
+    & .user-tab-activity {
+        padding: 10px 15px 15px;
+        
+    }
+
+    & .true {
+        font-size: 16px; 
+        background-color: $color-primary;
+        color:white; 
+        border-radius: 6px 6px 0 0;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    & .user-tab-settings {
+        font-size: 16px; 
+        padding: 10px 15px 15px;
+        cursor: pointer;
+    
+    }
+}
+
+.user-tab-content-container {
+    margin: 0 30px 20px 30px;
+
+    @include break-mobile {
+        margin: 0 15px 20px 15px; 
+    }
+   
+ }
+
+ .content-activity {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background-color: $color-primary;
+    border-radius: 0 6px 6px 6px; 
+ }
+
+ .activity-post-container {
+    background-color: white;
+    width: 100%;
+    border-radius: 6px;
+
+
+    & .activity-post-header {
+        display: flex;
+        flex-direction: row;
+        margin: 20px;
+        flex-basis: 100%;
+
+        & .activity-user-picture {
+            height: 50px;
+            width: 50px;
+
+            & .user-picture {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                min-height: 50px;
+                min-width: 50px; 
+                border-radius: 50%;
+            }
+        }
+
+        & .activity-user-pseudo {
+            padding-left: 20px;
+            flex-basis: 85%;
+            
+            
+            & h2 {
+                margin: 0;
+                font-size: 16px;
+
+            }
+
+            & p {
+                color: rgba(0, 0, 0, 0.54);
+                font-size: 14px;
+                margin: 8px 0 0 0;
+    
+            }
+        }
+
+        & .activity-user-option {
+
+            & .fa-gear{
+                font-size: 20px;
+                color: $color-primary;
+
+                &:hover {
+                    cursor: pointer;
+                    animation: bubble 0.5s;
+                }
+            }
+        }
+    }
+    & .activity-post-main {
+        margin: 20px; 
+
+        .activity-post-image {    
+            height: 300px;
+        
+            & img {
+        
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border: 1px solid rgb($color-secondary, 0.5);
+                
+            }
+        }
+    }
+}
+
+
+.content-settings {
+    display: flex;
+    justify-content: center; 
+    background-color: $color-primary;
+    border-radius: 6px; 
+}
+.settings-user{
+    margin: 20px;
+    background-color: white;
+    width: 100%;
+    border-radius: 6px;
+
+    & p {
+        margin-left: 15px;
+    }
+
+    & .settings-button {
+        display: flex;
+        justify-content: center;
+    
+        & button {
+            font-weight: bold;
+            font-size: 16px;
+            color: white;
+            background-color: $color-primary;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            margin: 0 15px 15px 15px;
+        
+        
+            &:hover {
+                background-color: #821007;
+            }
+        }
+    }
+}
+
+
 
