@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Roboto:wght@300;400&family=Shrikhand&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: $font;
+}
+
+body {
+    background-image: url('../assets/images/Background-groupomania.png');
+    margin: 0;
+}
+
+
+header {
+    @include break-mobile {
+        display: flex;
+        justify-content: center;
+    }
+}
