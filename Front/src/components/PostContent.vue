@@ -120,7 +120,7 @@ export default {
             width: 100%;
             height: 300px;
             object-fit: cover;
-            border: 1px solid rgb($color-secondary, 0.5);
+            border: 2px solid rgb($color-secondary, 0.5);
 
         }
     }
