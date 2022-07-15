@@ -17,23 +17,23 @@ export default {
                 <h1 class="SignUpMain__form-header"> Créez votre compte</h1>
 
                 <div class="SignUpMain__input">
-                    <input id="pseudoInput" class="SignUpMain__input-type" type="pseudo" placeholder="Pseudo">
+                    <input id="pseudoInput" class="SignUpMain__input-type" type="pseudo" placeholder="Pseudo" aria-label="Entrez votre pseudo">
                     <fa class="SignUpMain__input-pseudo" icon="fa-solid fa-user" />
                 </div>
 
                 <div class="SignUpMain__input">
-                    <input id="mailInput" class="SignUpMain__input-type" type="mail" placeholder="Email">
+                    <input id="mailInput" class="SignUpMain__input-type" type="mail" placeholder="Email" aria-label="Entrez votre adresse mail">
                     <fa class="SignUpMain__input-mail" icon="fa-solid fa-at" />
                 </div>
 
                 <div class="SignUpMain__input">
-                    <input id="passwordInput" class="SignUpMain__input-type" type='password' placeholder="Mot de passe">
+                    <input id="passwordInput" class="SignUpMain__input-type" type='password' placeholder="Mot de passe" aria-label="Entrez votre mot de passe">
                     <fa class="SignUpMain__input-password" icon="fa-solid fa-lock" />
                 </div>
 
                 <div class="SignUpMain__checkbox">
-                    <input class="SignUpMain__checkbox-type" type="checkbox">
-                    <span class="SignUpMain__checkbox-text"> J'accepte les <a class="SignUpMain__checkbox-cgu" href="#">conditions générales d'utilisations</a></span>
+                    <input class="SignUpMain__checkbox-type" type="checkbox" aria-label="Veuillez accepter nos CGU">
+                    <span class="SignUpMain__checkbox-text"> J'accepte les <a class="SignUpMain__checkbox-cgu" href="#" aria-label="Nos CGU">conditions générales d'utilisations</a></span>
                 </div>
 
                 <div class="SignUpMain__button">

@@ -7,25 +7,25 @@ export default {
 <template>
     <footer class="SocialFooter">
         <div class="footer-icon">
-            <a href="https://www.facebook.com/" target="_blank">
+            <a href="https://www.facebook.com/" target="_blank" aria-label="Notre Facebook">
                 <fa class="icon" :icon="['fab', 'facebook-f']" /> 
             </a>
         </div>
 
         <div class="footer-icon">
-            <a href="https://www.linkedin.com/" target="_blank">
+            <a href="https://www.linkedin.com/" target="_blank" aria-label="Notre LinkedIn">
                 <fa class="icon" :icon="['fab', 'linkedin-in']" />
             </a>
         </div>
 
         <div class="footer-icon">
-            <a href="https://twitter.com/" target="_blank">
+            <a href="https://twitter.com/" target="_blank" aria-label="Notre Twitter">
                 <fa class="icon" :icon="['fab', 'twitter']" />
             </a>
         </div>
 
         <div class="footer-icon">
-            <a href="mailto:groupomania@support.com">
+            <a href="mailto:groupomania@support.com" aria-label="Nous contacter">
                 <fa class=icon icon="fa-solid fa-envelope" />
             </a>
         </div>

@@ -20,8 +20,7 @@ export default {
     <section class="container-flex">
       <div class="Post">
         <PostContent></PostContent>
-        <PostComment></PostComment>
-        <PostCreateComment></PostCreateComment>
+    
       </div>
     </section>
   </main>

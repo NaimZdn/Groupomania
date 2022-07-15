@@ -1,10 +1,12 @@
 <script>
 export default {
-    name: 'PostComment'
+    name: "PostComment",
+
 }
 </script>
 
 <template>
+<transition name="slide2" appear> 
     <div class="PostComment">
 
         <div class="PostComment__picture">
@@ -17,6 +19,11 @@ export default {
         </div>
 
     </div>
+</transition>
+
+
+
+
 </template>
 
 <style lang="scss">
@@ -70,11 +77,19 @@ export default {
             }
         }
     }
-
-  
 }
 
+.slide2-enter-active,
+.slide2-leave-active {
+transition: transform .4s, opacity .5s;
 
+}
+
+.slide2-enter-from,
+.slide2-leave-to {
+ transform: translateY(100%);
+opacity: 0;
+}
 
 </style>
 

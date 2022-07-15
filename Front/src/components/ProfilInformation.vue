@@ -1,23 +1,23 @@
-<script>
-export default {
-    name: 'ProfilInformation'
-}
-</script>
-
 <template>
     <div class="ProfilInformation">
         <div class="ProfilInformation__picture">
-            <img id="userPicture" class="ProfilInformation__picture-user" src="../assets/images/Photo CV.jpg">
+            <img id="userPicture" class="ProfilInformation__picture-user" src="../assets/images/Photo CV.jpg" alt="Votre photo de profil">
+   
         </div>
         <div class="ProfilInformation__pseudo">
             <p id="userPseudo" class="ProfilInformation__pseudo-text"> Pseudo</p>
+            
         </div>
     </div>
 
-    <div class="ProfilInformation__button">
-        <button id="modificationButton" class="ProfilInformation__button-modification"> Modifier vos informations </button>
-    </div>
 </template>
+<script>
+
+export default {
+    name: "ProfilInformation",
+
+}
+</script>
 
 <style lang="scss">
 @import "../assets/sass/main.scss"; 
@@ -38,6 +38,10 @@ export default {
         width: 200px;
         min-height: 200px;
         min-width: 200px;
+        border-radius: 100%;
+        border: 4px solid $color-primary;
+        
+        
 
         @include break-mobile {
             margin-left: 0; 
@@ -48,7 +52,16 @@ export default {
             height: 100%;
             object-fit: cover;
             border-radius: 100%;
-            border: 4px solid $color-primary;
+            transition: .3s ease-in-out;
+          
+
+            cursor: pointer;
+
+            &:hover {
+                filter: grayscale(80%) blur(1px);
+
+
+            }
         }
     }
 

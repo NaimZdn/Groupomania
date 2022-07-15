@@ -14,15 +14,15 @@ export default {
             </div>
 
             <div class="LoginMain__form">
-                <h1 class="LoginMain__form-header" > S'identifier </h1>
+                <h1 class="LoginMain__form-header"> S'identifier </h1>
 
                 <div class="LoginMain__input">
-                    <input id="mailInput" class="LoginMain__input-type" type="mail" placeholder="Email">
+                    <input id="mailInput" class="LoginMain__input-type" type="mail" placeholder="Email" aria-label="Entrez votre adresse mail">
                     <fa class="LoginMain__input-mail" icon="fa-solid fa-at" />
                 </div>
 
                 <div class="LoginMain__input">
-                    <input id="passwordInput" class="LoginMain__input-type" type='password' placeholder="Mot de passe">
+                    <input id="passwordInput" class="LoginMain__input-type" type='password' placeholder="Mot de passe" aria-label="Entrez votre mot de passe">
                     <fa class="LoginMain__input-password" icon="fa-solid fa-lock" />
                 </div>
 

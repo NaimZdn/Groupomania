@@ -10,14 +10,14 @@ export default {
 
         <div class="PostCreate__form">
           <div class="PostCreate__picture">
-            <img id="userPicture" class="PostCreate__picture-user" src="../assets/images/Photo CV.jpg" alt="Photo de profil de l'utilisateur connecté">
+            <img id="userPicture" class="PostCreate__picture-user" src="../assets/images/Photo CV.jpg" alt="Votre photo de profil">
           </div>
           <span id="createComment" class="PostCreate__comment" role="textbox" contenteditable></span>
         </div>
 
         <div class="PostCreate__send">
-          <label for="file-upload" class="PostCreate__import-file"> <fa icon="fa-solid fa-image" /> </label>
-          <input id="fileUpload" type="file">
+          <label for="file-upload" class="PostCreate__import-file" aria-label="Cliquez pour importer votre image"> <fa icon="fa-solid fa-image" /> 
+          <input id="fileUpload" class="PostCreate__input" type="file" aria-label="Importez votre image"> </label>
           <button id="postCreate" class="PostCreate__button">PUBLIER</button>
         </div>
       </div>
@@ -32,7 +32,7 @@ export default {
 .PostCreate {
 
     background-color: white;
-    margin: 60px 0 30px 0;
+    margin: 120px 0 30px 0;
     box-shadow: $primary-shadow;
     border-radius: 12px;
     padding-bottom: 30px;
@@ -91,6 +91,16 @@ export default {
     &__import-file {
         display: flex;
         align-items: center;
+        cursor: pointer;
+        margin-right: 20px;
+        padding: 5px 8px 3px 8px;
+
+        &:hover {
+            background-color: rgb($color-secondary, 0.5);
+            border-radius: 30px;
+            animation: bubble 0.5s;
+
+        }
 
         & .fa-image {
             font-size: 25px;
@@ -104,21 +114,16 @@ export default {
     }
 }
 
-label[for="file-upload"] {
 
-    cursor: pointer;
-    margin-right: 20px;
-    padding: 5px 8px 3px 8px;
-
-    &:hover {
-        background-color: rgb($color-secondary, 0.5);
-        border-radius: 30px;
-        animation: bubble 0.5s;
-
-    }
+input[type="file"] {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
 }
 
-#fileUpload {
-    display: none;
-}
 </style>

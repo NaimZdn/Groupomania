@@ -12,6 +12,8 @@ export default {
                 <button id="deleteUser" class="ProfilTabsSettings__delete-button" > Supprimer le compte </button>
             </div>
         </div>  
+
+        
     </article>
 
 </template>
@@ -48,4 +50,6 @@ export default {
         }
     }
 }
+
+
 </style>

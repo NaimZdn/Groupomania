@@ -176,10 +176,6 @@
 };
 
 
-
-
-
-
 @mixin ContainerFlex {
     .container-flex {
         display: flex;
@@ -253,6 +249,7 @@
         background-color: whitesmoke;
         border-radius: 6px;
 
+        
     }
 
     &-icon {
@@ -268,3 +265,19 @@
     }
 };
 
+
+
+
+
+@mixin Fade {
+    .OptionFade-enter-active,
+    .OptionFade-leave-active {
+        transition: opacity .2s;
+
+    }
+
+    .OptionFade-enter-from,
+    .OptionFade-leave-to {
+        opacity: 0;
+    }
+};
