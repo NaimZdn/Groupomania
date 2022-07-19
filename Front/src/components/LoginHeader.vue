@@ -14,7 +14,7 @@ export default {
 
         <div class="LoginHeader__routes">
           <router-link class="LoginHeader__routes-login" to="/login"> Se connecter </router-link>
-          <router-link class="LoginHeader__routes-signup" to="/sign-up"> S'inscrire </router-link>
+          <router-link class="LoginHeader__routes-signup" to="/signup"> S'inscrire </router-link>
         </div>
 
       </nav>

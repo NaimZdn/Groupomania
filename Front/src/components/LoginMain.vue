@@ -1,10 +1,3 @@
-<script>
-export default {
-    name: "LoginMain"
-}
-
-</script>
-
 <template>
     <main class="container">
         <section class="LoginMain">
@@ -34,6 +27,20 @@ export default {
         </section>
     </main>
 </template>
+
+<script>
+export default {
+    name: "LoginMain",
+    data(){
+        return {
+            mail: "", 
+            password: "", 
+ 
+        }
+    },
+};
+
+</script>
 
 <style lang="scss">
 @import "../assets/sass/main.scss"; 

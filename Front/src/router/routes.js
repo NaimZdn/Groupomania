@@ -9,13 +9,22 @@ import UserProfil from '../views/UserProfil.vue';
 const routes = [
     { path: '/', redirect: "/login"},
     { path: "/login", component: Login },
-    { path: "/sign-up", component: SignUp },
+    { path: "/signup", component: SignUp },
     { path: "/mainpage", component: MainPage },
     { path: "/profil", component: UserProfil},
     
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });
+
+router.beforeEach((to, from) => {
+
+    const publicPages = ["/login", "/signup"];
+        if (!publicPages.includes(to.path)) {
+            router.push("/login")
+        };
+
+});
 
 export default router; 
 
