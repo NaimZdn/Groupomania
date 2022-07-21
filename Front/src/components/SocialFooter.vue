@@ -42,6 +42,7 @@ export default {
     justify-content: center;
     gap: 70px;
     width: 100%;
+    
     margin-bottom: 10px;
     
     

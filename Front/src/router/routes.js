@@ -17,14 +17,14 @@ const routes = [
 
 const router = createRouter({ history: createWebHistory(), routes });
 
-router.beforeEach((to, from) => {
+//router.beforeEach((to, from) => {
 
-    const publicPages = ["/login", "/signup"];
-        if (!publicPages.includes(to.path)) {
-            router.push("/login")
-        };
+//    const publicPages = ["/login", "/signup"];
+ //       if (!publicPages.includes(to.path)) {
+  //          router.push("/login")
+  //      };
 
-});
+//});
 
 export default router; 
 

@@ -3,6 +3,8 @@ const app = express();
 const mongoose = require ('mongoose')
 
 const userRoutes = require('./routes/user-router'); 
+const mainRoutes = require('./routes/mainpage-router'); 
+const profilRoutes = require('./routes/profil-router'); 
 
 mongoose.connect('mongodb+srv://Namsco:OpenClassrooms@cluster0.zfow9fn.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
@@ -20,6 +22,8 @@ app.use((req, res, next) => {
 
 app.use(express.json()); 
 app.use('/api/auth', userRoutes); 
+app.use ('/api/mainpage', mainRoutes);
+app.use ('/api/profil', profilRoutes); 
 
 module.exports = app; 
 

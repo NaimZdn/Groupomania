@@ -3,49 +3,122 @@
         <section class="LoginMain">
 
             <div class="LoginMain__illustration ">
-                <img class="LoginMain__illustration-picture" src="../assets/images/Illustration-login.png" alt="Illustration Login">
+                <img class="LoginMain__illustration-picture" src="../assets/images/Illustration-login.png"
+                    alt="Illustration Login">
             </div>
 
             <div class="LoginMain__form">
                 <h1 class="LoginMain__form-header"> S'identifier </h1>
 
                 <div class="LoginMain__input">
-                    <input id="mailInput" class="LoginMain__input-type" type="mail" placeholder="Email" aria-label="Entrez votre adresse mail">
+                    <input id="mailInput" class="LoginMain__input-type" type="mail" placeholder="Email"
+                        aria-label="Entrez votre adresse mail" v-model="email">
                     <fa class="LoginMain__input-mail" icon="fa-solid fa-at" />
+                    <span class="SignUpMain__input-error" v-if="v$.email.$error"> Veuillez entrer un email valide </span>
                 </div>
 
                 <div class="LoginMain__input">
-                    <input id="passwordInput" class="LoginMain__input-type" type='password' placeholder="Mot de passe" aria-label="Entrez votre mot de passe">
+                    <input id="passwordInput" class="LoginMain__input-type" type='password' placeholder="Mot de passe"
+                        aria-label="Entrez votre mot de passe" v-model="password">
                     <fa class="LoginMain__input-password" icon="fa-solid fa-lock" />
+                    <span class="SignUpMain__input-error" v-if="v$.password.$error"> Veuillez entrer un mot de passe  valide </span>
                 </div>
 
                 <div class="LoginMain__button">
-                    <button id="logButton" class="LoginMain__button-login"> Se connecter </button>
+                    <button id="logButton" class="LoginMain__button-login" @click="submitForm"> Se connecter </button>
                 </div>
 
             </div>
+        </section>
+
+        <section class="test">
+            <transition name=OptionFade appear>
+                <div class="LoginMain__option-content" v-if="popup">
+                    <div class="LoginMain__option-button">
+
+                        <router-link to="/profil">
+                            <div class="LoginMain__option-profil">
+                                <fa class="LoginMain__option-profil-icon" icon="fa-solid fa-circle-xmark" />
+                                <span class="LoginMain__option-profil-text"> L'identification a échouée, les informations rensignées ne sont pas valides. </span>
+                            </div>
+                        </router-link>
+                    </div>
+                </div>
+            </transition>
+
+            <div class="LoginMain__option-bg" v-if="popup" @click="popup = false"> </div>
         </section>
     </main>
 </template>
 
 <script>
+import axios from 'axios';
+import useVuelidate from '@vuelidate/core';
+import { required, email, helpers } from '@vuelidate/validators';
+
+const regexPassword = helpers.regex(/^[A-z0-9éèôöîïûùü' -/*]{8,}$/);
+
 export default {
+    setup() {
+        return { v$: useVuelidate() }
+    },
     name: "LoginMain",
-    data(){
+    data() {
         return {
-            mail: "", 
-            password: "", 
- 
+            email: "",
+            password: "",
+            error: null,
+            popup: false,
+
+        };
+    },
+
+    validations() {
+        return {
+            email: { required, email },
+            password: {
+                required,
+                regexPassword,
+
+            },
         }
+    },
+
+    methods: {
+        submitForm() {
+            this.v$.$validate()
+            if (!this.v$.$error) {
+                alert("C'est carré ")
+                const dataUser = {
+                    email: this.email,
+                    password: this.password,
+                };
+                console.log(dataUser);
+                axios
+                    .post("http://localhost:3000/api/auth/login", dataUser)
+                    .then((response) => {
+                        console.log(response.data);
+                        this.$router.push("/mainpage");
+
+                    })
+                    .catch((error) => {
+                        alert("L'Email et/ou le Mot de passe est incorrect");
+                        this.popup = true;
+                        console.log(error);
+                    });
+            } else {
+                alert("Pas carré");
+            };
+        },
     },
 };
 
 </script>
 
 <style lang="scss">
-@import "../assets/sass/main.scss"; 
+@import "../assets/sass/main.scss";
 
-@include Container; 
+@include Container;
 
 .LoginMain {
     display: flex;
@@ -58,8 +131,8 @@ export default {
     }
 
     @include break-mobile {
-         margin: 0 15px 0px 15px;
-    
+        margin: 0 15px 0px 15px;
+
     }
 
     &__illustration {
@@ -99,7 +172,7 @@ export default {
             text-align: center;
             color: $color-primary;
             font-size: 48px;
-            margin: 30px 0 50px 0; 
+            margin: 30px 0 50px 0;
 
             @include break-mobile {
                 font-size: 30px;
@@ -109,63 +182,147 @@ export default {
     }
 
     &__input {
+        position: relative;
 
         &-type {
-            @include LogInput; 
+            @include LogInput;
 
         }
 
         &-mail {
             position: absolute;
             left: 20px;
-            top: 162px;
+            top: 38px;
             font-size: 35px;
             color: $color-primary;
 
             @include break-mobile {
                 position: absolute;
                 left: 20px;
-                top: 120px;
+                top: 38px;
                 height: 35px;
 
-            }   
+            }
 
             &:hover {
                 animation: bubble 0.5s
-
             }
         }
 
         &-password {
             position: absolute;
             left: 27px;
-            top: 268px;
+            top: 38px;
             height: 30px;
             color: $color-primary;
 
             @include break-mobile {
                 position: absolute;
                 left: 27px;
-                top: 227px;
+                top: 38px;
                 height: 30px;
             }
 
             &:hover {
                 animation: bubble 0.5s
-
             }
         }
     }
+
     &__button {
         display: flex;
         justify-content: center;
-        margin-top: 12px;
+        margin-top: 16px;
         margin-bottom: 30px;
 
         &-login {
-          @include LogButton; 
+            @include LogButton;
 
         }
     }
-} 
+
+    &__option {
+
+        &-content {
+            display: flex;
+            gap: 70px;
+            width: 100%;
+
+
+            z-index: 99;
+            flex-direction: column;
+            display: flex;
+            min-width: 10%;
+            max-width: 400px;
+            background-color: $color-primary;
+            border-radius: 6px;
+            box-shadow: $primary-shadow;
+
+            @include break-tablet {
+                bottom: -211px;
+                left: 0;
+                margin: 0px;
+
+            }
+
+            @include break-mobile {
+                bottom: -193px;
+                left: 0;
+                margin: 0px;
+
+            }
+        }
+
+        &-button {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+        }
+
+        &-profil {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+            cursor: pointer;
+            color: white;
+
+            &-icon {
+
+                font-size: 30px;
+                padding-right: 20px;
+
+            }
+
+            &-text {
+                font-size: 16px;
+                font-weight: bold;
+
+
+            }
+        }
+
+        &-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 98;
+            background-color: rgba(0, 0, 0, 0);
+
+        }
+    }
+};
+
+.test {
+    display: flex;
+    margin: 0px 30px 0px 30px;
+    position: fixed;
+    bottom: 15px;
+
+    @include break-tablet {
+        bottom: 15px;
+    }
+
+};
 </style>
