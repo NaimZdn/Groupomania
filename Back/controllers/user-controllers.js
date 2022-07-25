@@ -10,7 +10,10 @@ exports.signup = (req, res, next) => {
             const user = new User({
                 pseudo: req.body.pseudo,
                 email: req.body.email, 
-                password: hash
+                password: hash,
+                picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/random-picture.png`,
+                bio:"",
+
             });
             user.save()
                 .then(() => res.status (201).json ({message: "Utilisateur enregistré ! "}))
