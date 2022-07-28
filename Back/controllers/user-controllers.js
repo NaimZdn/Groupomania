@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const bcrypt = require('bcrypt');
 const webToken = require('jsonwebtoken');
+const cryptoJs = require('crypto-js')
 
 
 const dbToken = process.env.DB_TOKEN;
@@ -75,7 +76,7 @@ exports.getAllUsers = (req, res) => {
 }
 
 
-exports.updateProfil = (req, res) => {
+/*exports.updateProfil = (req, res) => {
 
     if (req.file) {
         User.findOne({ userId: req.params.id })
@@ -98,9 +99,7 @@ exports.updateProfil = (req, res) => {
         .then(() => res.status(200).json({ message: 'Le post a bien été modifié' }))
         .catch(error => res.status(400).json({ error }));
 
-};
-
-
+};*/
 
 
 exports.deleteAccount = async (req, res) => {
