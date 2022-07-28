@@ -60,6 +60,49 @@ exports.logout = (req, res) => {
     res.status(202).clearCookie('webToken').send({ message: 'Vous avez bien été deconnecté' })
 }
 
+exports.getOneUser = (req, res) => {
+
+    User.findOne ({_id : req.params.id}) 
+        .then(User => res.status(200).json(User))
+        .catch(error => res.status(400).json({ message: 'Utilisateur introuvable' }));
+
+}
+
+exports.getAllUsers = (req, res) => {
+    User.find ()
+    .then(User => res.status(200).json(User))
+    .catch(error => res.status(400).json({ error }))
+}
+
+
+exports.updateProfil = (req, res) => {
+
+    if (req.file) {
+        User.findOne({ userId: req.params.id })
+            .then((user) => {
+                const filename = user.picture.split('/images/')[1];
+                fs.unlink(`images/${filename}`, (error) => {
+                    if (error) throw error;
+                });
+            })
+            .catch(error => res.status(404).json({ error }));
+    };
+
+    const updatedRecord = {
+        bio: req.body.bio,
+        picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+    };
+    
+    delete updatedRecord.userId
+    User.updateOne({ userId: req.params.id }, { ...updatedRecord, _id: req.params.id })
+        .then(() => res.status(200).json({ message: 'Le post a bien été modifié' }))
+        .catch(error => res.status(400).json({ error }));
+
+};
+
+
+
+
 exports.deleteAccount = async (req, res) => {
 
     await Post.find({ userId: req.params.id })
