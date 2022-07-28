@@ -3,19 +3,20 @@ const router = express.Router();
 const multer = require('../middlewares/multer-config'); 
 
 const auth = require('../middlewares/auth'); 
+const idCompare = require('../middlewares/idCompare');
 
 const postCrtl = require ('../controllers/mainpage-controllers'); 
 
-router.get('/', postCrtl.readPost); 
-router.post('/', multer, postCrtl.createPost);
-router.put('/:id', multer, postCrtl.updatePost); 
-router.delete('/:id', multer, postCrtl.deletePost); 
-router.post('/:id/like', postCrtl.likePost); 
+router.get('/', auth, postCrtl.readPost); 
+router.post('/', auth, multer, postCrtl.createPost);
+router.put('/:id', auth, idCompare, multer, postCrtl.updatePost); 
+router.delete('/:id', auth, idCompare, multer, postCrtl.deletePost); 
+router.post('/:id/like', auth, postCrtl.likePost); 
 
 // comments
-router.patch('/comment/:id',postCrtl.addComment); 
-router.patch('/edit-comment/:id', postCrtl.editComment); 
-router.patch('/delete-comment/:id', postCrtl.deleteComment); 
+router.patch('/comment/:id', auth, postCrtl.addComment); 
+router.patch('/edit-comment/:id', auth, idCompare, postCrtl.editComment); 
+router.patch('/delete-comment/:id', auth, idCompare, postCrtl.deleteComment); 
 
 
 module.exports = router; 

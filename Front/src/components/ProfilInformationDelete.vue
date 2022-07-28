@@ -16,7 +16,7 @@
 
          <div class="ProfilInformationModification__send">
             <label for="file-upload" class="ProfilInformationModification__import-file"> <fa icon="fa-solid fa-camera" /> </label>
-            <input id="fileUpload" class="ProfilInformationModification__input" type="file"> 
+            <input id="fileUpload" class="ProfilInformationModification__input" type="file" name="file"> 
         </div>
 
 

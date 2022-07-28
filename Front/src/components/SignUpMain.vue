@@ -51,7 +51,7 @@ import axios from 'axios';
 import useVuelidate from '@vuelidate/core';
 import { required, email, helpers } from '@vuelidate/validators';
 
-const regexPseudo = helpers.regex(/^[a-z0-9éèôöîïûùü' -]{2,20}$/);
+const regexPseudo = helpers.regex(/^[A-z0-9éèôöîïûùü' -]{2,20}$/);
 const regexPassword = helpers.regex(/^[A-z0-9éèôöîïûùü' -/*]{8,}$/);
 
 export default {
