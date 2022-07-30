@@ -8,16 +8,11 @@ const userSchema = mongoose.Schema({
                 return /^[A-z0-9éèôöîïûùü' -/]{2,20}$/.test(v);
             },
         },},
-    email: { type: String, required: true, unique: true, 
-        validate: {
-            validator: function(v) {
-                return /^[a-z0-9.-_]+[@]{1}[a-z0-9.-_]+[.]{1}[a-z]{2,10}$/.test(v);
-            },
-        } },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     picture: { type: String },
     bio: { type: String, max: 500 },
-
+    isAdmin:Boolean
 });
 
 userSchema.plugin(uniqueValidator);

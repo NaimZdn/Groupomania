@@ -1,3 +1,5 @@
+require('dotenv').config();
+const { MongoClient } = require('mongodb');
 const User = require('../models/user-model');
 const Post = require('../models/post-model');
 const fs = require('fs');
@@ -6,23 +8,32 @@ const bcrypt = require('bcrypt');
 const webToken = require('jsonwebtoken');
 const cryptoJs = require('crypto-js')
 
+const dbUrl = process.env.DB_URL;
+
+
 
 const dbToken = process.env.DB_TOKEN;
+const dbCryptoJs = process.env.DB_CRYPTOJS
 const tokenExpiration = '24h';
-const createToken = (id) => {
-    return webToken.sign({ id }, dbToken, { expiresIn: '24h' })
+const createToken = (id, isAdmin) => {
+    return webToken.sign({ id, isAdmin }, dbToken, { expiresIn: '24h' })
 }
 
 
 exports.signup = (req, res, next) => {
+
+    const emailCryptoJs = cryptoJs.HmacSHA256(req.body.email, dbCryptoJs).toString();
+
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
                 pseudo: req.body.pseudo,
-                email: req.body.email,
+                email: emailCryptoJs,
                 password: hash,
                 picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/random-picture.png`,
                 bio: "",
+                isAdmin: false, 
+
 
             });
             user.save()
@@ -34,7 +45,10 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-    User.findOne({ email: req.body.email })
+
+    const emailCryptoJs = cryptoJs.HmacSHA256(req.body.email, dbCryptoJs).toString();
+
+    User.findOne({ email: emailCryptoJs })
         .then(user => {
             if (!user) {
                 return res.status(401).json({ error: " Utilisateur introuvable " });
@@ -44,8 +58,9 @@ exports.login = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ error: "Mot de passe invalide " });
                     }
-                    const token = createToken(user._id);
+                    const token = createToken(user._id, user.isAdmin);
                     res.cookie('webToken', token, { httpOnly: true, expiresIn: '24h' })
+                
                     res.status(200).json({
                         userId: user._id,
                         pseudo: user.pseudo,
@@ -63,16 +78,16 @@ exports.logout = (req, res) => {
 
 exports.getOneUser = (req, res) => {
 
-    User.findOne ({_id : req.params.id}) 
+    User.findOne({ _id: req.params.id })
         .then(User => res.status(200).json(User))
         .catch(error => res.status(400).json({ message: 'Utilisateur introuvable' }));
 
 }
 
 exports.getAllUsers = (req, res) => {
-    User.find ()
-    .then(User => res.status(200).json(User))
-    .catch(error => res.status(400).json({ error }))
+    User.find()
+        .then(User => res.status(200).json(User))
+        .catch(error => res.status(400).json({ error }))
 }
 
 
@@ -101,13 +116,39 @@ exports.getAllUsers = (req, res) => {
 
 };*/
 
+exports.deleteAccount = (req, res, next) => {
 
-exports.deleteAccount = async (req, res) => {
+    const uri = dbUrl
 
-    await Post.find({ userId: req.params.id })
-        .then(Post => res.status(200).json(Post))
-        .catch(error => res.status(400).json({ error }));
+    const client = new MongoClient(uri)
+
+    try {
+         client.connect(function deletePicture(err, client) {
+            if (err) throw err;
+            client.db("test").collection('posts').find({ userId: req.params.id }).toArray((err, result) => {
+                if (err) throw err;
+                for (res of result) {
+                    const filename = res.picture.split('/images/')[1];
+                    fs.unlink(`images/${filename}`, () => {
+                        Post.deleteMany({ userId: req.params.id })
+                        .then(User.deleteOne({userId: req.params.id}))
+                        .catch(() => console.log('Connexion à MongoDB échouée !'));
+                    });
+                } 
+            })  
+
+        }); 
+
+
+      
+
+    } catch (err) {
+        return res.status(400).send(err);
+
+    }
 
 
 }
+
+
 

@@ -6,9 +6,8 @@ module.exports = (req, res, next) => {
     try {
         const token = req.cookies.webToken; 
         const decodedToken = webToken.verify(token, dbToken);
-        const userId = decodedToken.userId;
+        const userId = decodedToken.id;
         if (req.body.userId && req.body.userId !== userId) {
-            console.log(userId)
             throw 'User ID non valable !'; 
         } else {
             next();

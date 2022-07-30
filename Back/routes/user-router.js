@@ -5,9 +5,11 @@ const userCtrl = require('../controllers/user-controllers');
 const auth = require('../middlewares/auth'); 
 const multer = require('../middlewares/multer-config'); 
 const passwordValidator = require('../middlewares/password-validator');
+const emailValidator = require('../middlewares/email-validator');
+const isAdmin = require('../middlewares/admin'); 
 
-router.post('/login', userCtrl.login); 
-router.post('/signup', passwordValidator, userCtrl.signup);
+router.post('/login', emailValidator, userCtrl.login); 
+router.post('/signup', emailValidator, passwordValidator, userCtrl.signup);
 router.get('/logout', auth, userCtrl.logout); 
 
 router.get('/user/:id', auth, userCtrl.getOneUser);

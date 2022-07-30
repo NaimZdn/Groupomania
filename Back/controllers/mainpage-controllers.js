@@ -2,12 +2,17 @@ const Post = require('../models/post-model');
 const ObjectID = require('mongoose').Types.ObjectId;
 const fs = require('fs')
 
-
 exports.readPost = (req, res) => {
     Post.find() 
         .then(Post => res.status(200).json(Post))
         .catch(error => res.status(400).json({ error }));
-    };
+};
+
+exports.getUsersPosts = (req, res) => {
+    Post.find ({userId: req.params.id})
+    .then(Post => res.status(200).json(Post))
+    .catch(error => res.status(400).json({ error }));
+};
 
 
 exports.createPost = async (req, res) => {
@@ -79,24 +84,31 @@ exports.likePost = (req, res) => {
 
     Post.findOne({ _id: postId })
         .then(postArg => {
-            // Si l'utilisateur n'a pas encore aimé ou non une sauce
-            if (postArg.usersLiked.indexOf(userId) == -1) {
-                // Si l'utilisateur aime la sauce
-                if (like === 1) {
-                    postArg.usersLiked.push(userId);
-                    postArg.likes += like;
-
-                } else return res.status(400).json({ message: 'You cant Unlike twice' })
-            }
-            // Si l'utilisateur veut annuler son "like"
-            if (postArg.usersLiked.indexOf(userId) != -1 && like == 0) {
-                const likesIndex = postArg.usersLiked.findIndex(user => user === userId);
-                postArg.usersLiked.splice(likesIndex, 1);
-                postArg.likes -= 1;
+            if (!postArg.usersLiked.includes(userId) && like === 1 ) {           
+                Post.updateOne({_id : req.params.id},
+                    {
+                        $inc: {likes: 1},
+                        $push: {usersLiked: userId}
+                    })
+                    .then (() => res.status(201).json({message : 'Le post a bien été liké '}))
+                    .catch(error => res.status(400).json({ error }));
+            } else if (like >= 1 ) {
+                res.status(400).json({ error : "Vous ne pouvez pas liké plusieurs fois un même post" }) 
             }
 
-            postArg.save();
-            res.status(201).json({ message: 'Like / Unlike updated' });
+            if (postArg.usersLiked.includes(userId) && like === 0 ) {
+                
+                Post.updateOne({_id : req.params.id},
+                    {
+                        $inc: {likes: -1},
+                        $pull: {usersLiked: userId}
+                    })
+                    .then (() => res.status(201).json({message : 'Votre like a bien été retiré '}))
+                    .catch(error => res.status(400).json({ error }));
+            } else if (like <= 0 ) {
+                res.status(400).json({ error : "Vous ne pouvez pas liké plusieurs fois un même post" }) 
+            }
+
         })
         .catch(error => res.status(500).json({ error }));
 };
