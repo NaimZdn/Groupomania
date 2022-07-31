@@ -1,6 +1,10 @@
 const Post = require('../models/post-model');
 const ObjectID = require('mongoose').Types.ObjectId;
-const fs = require('fs')
+const webToken = require('jsonwebtoken');
+const fs = require('fs');
+const sharp = require('sharp');
+
+const dbToken = process.env.DB_TOKEN;
 
 exports.readPost = (req, res) => {
     Post.find() 
@@ -16,8 +20,11 @@ exports.getUsersPosts = (req, res) => {
 
 
 exports.createPost = async (req, res) => {
+    const token = req.cookies.webToken; 
+    const decodedToken = webToken.verify(token, dbToken);
+  
     const newPost = new Post({
-        userId: req.body.userId,
+        userId: decodedToken.id,
         message: req.body.message,
         picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         likers: [],
@@ -79,7 +86,11 @@ exports.deletePost = (req, res) => {
 };
 
 exports.likePost = (req, res) => {
-    const { like, userId } = req.body
+    const token = req.cookies.webToken; 
+    const decodedToken = webToken.verify(token, dbToken);
+    const userId = decodedToken.id
+
+    const like = req.body.like
     let postId = req.params.id
 
     Post.findOne({ _id: postId })
@@ -114,6 +125,13 @@ exports.likePost = (req, res) => {
 };
 
 exports.addComment = (req, res) => {
+    const token = req.cookies.webToken; 
+    const decodedToken = webToken.verify(token, dbToken);
+    const userId = decodedToken.id; 
+    const pseudo = decodedToken.pseudo; 
+    console.log(decodedToken.pseudo)
+     
+
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
 
@@ -123,9 +141,9 @@ exports.addComment = (req, res) => {
             {
                 $push: {
                     comments: {
-                        commenter: req.body.commenterId,
-                        commenterPseudo: req.body.commenterPseudo,
-                        text: req.body.text,
+                        userId: decodedToken.id,
+                        pseudo: decodedToken.pseudo,
+                        comment: req.body.comment,
                         timestamp: new Date().getTime(),
                     }
                 }
@@ -155,7 +173,7 @@ exports.editComment = (req, res) => {
             );
 
             if (!theComment) return res.status(404).send("Comment not found");
-            theComment.text = req.body.text;
+            theComment.comment = req.body.comment;
 
             return docs.save((err) => {
                 if (!err) return res.status(200).send(docs);
@@ -168,6 +186,10 @@ exports.editComment = (req, res) => {
 };
 
 exports.deleteComment = (req, res) => {
+    const token = req.cookies.webToken; 
+    const decodedToken = webToken.verify(token, dbToken);
+    const userId = decodedToken.id; 
+
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
 
@@ -178,6 +200,7 @@ exports.deleteComment = (req, res) => {
                 $pull: {
                     comments: {
                         _id: req.body.commentId,
+                        userId: userId, 
                     },
                 },
             },

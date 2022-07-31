@@ -9,9 +9,9 @@ const postSchema = mongoose.Schema({
     comments: {
         type: [
             {
-                commenterId: String,
-                commenterPseudo: String,
-                text: {type: String},
+                userId: String,
+                pseudo: String,
+                comment: String,
                // timestamp: Number,
 
             },

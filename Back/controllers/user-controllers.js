@@ -3,6 +3,7 @@ const { MongoClient } = require('mongodb');
 const User = require('../models/user-model');
 const Post = require('../models/post-model');
 const fs = require('fs');
+const sharp = require('sharp');
 
 const bcrypt = require('bcrypt');
 const webToken = require('jsonwebtoken');
@@ -10,13 +11,11 @@ const cryptoJs = require('crypto-js')
 
 const dbUrl = process.env.DB_URL;
 
-
-
 const dbToken = process.env.DB_TOKEN;
 const dbCryptoJs = process.env.DB_CRYPTOJS
 const tokenExpiration = '24h';
-const createToken = (id, isAdmin) => {
-    return webToken.sign({ id, isAdmin }, dbToken, { expiresIn: '24h' })
+const createToken = (id, isAdmin, pseudo) => {
+    return webToken.sign({ id, isAdmin, pseudo }, dbToken, { expiresIn: '24h' })
 }
 
 
@@ -32,7 +31,7 @@ exports.signup = (req, res, next) => {
                 password: hash,
                 picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/random-picture.png`,
                 bio: "",
-                isAdmin: false, 
+                isAdmin: false,
 
 
             });
@@ -58,9 +57,9 @@ exports.login = (req, res, next) => {
                     if (!valid) {
                         return res.status(401).json({ error: "Mot de passe invalide " });
                     }
-                    const token = createToken(user._id, user.isAdmin);
+                    const token = createToken(user._id, user.isAdmin, user.pseudo);
                     res.cookie('webToken', token, { httpOnly: true, expiresIn: '24h' })
-                
+
                     res.status(200).json({
                         userId: user._id,
                         pseudo: user.pseudo,
@@ -91,30 +90,82 @@ exports.getAllUsers = (req, res) => {
 }
 
 
-/*exports.updateProfil = (req, res) => {
+exports.updateProfil = (req, res) => {
 
-    if (req.file) {
-        User.findOne({ userId: req.params.id })
-            .then((user) => {
-                const filename = user.picture.split('/images/')[1];
-                fs.unlink(`images/${filename}`, (error) => {
+
+
+    User.findOne({ _id: req.params.id })
+        .then((user) => {
+            const filename = user.picture.split('/images/uploads/')[1];
+
+            if (filename == "random-picture.png") {
+                console.log('test')
+
+                const updatedRecord = {
+                    bio: req.body.bio,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${req.file.filename}`,
+                };
+
+                delete updatedRecord.id
+                User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié' }))
+                    .catch(error => res.status(400).json({ error }));
+
+            } else {
+                console.log('test2')
+                const filename = user.picture.split('/images/uploads/')[1];
+                console.log(filename)
+                fs.unlink(`images/uploads/${filename}`, (error) => {
                     if (error) throw error;
                 });
-            })
-            .catch(error => res.status(404).json({ error }));
-    };
+        
+                console.log(`images/uploads/profil/${req.file.filename}`)   
+                const sizeFile = `./images/uploads/profil/${req.file.filename}`
 
-    const updatedRecord = {
-        bio: req.body.bio,
-        picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-    };
-    
-    delete updatedRecord.userId
-    User.updateOne({ userId: req.params.id }, { ...updatedRecord, _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Le post a bien été modifié' }))
-        .catch(error => res.status(400).json({ error }));
 
-};*/
+                
+                sharp.cache(false)
+                sharp(`./images/uploads/profil/${req.file.filename}`).resize(50).webp().toFile(`./images/uploads/${req.file.filename}`); 
+                
+                
+                
+ 
+
+
+
+
+
+         
+                console.log(sizeFile)
+                console.log('cc')
+            
+               
+     
+                const updatedRecord = {
+                    bio: req.body.bio,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/${req.file.filename}`,
+                };
+
+                
+
+
+                User.updateOne({ id: req.params.id }, { ...updatedRecord, id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié' }))
+                    .catch(error => res.status(400).json({ error }));
+
+                const dir1 = './images/uploads/profil'
+                fs.rm(dir1, { recursive: true }, (err) => {
+                    if (err) {
+                        console.log(err)
+                    }
+                })
+
+
+            }
+        })
+        .catch(error => res.status(404).json({ error }));
+};
+
 
 exports.deleteAccount = (req, res, next) => {
 
@@ -123,7 +174,7 @@ exports.deleteAccount = (req, res, next) => {
     const client = new MongoClient(uri)
 
     try {
-         client.connect(function deletePicture(err, client) {
+        client.connect(function deletePicture(err, client) {
             if (err) throw err;
             client.db("test").collection('posts').find({ userId: req.params.id }).toArray((err, result) => {
                 if (err) throw err;
@@ -131,16 +182,16 @@ exports.deleteAccount = (req, res, next) => {
                     const filename = res.picture.split('/images/')[1];
                     fs.unlink(`images/${filename}`, () => {
                         Post.deleteMany({ userId: req.params.id })
-                        .then(User.deleteOne({userId: req.params.id}))
-                        .catch(() => console.log('Connexion à MongoDB échouée !'));
+                            .then(User.deleteOne({ userId: req.params.id }))
+                            .catch(() => console.log('Connexion à MongoDB échouée !'));
                     });
-                } 
-            })  
+                }
+            })
 
-        }); 
+        });
 
 
-      
+
 
     } catch (err) {
         return res.status(400).send(err);
