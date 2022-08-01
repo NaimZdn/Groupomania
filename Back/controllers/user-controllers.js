@@ -4,6 +4,7 @@ const User = require('../models/user-model');
 const Post = require('../models/post-model');
 const fs = require('fs');
 const sharp = require('sharp');
+const path = require('path');
 
 const bcrypt = require('bcrypt');
 const webToken = require('jsonwebtoken');
@@ -17,6 +18,10 @@ const tokenExpiration = '24h';
 const createToken = (id, isAdmin, pseudo) => {
     return webToken.sign({ id, isAdmin, pseudo }, dbToken, { expiresIn: '24h' })
 }
+
+
+
+
 
 
 exports.signup = (req, res, next) => {
@@ -84,6 +89,7 @@ exports.getOneUser = (req, res) => {
 }
 
 exports.getAllUsers = (req, res) => {
+
     User.find()
         .then(User => res.status(200).json(User))
         .catch(error => res.status(400).json({ error }))
@@ -92,18 +98,20 @@ exports.getAllUsers = (req, res) => {
 
 exports.updateProfil = (req, res) => {
 
-
-
     User.findOne({ _id: req.params.id })
         .then((user) => {
-            const filename = user.picture.split('/images/uploads/')[1];
+            const filename = user.picture.split('/images/uploads/profil')[1];
+            //console.log(filename)
 
-            if (filename == "random-picture.png") {
-                console.log('test')
+            if (filename == "/random-picture.png") {
+                //console.log('test')
+
+                const test = req.file.filename.split('.')[0]
+                sharp(`./images/uploads/profil-BR/${req.file.filename}`).webp().resize(50).toFile(`./images/uploads/profil/${test}.webp`)
 
                 const updatedRecord = {
                     bio: req.body.bio,
-                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${req.file.filename}`,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${test}.webp`,
                 };
 
                 delete updatedRecord.id
@@ -112,54 +120,29 @@ exports.updateProfil = (req, res) => {
                     .catch(error => res.status(400).json({ error }));
 
             } else {
-                console.log('test2')
-                const filename = user.picture.split('/images/uploads/')[1];
-                console.log(filename)
-                fs.unlink(`images/uploads/${filename}`, (error) => {
+                //console.log('test2')
+                const filename = user.picture.split('/images/uploads/profil')[1];
+                //console.log(filename)
+                fs.unlink(`images/uploads/profil/${filename}`, (error) => {
                     if (error) throw error;
                 });
-        
-                console.log(`images/uploads/profil/${req.file.filename}`)   
+
+                //console.log(`images/uploads/profil/${req.file.filename}`)
                 const sizeFile = `./images/uploads/profil/${req.file.filename}`
 
+                const test = req.file.filename.split('.')[0]
+                //console.log(test)
 
-                
-                sharp.cache(false)
-                sharp(`./images/uploads/profil/${req.file.filename}`).resize(50).webp().toFile(`./images/uploads/${req.file.filename}`); 
-                
-                
-                
- 
+                sharp(`./images/uploads/profil-BR/${req.file.filename}`).webp().resize(50).toFile(`./images/uploads/profil/${test}.webp`)
 
-
-
-
-
-         
-                console.log(sizeFile)
-                console.log('cc')
-            
-               
-     
                 const updatedRecord = {
                     bio: req.body.bio,
-                    picture: `${req.protocol}://${req.get('host')}/images/uploads/${req.file.filename}`,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${test}.webp`,
                 };
 
-                
-
-
-                User.updateOne({ id: req.params.id }, { ...updatedRecord, id: req.params.id })
+                User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
                     .then(() => res.status(200).json({ message: 'Le profil a bien été modifié' }))
                     .catch(error => res.status(400).json({ error }));
-
-                const dir1 = './images/uploads/profil'
-                fs.rm(dir1, { recursive: true }, (err) => {
-                    if (err) {
-                        console.log(err)
-                    }
-                })
-
 
             }
         })
@@ -170,34 +153,94 @@ exports.updateProfil = (req, res) => {
 exports.deleteAccount = (req, res, next) => {
 
     const uri = dbUrl
-
     const client = new MongoClient(uri)
 
     try {
         client.connect(function deletePicture(err, client) {
             if (err) throw err;
             client.db("test").collection('posts').find({ userId: req.params.id }).toArray((err, result) => {
+
                 if (err) throw err;
+
                 for (res of result) {
                     const filename = res.picture.split('/images/')[1];
+
                     fs.unlink(`images/${filename}`, () => {
-                        Post.deleteMany({ userId: req.params.id })
-                            .then(User.deleteOne({ userId: req.params.id }))
-                            .catch(() => console.log('Connexion à MongoDB échouée !'));
+                        if (err) throw error;
                     });
+
+                    Post.deleteMany({ userId: req.params.id })
+                }
+            })
+        });
+        client.close();
+
+        client.connect(function deleteUser(err, client, response) {
+            if (err) throw err;
+            client.db("test").collection('users').find().toArray((err, result) => {
+                if (err) throw err;
+
+                for (res of result) {
+                    const userId = res._id.valueOf()
+                    const isAdmin = res.isAdmin
+                    const userPicture = res.picture.split('http://localhost:3000/images/uploads/profil/')[1]
+                    //console.log(userPicture)
+
+                    if (userId === req.params.id || isAdmin === true) {
+                        console.log('good')
+
+                        if (userPicture === 'random-picture.png') {
+                            console.log('photo de profil basique')
+                          /*  User.deleteOne({ _id: userId })
+                            .then()
+                            .catch()
+
+                            console.log('delete')*/
+                            
+
+                        }else {
+                            console.log('photo de profil modifiée')
+                            /*fs.unlink(`./images/uploads/profil/${userPicture}`, ()=> {
+                                if (err) throw error;
+                            })
+
+                            User.deleteOne({ _id: userId })
+                            .then()
+                            .catch()
+
+                            console.log('delete')*/
+                            
+
+                            
+                        }
+                        
+                    }
                 }
             })
 
-        });
+        })
+        client.close(); 
+        return res.status(200).json({message : "Votre compte a bien été supprimé"})
 
+         
+        
 
-
+        
+        
 
     } catch (err) {
         return res.status(400).send(err);
 
     }
 
+    /* const testFolder = './images/uploads/profil-BR/'
+     fs.readdir(testFolder, (err, files) => {
+         files.forEach(file => {
+           fs.unlink(path.join(testFolder, file), err => {
+             if(err) console.log(err)
+           }); 
+         });
+       });*/
 
 }
 
