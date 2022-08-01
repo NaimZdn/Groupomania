@@ -19,11 +19,6 @@ const createToken = (id, isAdmin, pseudo) => {
     return webToken.sign({ id, isAdmin, pseudo }, dbToken, { expiresIn: '24h' })
 }
 
-
-
-
-
-
 exports.signup = (req, res, next) => {
 
     const emailCryptoJs = cryptoJs.HmacSHA256(req.body.email, dbCryptoJs).toString();
@@ -115,7 +110,7 @@ exports.updateProfil = (req, res) => {
                 };
 
                 delete updatedRecord.id
-                User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
+                 User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
                     .then(() => res.status(200).json({ message: 'Le profil a bien été modifié' }))
                     .catch(error => res.status(400).json({ error }));
 
@@ -152,10 +147,11 @@ exports.updateProfil = (req, res) => {
 
 exports.deleteAccount = (req, res, next) => {
 
-    const uri = dbUrl
-    const client = new MongoClient(uri)
+    const uri = dbUrl;
+    const client = new MongoClient(uri);
 
     try {
+
         client.connect(function deletePicture(err, client) {
             if (err) throw err;
             client.db("test").collection('posts').find({ userId: req.params.id }).toArray((err, result) => {
@@ -170,79 +166,77 @@ exports.deleteAccount = (req, res, next) => {
                     });
 
                     Post.deleteMany({ userId: req.params.id })
-                }
-            })
+                        .then()
+                        .catch()
+                };
+            });
         });
         client.close();
 
-        client.connect(function deleteUser(err, client, response) {
+        client.connect(function deleteUser(err, client) {
             if (err) throw err;
             client.db("test").collection('users').find().toArray((err, result) => {
                 if (err) throw err;
 
                 for (res of result) {
-                    const userId = res._id.valueOf()
-                    const isAdmin = res.isAdmin
-                    const userPicture = res.picture.split('http://localhost:3000/images/uploads/profil/')[1]
+                    const userId = res._id.valueOf();
+                    const isAdmin = res.isAdmin;
+                    const userPicture = res.picture.split('http://localhost:3000/images/uploads/profil/')[1];
                     //console.log(userPicture)
+                    const userIdFinal = userId === req.params.id; 
+                     console.log('user final', userIdFinal)
+                     console.log(res)
 
-                    if (userId === req.params.id || isAdmin === true) {
-                        console.log('good')
+                    if (userId === req.params.id || isAdmin === true  ) {
+                        console.log('good');
+                        console.log(userId)
+                        
 
                         if (userPicture === 'random-picture.png') {
-                            console.log('photo de profil basique')
-                          /*  User.deleteOne({ _id: userId })
+                            console.log('photo de profil basique');
+                            console.log({ _id: userId })
+                          User.deleteOne({ _id: req.params.id })
                             .then()
                             .catch()
 
-                            console.log('delete')*/
+                            console.log('delete')
                             
 
                         }else {
-                            console.log('photo de profil modifiée')
-                            /*fs.unlink(`./images/uploads/profil/${userPicture}`, ()=> {
+                            console.log('photo de profil modifiée');
+                            fs.unlink(`./images/uploads/profil/${userPicture}`, ()=> {
                                 if (err) throw error;
                             })
+                            console.log(userId)
 
-                            User.deleteOne({ _id: userId })
+                            User.deleteOne({ _id: req.params.id })
                             .then()
                             .catch()
 
-                            console.log('delete')*/
-                            
-
-                            
-                        }
-                        
-                    }
-                }
-            })
-
-        })
+                            console.log('delete')        
+                        };     
+                    } else return console.log('non');
+                };
+            });
+        });
         client.close(); 
-        return res.status(200).json({message : "Votre compte a bien été supprimé"})
+        
+        res.status(202).clearCookie('webToken').send({ message: 'Votre compte a bien été supprimé' })
 
-         
-        
-
-        
-        
 
     } catch (err) {
         return res.status(400).send(err);
 
-    }
-
-    /* const testFolder = './images/uploads/profil-BR/'
+    };
+    const testFolder = './images/uploads/posts-BR/'
      fs.readdir(testFolder, (err, files) => {
          files.forEach(file => {
            fs.unlink(path.join(testFolder, file), err => {
              if(err) console.log(err)
            }); 
          });
-       });*/
-
-}
+       });
+};
 
 
 

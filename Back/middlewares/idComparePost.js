@@ -11,8 +11,6 @@ module.exports = (req, res, next) => {
             const decodedToken = webToken.verify(token, dbToken);
             const userId = decodedToken.id;
             const isAdmin = decodedToken.isAdmin;
-            const find = post.comments.find(comment => comment.userId);
-            console.log(find.userId)
             if (isAdmin === false && post.userId !== userId) {
                 res.status(403).json({ message: 'Requête non autorisée' });
             } else if (isAdmin === true && post.userId !== userId) {
@@ -23,7 +21,7 @@ module.exports = (req, res, next) => {
                 next();
             }
         }).catch(error => {
-            res.status(401).json({ error: error | 'Requête non authentifiée ! ' })
+            res.status(401).json({ error: 'Requête non authentifiée ! ' })
         });
 };
 

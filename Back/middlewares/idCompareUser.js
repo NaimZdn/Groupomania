@@ -12,7 +12,6 @@ module.exports = (req, res, next) => {
             const decodedToken = webToken.verify(token, dbToken);
             const userId = decodedToken.id;
             const isAdmin = decodedToken.isAdmin;
-
             if (isAdmin === false && user.id !== userId) {
                 res.status(403).json({ message: 'Requête non autorisée' });
             } else if (isAdmin === true && user.id !== userId) {

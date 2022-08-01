@@ -11,7 +11,7 @@ const MIME_TYPES = {
 // On dit un multer que l'on va enregister les images sur notre disque, ici ce sera le dossier images.
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'images');
+    callback(null, 'images/uploads/posts-BR');
   },
   // On dit a multer quel nom de fichier utiliser. On enlever les espaces en les remplaçant par des underscore.
   filename: (req, file, callback) => {

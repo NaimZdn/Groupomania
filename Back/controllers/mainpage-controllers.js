@@ -22,11 +22,13 @@ exports.getUsersPosts = (req, res) => {
 exports.createPost = async (req, res) => {
     const token = req.cookies.webToken; 
     const decodedToken = webToken.verify(token, dbToken);
+    
+    sharp(`./images/uploads/posts-BR/${req.file.filename}`).webp().resize({ fit: 'fill'}).toFile(`./images/uploads/posts/${req.file.filename}.webp`)
   
     const newPost = new Post({
         userId: decodedToken.id,
         message: req.body.message,
-        picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}.webp`,
         likers: [],
         comments: [],
         likes: 0,
@@ -48,17 +50,19 @@ exports.updatePost = (req, res) => {
     if (req.file) {
         Post.findOne({ _id: req.params.id })
             .then((PostArg) => {
-                const filename = PostArg.picture.split('/images/')[1];
-                fs.unlink(`images/${filename}`, (error) => {
+                const filename = PostArg.picture.split('/images/uploads/posts/')[1];
+                fs.unlink(`images/uploads/posts/${filename}`, (error) => {
                     if (error) throw error;
                 });
             })
             .catch(error => res.status(404).json({ error }));
     };
 
+    sharp(`./images/uploads/posts-BR/${req.file.filename}`).webp().resize({ fit: 'fill'}).toFile(`./images/uploads/posts/${req.file.filename}.webp`)
+
     const updatedRecord = {
         message: req.body.message,
-        picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}.webp`,
     };
     
     delete updatedRecord.userId
@@ -131,7 +135,6 @@ exports.addComment = (req, res) => {
     const pseudo = decodedToken.pseudo; 
     console.log(decodedToken.pseudo)
      
-
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
 
@@ -200,7 +203,7 @@ exports.deleteComment = (req, res) => {
                 $pull: {
                     comments: {
                         _id: req.body.commentId,
-                        userId: userId, 
+                         
                     },
                 },
             },
