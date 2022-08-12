@@ -2,7 +2,6 @@ const Post = require('../models/post-model');
 const ObjectID = require('mongoose').Types.ObjectId;
 const webToken = require('jsonwebtoken');
 const fs = require('fs');
-const sharp = require('sharp');
 
 const dbToken = process.env.DB_TOKEN;
 
@@ -22,13 +21,11 @@ exports.getUsersPosts = (req, res) => {
 exports.createPost = async (req, res) => {
     const token = req.cookies.webToken; 
     const decodedToken = webToken.verify(token, dbToken);
-    
-    sharp(`./images/uploads/posts-BR/${req.file.filename}`).webp().resize({ fit: 'fill'}).toFile(`./images/uploads/posts/${req.file.filename}.webp`)
-  
+
     const newPost = new Post({
         userId: decodedToken.id,
         message: req.body.message,
-        picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}.webp`,
+        picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}`,
         likers: [],
         comments: [],
         likes: 0,
@@ -58,11 +55,9 @@ exports.updatePost = (req, res) => {
             .catch(error => res.status(404).json({ error }));
     };
 
-    sharp(`./images/uploads/posts-BR/${req.file.filename}`).webp().resize({ fit: 'fill'}).toFile(`./images/uploads/posts/${req.file.filename}.webp`)
-
     const updatedRecord = {
         message: req.body.message,
-        picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}.webp`,
+        picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}`,
     };
     
     delete updatedRecord.userId

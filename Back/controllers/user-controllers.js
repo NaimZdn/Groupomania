@@ -29,7 +29,7 @@ exports.signup = (req, res, next) => {
                 pseudo: req.body.pseudo,
                 email: emailCryptoJs,
                 password: hash,
-                picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/random-picture.png`,
+                picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/random-picture.webp`,
                 bio: "",
                 isAdmin: false,
 
@@ -84,7 +84,6 @@ exports.getOneUser = (req, res) => {
 }
 
 exports.getAllUsers = (req, res) => {
-
     User.find()
         .then(User => res.status(200).json(User))
         .catch(error => res.status(400).json({ error }))
@@ -95,51 +94,72 @@ exports.updateProfil = (req, res) => {
 
     User.findOne({ _id: req.params.id })
         .then((user) => {
-            const filename = user.picture.split('/images/uploads/profil')[1];
-            //console.log(filename)
+            const filename = user.picture.split('/images/uploads/profil/')[1];
 
-            if (filename == "/random-picture.png") {
-                //console.log('test')
+            if (req.file === undefined && filename != "random-picture.webp") {
+                console.log('il ny a pas de photo')
 
-                const test = req.file.filename.split('.')[0]
-                sharp(`./images/uploads/profil-BR/${req.file.filename}`).webp().resize(50).toFile(`./images/uploads/profil/${test}.webp`)
-
-                const updatedRecord = {
+               const updatedRecord = {
                     bio: req.body.bio,
-                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${test}.webp`,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${filename}`
                 };
 
-                delete updatedRecord.id
-                 User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié' }))
+                console.log(updatedRecord.picture)
+
+             User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié', ...updatedRecord }))
                     .catch(error => res.status(400).json({ error }));
 
-            } else {
-                //console.log('test2')
-                const filename = user.picture.split('/images/uploads/profil')[1];
-                //console.log(filename)
+
+            }
+
+            else if (filename == "random-picture.webp" && req.file !== undefined) {
+                console.log('test')
+                console.log(req.file === undefined)
+                console.log(req.file)
+                
+                const updatedRecord = {
+                    bio: req.body.bio,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${req.file.filename}`,
+                };
+              
+                delete updatedRecord.id
+                 User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié', ...updatedRecord }))
+                    .catch(error => res.status(400).json({ error }));
+
+
+            } else if (filename == "random-picture.webp" && req.file === undefined) {
+                console.log('undefined + photo de base')
+                console.log(req.body.bio)
+                
+                const updatedRecord = {
+                    bio: req.body.bio,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${filename}`,
+                };
+              
+                delete updatedRecord.id
+                 User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié', ...updatedRecord }))
+                    .catch(error => res.status(400).json({ error }));
+                    
+
+            } else if (filename != 'random-picture.webp' && filename != 'undefined'){
+                console.log('test2')
                 fs.unlink(`images/uploads/profil/${filename}`, (error) => {
                     if (error) throw error;
                 });
-
-                //console.log(`images/uploads/profil/${req.file.filename}`)
-                const sizeFile = `./images/uploads/profil/${req.file.filename}`
-
-                const test = req.file.filename.split('.')[0]
-                //console.log(test)
-
-                sharp(`./images/uploads/profil-BR/${req.file.filename}`).webp().resize(50).toFile(`./images/uploads/profil/${test}.webp`)
-
+   
                 const updatedRecord = {
                     bio: req.body.bio,
-                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${test}.webp`,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${req.file.filename}`,
                 };
 
                 User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié' }))
+                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié', ...updatedRecord }))
                     .catch(error => res.status(400).json({ error }));
 
-            }
+            } 
         })
         .catch(error => res.status(404).json({ error }));
 };
@@ -159,9 +179,9 @@ exports.deleteAccount = (req, res, next) => {
                 if (err) throw err;
 
                 for (res of result) {
-                    const filename = res.picture.split('/images/')[1];
+                    const filename = res.picture.split('/images/posts')[1];
 
-                    fs.unlink(`images/${filename}`, () => {
+                    fs.unlink(`images/posts/${filename}`, () => {
                         if (err) throw error;
                     });
 
@@ -178,7 +198,8 @@ exports.deleteAccount = (req, res, next) => {
             client.db("test").collection('users').find().toArray((err, result) => {
                 if (err) throw err;
 
-                for (res of result) {
+                for (res of result){
+                                   
                     const userId = res._id.valueOf();
                     const isAdmin = res.isAdmin;
                     const userPicture = res.picture.split('http://localhost:3000/images/uploads/profil/')[1];
@@ -192,7 +213,7 @@ exports.deleteAccount = (req, res, next) => {
                         console.log(userId)
                         
 
-                        if (userPicture === 'random-picture.png') {
+                        if (userPicture === 'random-picture.webp') {
                             console.log('photo de profil basique');
                             console.log({ _id: userId })
                           User.deleteOne({ _id: req.params.id })
@@ -228,14 +249,6 @@ exports.deleteAccount = (req, res, next) => {
         return res.status(400).send(err);
 
     };
-    const testFolder = './images/uploads/posts-BR/'
-     fs.readdir(testFolder, (err, files) => {
-         files.forEach(file => {
-           fs.unlink(path.join(testFolder, file), err => {
-             if(err) console.log(err)
-           }); 
-         });
-       });
 };
 
 

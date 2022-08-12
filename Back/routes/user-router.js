@@ -13,8 +13,6 @@ router.post('/login', emailValidator, userCtrl.login);
 router.post('/signup', emailValidator, passwordValidator, userCtrl.signup);
 router.get('/logout', auth, userCtrl.logout); 
 
-
-
 router.get('/user/:id', auth, userCtrl.getOneUser);
 router.get('/users',  auth, userCtrl.getAllUsers);
 router.put('/user/:id', auth, idCompareUser, multerUser, userCtrl.updateProfil);

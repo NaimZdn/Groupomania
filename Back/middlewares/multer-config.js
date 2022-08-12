@@ -3,15 +3,16 @@ const multer = require('multer');
 
 // Création des extensions des fichiers.
 const MIME_TYPES = {
-  'image/jpg': 'jpg',
-  'image/jpeg': 'jpeg',
-  'image/png': 'png'
+  'image/jpg': 'webp',
+  'image/jpeg': 'webp',
+  'image/png': 'webp',
+  'image/webp': 'webp',
 };
 
 // On dit un multer que l'on va enregister les images sur notre disque, ici ce sera le dossier images.
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, 'images/uploads/posts-BR');
+    callback(null, 'images/uploads/posts');
   },
   // On dit a multer quel nom de fichier utiliser. On enlever les espaces en les remplaçant par des underscore.
   filename: (req, file, callback) => {

@@ -13,8 +13,6 @@ module.exports = (req, res, next) => {
             const isAdmin = decodedToken.isAdmin;
             const comments = post.comments.find(comment => comment.userId);
             const commentUserId = comments.userId
-            console.log(commentUserId)
-            console.log(isAdmin)
 
             if (isAdmin === false && commentUserId !== userId) {
                 res.status(403).json({ message: 'Requête non autorisée' });
