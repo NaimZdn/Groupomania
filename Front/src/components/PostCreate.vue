@@ -16,9 +16,9 @@ export default {
         </div>
 
         <div class="PostCreate__send">
-          <label for="file-upload" class="PostCreate__import-file" aria-label="Cliquez pour importer votre image"> <fa icon="fa-solid fa-image" /> 
-          <input id="fileUpload" class="PostCreate__input" type="file" aria-label="Importez votre image"> </label>
-          <button id="postCreate" class="PostCreate__button">PUBLIER</button>
+          <label class="PostCreate__import-file" aria-label="Cliquez pour importer votre image"> <fa icon="fa-solid fa-image" /> 
+          <input class="PostCreate__input" type="file" aria-label="Importez votre image"> </label>
+          <button class="PostCreate__button">PUBLIER</button>
         </div>
       </div>
     </section>

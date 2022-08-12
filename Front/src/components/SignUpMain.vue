@@ -14,31 +14,38 @@
                     <input id="pseudoInput" class="SignUpMain__input-type" type="pseudo" placeholder="Pseudo"
                         aria-label="Entrez votre pseudo" v-model="pseudo" v-on:keydown="regex = false">
                     <fa class="SignUpMain__input-pseudo" icon="fa-solid fa-user" />
-                    <span class="SignUpMain__input-error" v-if="v$.pseudo.$error"> Veuillez entrer un pseudo valide </span>
+                    <span class="SignUpMain__input-error" v-if="v$.pseudo.$error"> Veuillez entrer un pseudo valide
+                    </span>
                 </div>
 
                 <div class="SignUpMain__input">
                     <input id="mailInput" class="SignUpMain__input-type" type="mail" placeholder="Email"
                         aria-label="Entrez votre adresse mail" v-model="email">
                     <fa class="SignUpMain__input-mail" icon="fa-solid fa-at" />
-                    <span class="SignUpMain__input-error" v-if="v$.email.$error"> Veuillez entrer une adresse mail valide </span>
+                    <span class="SignUpMain__input-error" v-if="v$.email.$error"> Veuillez entrer une adresse mail
+                        valide </span>
                 </div>
 
                 <div class="SignUpMain__input">
-                    <input id="passwordInput" class="SignUpMain__input-type" type='password' placeholder="Mot de passe" aria-label="Entrez votre mot de passe" v-model="password">
+                    <input id="passwordInput" class="SignUpMain__input-type" type='password' placeholder="Mot de passe"
+                        aria-label="Entrez votre mot de passe" v-model="password">
                     <fa class="SignUpMain__input-password" icon="fa-solid fa-lock" />
-                    <span class="SignUpMain__input-error" v-if="v$.password.$error"> Veuillez entrer un mot de passe correct </span>
+                    <span class="SignUpMain__input-error" v-if="v$.password.$error"> Veuillez entrer un mot de passe
+                        correct </span>
                 </div>
 
                 <div class="SignUpMain__checkbox">
-                    <input class="SignUpMain__checkbox-type" type="checkbox" aria-label="Veuillez accepter nos CGU" v-model="acceptTerms" @click="acceptTerms = true">
-                    <span class="SignUpMain__checkbox-text"> J'accepte les <a class="SignUpMain__checkbox-cgu" href="#" aria-label="Nos CGU">conditions générales d'utilisations</a></span>
+                    <input class="SignUpMain__checkbox-type" type="checkbox" aria-label="Veuillez accepter nos CGU"
+                        v-model="acceptTerms" @click="acceptTerms = true">
+                    <span class="SignUpMain__checkbox-text"> J'accepte les <a class="SignUpMain__checkbox-cgu" href="#"
+                            aria-label="Nos CGU">conditions générales d'utilisations</a></span>
                 </div>
 
-                <span class="SignUpMain__input-error" v-if="v$.acceptTerms.$error"> Veuillez accepter nos conditions générales d'utilisations </span>
+                <span class="SignUpMain__input-error" v-if="v$.acceptTerms.$error"> Veuillez accepter nos conditions
+                    générales d'utilisations </span>
 
                 <div class="SignUpMain__button">
-                    <button class="SignUpMain__button-signup" @click="submitForm"> Créer mon compte </button>
+                    <button class="SignUpMain__button-signup" @click="createAccount"> Créer mon compte </button>
                 </div>
 
             </div>
@@ -48,6 +55,7 @@
 
 <script>
 import axios from 'axios';
+
 import useVuelidate from '@vuelidate/core';
 import { required, email, helpers } from '@vuelidate/validators';
 
@@ -94,33 +102,50 @@ export default {
     },
 
     methods: {
-        submitForm() {
-            this.v$.$validate()
-            if (!this.v$.$error) {
-                alert("C'est carré ")
-                const dataUser = {
-                    pseudo: this.pseudo,
-                    email: this.email,
-                    password: this.password,
-                };
-                console.log(dataUser);
-                axios
-                    .post("http://localhost:3000/api/auth/signup", dataUser)
-                    .then((response) => {
-                        console.log(response.data);
-                        this.popup = true;
-                        //this.$router.push("/login");
+        /*  submitForm() {
+             this.v$.$validate()
+             if (!this.v$.$error) {
+                 alert("C'est carré ")
+                 const dataUser = {
+                     pseudo: this.pseudo,
+                     email: this.email,
+                     password: this.password,
+                 };
+                 
+                 console.log(dataUser);
+                 axios
+                     .post("http://localhost:3000/api/auth/signup", dataUser)
+                     .then((response) => {
+                         console.log(response.data);
+                         this.popup = true;
+                         //this.$router.push("/login");
+ 
+                     })
+                     .catch((error) => {
+                         alert("L'Email et/ou le Pseudo est déjà utilisé");
+                         console.log(error);
+                     });
+             } else {
+                 alert("Pas carré");
+             }
+         }, */
+        createAccount: function () {
+            this.$store.dispatch('createAccount', {
+                pseudo: this.pseudo,
+                email: this.email,
+                password: this.password,
+            }).then((response) => {
+                console.log(response.data);
+                this.popup = true;
+                
+                //this.$router.push("/login");
 
-
-                    })
-                    .catch((error) => {
-                        alert("L'Email et/ou le Pseudo est déjà utilisé");
-                        console.log(error);
-                    });
-            } else {
-                alert("Pas carré");
-            }
-        },
+            })
+                .catch((error) => {
+                    alert("L'Email et/ou le Pseudo est déjà utilisé");
+                    console.log(error);
+                })
+        }
     },
 };
 </script>
@@ -302,5 +327,7 @@ export default {
 
         }
     }
-};
+}
+
+;
 </style>

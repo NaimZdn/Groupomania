@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="LoginMain__button">
-                    <button id="logButton" class="LoginMain__button-login" @click="submitForm"> Se connecter </button>
+                    <button id="logButton" class="LoginMain__button-login" @click="login"> Se connecter </button>
                 </div>
 
             </div>
@@ -56,6 +56,7 @@ import axios from 'axios';
 import useVuelidate from '@vuelidate/core';
 import { required, email, helpers } from '@vuelidate/validators';
 
+
 const regexPassword = helpers.regex(/^[A-z0-9éèôöîïûùü' -/*]{8,}$/);
 
 export default {
@@ -84,8 +85,9 @@ export default {
         }
     },
 
+
     methods: {
-        submitForm() {
+        /* submitForm() {
             this.v$.$validate()
             if (!this.v$.$error) {
                 alert("C'est carré ")
@@ -95,7 +97,7 @@ export default {
                 };
                 console.log(dataUser);
                 axios
-                    .post("http://localhost:3000/api/auth/login", dataUser)
+                    .post("http://localhost:3000/api/auth/login", dataUser, {withCredentials: true})
                     .then((response) => {
                         console.log(response.data);
                         this.$router.push("/mainpage");
@@ -109,7 +111,23 @@ export default {
             } else {
                 alert("Pas carré");
             };
-        },
+        }, */
+        login: function () {
+            this.$store.dispatch('login', {
+                email: this.email,
+                password: this.password,
+            }).then((response) => {
+                this.$router.push("/profil")
+                console.log(response.data);
+
+            })
+                .catch((error) => {
+                    alert("L'Email et/ou le Mot de passe est incorrect");
+                    this.popup = true;
+                    console.log(error);
+                })
+        }
+
     },
 };
 

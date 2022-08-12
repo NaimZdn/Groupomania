@@ -2,28 +2,32 @@
     <header>
         <nav class="MainHeader">
 
-            <router-link to="/mainpage"> <div class="MainHeader__logo">
-                <img class="MainHeader__logo-desktop" src="../assets/images/Logo_red.png" alt="Logo Groupomania version Desktop">
-                <img class="MainHeader__logo-mobile" src="../assets/images/Groupomania-logo_mobile.png" alt="Logo Groupomania version mobile">
-            </div>
+            <router-link to="/mainpage">
+                <div class="MainHeader__logo">
+                    <img class="MainHeader__logo-desktop" src="../assets/images/Logo_red.png" alt="Logo Groupomania version Desktop">
+                    <img class="MainHeader__logo-mobile" src="../assets/images/Groupomania-logo_mobile.png" alt="Logo Groupomania version mobile">
+                </div>
             </router-link>
 
             <div class="MainHeader__profil">
                 <div class="MainHeader__anchor" @click="showOption = true">
-                   <img id="userPicture" class="MainHeader__anchor-picture" src="../assets/images/Photo CV.jpg" alt="Votre photo de profil">
+                    <img id="userPicture" class="MainHeader__anchor-picture" :src="userInfos.picture" alt="Votre photo de profil">
                 </div>
 
                 <transition name=OptionFade appear>
                     <div class="MainHeader__option-content" v-if="showOption" @click="showOption = true">
                         <div class="MainHeader__option-button">
 
-                            <router-link to="/profil"> <div class="MainHeader__option-profil">
-                                <fa class="MainHeader__option-profil-icon" icon="fa-solid fa-user" />
-                                <span class="MainHeader__option-profil-text"> Mon profil </span>
-                            </div> </router-link>
+                            <router-link to="/profil">
+                                <div class="MainHeader__option-profil">
+                                    <fa class="MainHeader__option-profil-icon" icon="fa-solid fa-user" />
+                                    <span class="MainHeader__option-profil-text"> Mon profil </span>
+                                </div>
+                            </router-link>
 
-                            <div class="MainHeader__option-modification">
-                                <fa class="MainHeader__option-modification-icon" :icon="['fas', 'arrow-right-from-bracket']" />
+                            <div class="MainHeader__option-modification" @click="disconnectUser">
+                                <fa class="MainHeader__option-modification-icon"
+                                    :icon="['fas', 'arrow-right-from-bracket']" />
                                 <span class="MainHeader__option-modification-text"> Se déconnecter </span>
                             </div>
 
@@ -39,6 +43,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
     name: 'MainHeader',
 
@@ -46,7 +52,29 @@ export default {
         return {
             showOption: false,
         }
+    },
+    methods: {
+        disconnectUser() {
+            this.$store.dispatch('disconnectUser') 
+            .then((response) => {
+                this.$router.push("/")
+
+            })
+            .catch((error) => {
+                console.log('error')
+            })      
+        }
+    },
+
+    computed: {
+        ...mapState({
+            userInfos: 'userInfos'
+        })
     }
+   
+
+
+
 }
 </script>
 
@@ -215,5 +243,6 @@ export default {
         }
     }
 }
-@include Fade; 
+
+@include Fade;
 </style>

@@ -4,6 +4,8 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+import TextareaAutosize from 'vue-textarea-autosize';
+import store from './store';
 import router from './router/routes';
 import App from './App.vue';
 
@@ -13,7 +15,9 @@ library.add(fas, fab);
 
 
 const app = createApp(App);
+app.use(store)
 app.use(router);
+app.use(TextareaAutosize)
 app.component('fa', FontAwesomeIcon);
 
 app.mount('#app');

@@ -1,20 +1,49 @@
 <template>
     <div class="ProfilInformation">
         <div class="ProfilInformation__picture">
-            <img id="userPicture" class="ProfilInformation__picture-user" src="../assets/images/Photo CV.jpg" alt="Votre photo de profil">
+            <img id="userPicture" class="ProfilInformation__picture-user" :src="userInfos.picture" alt="Votre photo de profil">
    
         </div>
         <div class="ProfilInformation__pseudo">
-            <p id="userPseudo" class="ProfilInformation__pseudo-text"> Pseudo</p>
+            <p  class="ProfilInformation__pseudo-text"> {{user.pseudo}}</p>
+            <p  class="ProfilInformation__pseudo-bio">{{userInfos.bio}}</p>
             
         </div>
     </div>
 
 </template>
 <script>
+import { mapState } from 'vuex'; 
 
 export default {
     name: "ProfilInformation",
+    mounted: function () {
+        //console.log(`/api/auth/user/${this.$store.state.user.userId}`)
+        if(this.$store.state.user.userId == '') {
+            this.$router.push('/')
+        }
+        this.$store.dispatch('getUserInfos')
+    },
+    methods: {
+        getUserInfos: function () {
+            this.$store.dispatch('getUserInfos', {
+            }).then((response) => {
+                console.log(response.data);
+
+            })
+                .catch((error) => {
+                    alert("L'Email et/ou le Mot de passe est incorrect");
+                    this.popup = true;
+                    console.log(error);
+                })
+        }
+    },
+    computed: {
+        ...mapState({
+            user: 'user', 
+            userInfos: 'userInfos'
+        })
+    }
 
 }
 </script>
@@ -26,6 +55,7 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-bottom: 30px;
 
     @include break-mobile{
         flex-direction: column;
@@ -53,15 +83,7 @@ export default {
             object-fit: cover;
             border-radius: 100%;
             transition: .3s ease-in-out;
-          
 
-            cursor: pointer;
-
-            &:hover {
-                filter: grayscale(80%) blur(1px);
-
-
-            }
         }
     }
 
@@ -78,9 +100,23 @@ export default {
         &-text{
         
             @include break-mobile {
+                text-align: center;
                 margin-top: 0;
                         
             } 
+        }
+
+        &-bio {
+            border-left: 3px solid $color-primary;
+            font-size: 16px;
+            font-style: italic;
+            padding-left: 10px; 
+            margin-right: 30px;
+
+            @include break-mobile {                
+                margin: 0 15px 0 15px; 
+                text-align: center;
+            }
         }
     }
 
