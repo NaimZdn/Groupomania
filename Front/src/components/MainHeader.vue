@@ -4,14 +4,17 @@
 
             <router-link to="/mainpage">
                 <div class="MainHeader__logo">
-                    <img class="MainHeader__logo-desktop" src="../assets/images/Logo_red.png" alt="Logo Groupomania version Desktop">
-                    <img class="MainHeader__logo-mobile" src="../assets/images/Groupomania-logo_mobile.png" alt="Logo Groupomania version mobile">
+                    <img class="MainHeader__logo-desktop" src="../assets/images/Logo_red.png"
+                        alt="Logo Groupomania version Desktop">
+                    <img class="MainHeader__logo-mobile" src="../assets/images/Groupomania-logo_mobile.png"
+                        alt="Logo Groupomania version mobile">
                 </div>
             </router-link>
 
             <div class="MainHeader__profil">
                 <div class="MainHeader__anchor" @click="showOption = true">
-                    <img id="userPicture" class="MainHeader__anchor-picture" :src="userInfos.picture" alt="Votre photo de profil">
+                    <img id="userPicture" class="MainHeader__anchor-picture" :src="this.userInfos.picture"
+                        alt="Votre photo de profil">
                 </div>
 
                 <transition name=OptionFade appear>
@@ -50,28 +53,47 @@ export default {
 
     data() {
         return {
+            userInfos: [],
             showOption: false,
         }
     },
+
+    mounted() {
+        if (localStorage.user) {
+            this.userInfos = JSON.parse(localStorage.user)
+            //console.log(this.userInfos)
+        }
+    },
+
     methods: {
-        disconnectUser() {
-            this.$store.dispatch('disconnectUser') 
-            .then((response) => {
-                this.$router.push("/")
+        getUserInfos() {
+            this.$store.dispatch('getUserInfos', {
+            }).then((response) => {
+                console.log(response.data);
 
             })
-            .catch((error) => {
-                console.log('error')
-            })      
+                .catch((error) => {
+                    console.log('il y a une erreur ');
+                })
+        },
+        disconnectUser() {
+            this.$store.dispatch('disconnectUser')
+                .then((response) => {
+                    this.$router.push("/")
+
+                })
+                .catch((error) => {
+                    console.log('error')
+                })
         }
     },
 
     computed: {
         ...mapState({
-            userInfos: 'userInfos'
+            //user: 'user'
         })
     }
-   
+
 
 
 

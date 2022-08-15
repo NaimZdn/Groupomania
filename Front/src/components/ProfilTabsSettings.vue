@@ -45,7 +45,7 @@ export default {
         deleteAccount() {
             this.$store.dispatch('deleteAccount')
             .then((response) => {
-                this.$router.push("/")
+               this.$router.push("/")
 
             })
             .catch((error) => {

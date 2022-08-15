@@ -52,9 +52,9 @@
 </template>
 
 <script>
-import axios from 'axios';
 import useVuelidate from '@vuelidate/core';
 import { required, email, helpers } from '@vuelidate/validators';
+
 
 
 const regexPassword = helpers.regex(/^[A-z0-9éèôöîïûùü' -/*]{8,}$/);
@@ -112,13 +112,28 @@ export default {
                 alert("Pas carré");
             };
         }, */
+       /* getUserInfos() {
+            this.$store.dispatch('getUserInfos', {
+            }).then((response) => {
+                console.log(response.data);
+
+            })
+                .catch((error) => {
+                    console.log('il y a une erreur ');
+                })
+        },*/
         login: function () {
             this.$store.dispatch('login', {
                 email: this.email,
                 password: this.password,
+                
             }).then((response) => {
-                this.$router.push("/profil")
+                //this.getUserInfos()
+               
+                this.$router.push("/mainpage") 
                 console.log(response.data);
+                
+                
 
             })
                 .catch((error) => {
@@ -126,8 +141,7 @@ export default {
                     this.popup = true;
                     console.log(error);
                 })
-        }
-
+        }, 
     },
 };
 

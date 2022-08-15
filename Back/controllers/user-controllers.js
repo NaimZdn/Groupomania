@@ -14,7 +14,6 @@ const dbUrl = process.env.DB_URL;
 
 const dbToken = process.env.DB_TOKEN;
 const dbCryptoJs = process.env.DB_CRYPTOJS
-const tokenExpiration = '24h';
 const createToken = (id, isAdmin, pseudo) => {
     return webToken.sign({ id, isAdmin, pseudo }, dbToken, { expiresIn: '24h' })
 }
@@ -63,6 +62,7 @@ exports.login = (req, res, next) => {
                     res.status(200).json({
                         userId: user._id,
                         pseudo: user.pseudo,
+                        picture: user.picture
                     });
 
                 })
@@ -78,7 +78,19 @@ exports.logout = (req, res) => {
 exports.getOneUser = (req, res) => {
 
     User.findOne({ _id: req.params.id })
-        .then(User => res.status(200).json(User))
+        .then(User => {
+            const userInfos = {
+                userId: User._id, 
+                pseudo: User.pseudo, 
+                picture: User.picture, 
+                bio: User.bio, 
+                isAdmin: User.isAdmin, 
+                
+            }
+            res.status(200).json({...userInfos})
+
+        }
+            )
         .catch(error => res.status(400).json({ message: 'Utilisateur introuvable' }));
 
 }
@@ -96,24 +108,7 @@ exports.updateProfil = (req, res) => {
         .then((user) => {
             const filename = user.picture.split('/images/uploads/profil/')[1];
 
-            if (req.file === undefined && filename != "random-picture.webp") {
-                console.log('il ny a pas de photo')
-
-               const updatedRecord = {
-                    bio: req.body.bio,
-                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${filename}`
-                };
-
-                console.log(updatedRecord.picture)
-
-             User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié', ...updatedRecord }))
-                    .catch(error => res.status(400).json({ error }));
-
-
-            }
-
-            else if (filename == "random-picture.webp" && req.file !== undefined) {
+            if (filename == "random-picture.webp" && req.file !== undefined) {
                 console.log('test')
                 console.log(req.file === undefined)
                 console.log(req.file)
@@ -144,7 +139,7 @@ exports.updateProfil = (req, res) => {
                     .catch(error => res.status(400).json({ error }));
                     
 
-            } else if (filename != 'random-picture.webp' && filename != 'undefined'){
+            } else if (filename != 'random-picture.webp' && req.file != undefined){
                 console.log('test2')
                 fs.unlink(`images/uploads/profil/${filename}`, (error) => {
                     if (error) throw error;
@@ -164,7 +159,6 @@ exports.updateProfil = (req, res) => {
         .catch(error => res.status(404).json({ error }));
 };
 
-
 exports.deleteAccount = (req, res, next) => {
 
     const uri = dbUrl;
@@ -178,10 +172,10 @@ exports.deleteAccount = (req, res, next) => {
 
                 if (err) throw err;
 
-                for (res of result) {
-                    const filename = res.picture.split('/images/posts')[1];
-
-                    fs.unlink(`images/posts/${filename}`, () => {
+                for (res of result)  {
+                    const filename = res.picture.split('/images/uploads/posts')[1];
+                
+                    fs.unlink(`images/uploads/posts/${filename}`, () => {
                         if (err) throw error;
                     });
 
@@ -198,46 +192,47 @@ exports.deleteAccount = (req, res, next) => {
             client.db("test").collection('users').find().toArray((err, result) => {
                 if (err) throw err;
 
-                for (res of result){
+                result.forEach(res => {
+                    console.log(res)
                                    
                     const userId = res._id.valueOf();
                     const isAdmin = res.isAdmin;
                     const userPicture = res.picture.split('http://localhost:3000/images/uploads/profil/')[1];
-                    //console.log(userPicture)
+                    console.log(userPicture)
                     const userIdFinal = userId === req.params.id; 
-                     console.log('user final', userIdFinal)
-                     console.log(res)
+                    console.log('user final', userIdFinal)
+                   
+                
 
                     if (userId === req.params.id || isAdmin === true  ) {
-                        console.log('good');
-                        console.log(userId)
+                        //console.log('good');
+                        //console.log(userId)
                         
 
                         if (userPicture === 'random-picture.webp') {
                             console.log('photo de profil basique');
-                            console.log({ _id: userId })
+                            //console.log({ _id: userId })
                           User.deleteOne({ _id: req.params.id })
                             .then()
                             .catch()
 
-                            console.log('delete')
+                            //console.log('delete')
                             
-
                         }else {
                             console.log('photo de profil modifiée');
                             fs.unlink(`./images/uploads/profil/${userPicture}`, ()=> {
                                 if (err) throw error;
                             })
-                            console.log(userId)
+                            //console.log(userId)
 
                             User.deleteOne({ _id: req.params.id })
                             .then()
                             .catch()
 
-                            console.log('delete')        
+                           // console.log('delete')        
                         };     
                     } else return console.log('non');
-                };
+                });
             });
         });
         client.close(); 

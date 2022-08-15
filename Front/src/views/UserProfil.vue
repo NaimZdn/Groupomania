@@ -17,7 +17,7 @@ export default {
 
     <main class="container-flex">
         <section class="Profil">
-            <ProfilInformation></ProfilInformation>
+            
             <ProfilInformationDelete/>
             <ProfilTabs></ProfilTabs>
 

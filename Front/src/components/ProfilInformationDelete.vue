@@ -1,5 +1,26 @@
 <template>
 
+
+    <div class="ProfilInformation">
+        <div class="ProfilInformation__picture">
+            <img id="userPicture" class="ProfilInformation__picture-user" :src="this.userData.picture"
+                alt="Votre photo de profil">
+
+        </div>
+        <div class="ProfilInformation__pseudo">
+            <p class="ProfilInformation__pseudo-text"> {{this.userData.pseudo}} </p>
+            <p class="ProfilInformation__pseudo-bio"> {{this.userData.bio}} </p>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
     <div class="ProfilInformationModification__button">
         <button id="modificationButton" class="ProfilInformationModification__button-modification"
             @click="displayModification = true"> Modifier vos informations </button>
@@ -13,12 +34,13 @@
     <transition name="slide" appear>
         <div class="ProfilInformationModification__content" v-if="displayModification">
             <div class="ProfilInformationModification__picture">
-                <img v-if="files" class="ProfilInformationModification__picture-user" :src="userInfos.picture">
+                <img v-if="files" class="ProfilInformationModification__picture-user" :src="userData.picture">
                 <img v-if="url" class="ProfilInformationModification__picture-user" :src="url">
             </div>
 
             <div class="ProfilInformationModification__send">
-                <label class="ProfilInformationModification__import-file" aria-label="Cliquez pour importer votre image">
+                <label class="ProfilInformationModification__import-file"
+                    aria-label="Cliquez pour importer votre image">
                     <fa icon="fa-solid fa-camera" />
                     <input class="ProfilInformationModification__input" type="file" @change="changeFile">
                 </label>
@@ -26,13 +48,14 @@
 
 
             <div class="ProfilInformationModification__text">
-                <textarea class="ProfilInformationModification__text-description" role="textbox" placeholder="Bio" maxlength="300" v-model='this.userInfos.bio' @input="resizeTextarea()" ref="textarea"> </textarea>
-                <span class="ProfilInformationModification__text-counter"> {{totalCharacters}}/300 caractères</span>
+                <textarea class="ProfilInformationModification__text-description" role="textbox" placeholder="Bio"
+                    maxlength="300" v-model='this.userData.bio' @input="resizeTextarea()" ref="textarea"> </textarea>
+                <span class="ProfilInformationModification__text-counter"> {{ totalCharacters }}/300 caractères</span>
             </div>
-            
+
 
             <div class="ProfilInformationModification__save">
-                
+
                 <button class="ProfilInformationModification__save-modification" @click="updateUserProfil"> Modifier
                 </button>
                 <button class="ProfilInformationModification__save-return" @click="displayModification = false"> Annuler
@@ -57,34 +80,58 @@ export default {
             displayModification: false,
             files: true,
             url: null,
-            maxLength: 300, 
-
+            maxLength: 300,
+            userData: [], 
 
         }
     },
 
+    mounted() {
+        if (localStorage.user) {
+            this.userData = JSON.parse(localStorage.user)
+            //console.log(this.userInfos)
+        }
+    },
+
+   
+
     methods: {
         changeFile(fileUpload) {
+            
             this.file = fileUpload.target.files[0];
             this.url = URL.createObjectURL(this.file);
+            //console.log(this.file)
             this.files = false
 
         },
 
         updateUserProfil() {
+            /*if (this.file === undefined) {
+                this.file = this.userData.picture; }*/
             const dataForm = new FormData();
             dataForm.append('image', this.file);
-            dataForm.append('bio', this.userInfos.bio);
+            dataForm.append('bio', this.userData.bio);
+            //console.log(this.file)
             this.$store.dispatch('updateUserProfil', dataForm)
                 .then((response) => {
-                    console.log('réponse du serveur')
-                     this.displayModification = false
+                    
+                    this.displayModification = false
+                    //this.$router.go('/profil')
+                    //this.reloadStorage(response.data)
+                    
+                    
+                  
+                    
 
                 })
                 .catch((error) => {
-                    console.log('error aie aie ')
+                   
+                   // console.log('error aie aie ')
                     //console.log(this.bio)
                 })
+                
+                
+                
         },
         resizeTextarea() {
             const element = this.$refs["textarea"];
@@ -93,19 +140,22 @@ export default {
             element.style.height = element.scrollHeight + "px";
         },
 
+        reloadStorage() {
+            this.userData = JSON.parse(localStorage.getItem('user'))
+            console.log(this.userData)
+        }
+
 
     },
     computed: {
         ...mapState({
-            userInfos: 'userInfos'
-        }), 
+           // userInfos: 'userInfos'
+        }),
 
-        totalCharacters () {
-            return this.userInfos.bio.length
+        totalCharacters() {
+            return this.userData.bio.length
         }
-
     }
-
 }
 
 
@@ -224,8 +274,8 @@ export default {
         }
 
         &-counter {
-            font-size: 13px; 
-            color: $color-tertiary; 
+            font-size: 13px;
+            color: $color-tertiary;
             font-weight: bold;
         }
     }

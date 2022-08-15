@@ -8,7 +8,8 @@ import PostCreateComment from '../components/PostCreateComment.vue';
 
 export default {
   name: "Mainpage",
-  components: { MainHeader, PostCreate, PostComment, PostContent, PostCreateComment }
+  components: { MainHeader, PostCreate, PostComment, PostContent, PostCreateComment }, 
+
 }
 
 </script>
