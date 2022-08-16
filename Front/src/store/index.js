@@ -15,6 +15,7 @@ if (!user) {
        picture: '', 
        isAdmin: '', 
        bio: '', 
+       createdAt: '',
      }; 
    } else {
      try {
@@ -27,6 +28,7 @@ if (!user) {
          picture: '', 
          isAdmin: '', 
          bio: '', 
+         createdAt: '', 
        };
      }
    }
@@ -39,14 +41,9 @@ const store = createStore({
             picture: '', 
             bio: '', 
             userId: '', 
+            createdAt: '', 
          
         },
-        post : {
-            message: '', 
-            picture: '', 
-            likes: '', 
-
-        }
     },
     mutations: {
         setStatus: function(state, status){
@@ -54,6 +51,7 @@ const store = createStore({
         },
         logUser: function (state, user) {
             localStorage.setItem('user', JSON.stringify(user));
+            console.log(user)
             state.user = user; 
         },
         userInfos: function(state, userInfos) {
@@ -62,14 +60,8 @@ const store = createStore({
         },
         updateUserInfos: function(state, userInfos) {
             const userData = JSON.parse(localStorage.getItem('user')); 
-
             userData.bio = userInfos.bio ; 
-            
-            userData.picture = userInfos.picture
-            //console.log(userData)
-            
-            //userData.picture= userInfos.picture; 
-            //userData.bio = userInfos.bio
+            userData.picture = userInfos.picture   
             localStorage.setItem('user', JSON.stringify(userData));
             state.userInfos = userData
         },
@@ -108,12 +100,9 @@ const store = createStore({
                 axiosInstance.post('/api/auth/login', userInfos, {withCredentials: true})
                     .then((response) => {
                         commit('logUser', response.data)
-                        dispatch('getUserInfos')
-                       
+                        dispatch('getUserInfos')         
                         console.log(response.data)
                         resolve(response)
-                        
-                    
 
                     })
                     .catch((error) => {
@@ -131,7 +120,6 @@ const store = createStore({
                         commit('userInfos', response.data)
                         console.log(response.data)
                         resolve(response)
-                        
 
                     })
                     .catch((error) => {
@@ -164,18 +152,18 @@ const store = createStore({
             })
         }, 
         updateUserProfil: ({state, commit}, dataForm) => {
-            //console.log(state.user.userId)
-            //console.log(state.user)
+            return new Promise ((resolve, reject) => {
             axiosInstance.put('api/auth/user/' + state.user.userId , dataForm, {withCredentials: true }, )
             .then((response ) => {
                commit('updateUserInfos', response.data)
+               resolve(response)
     
             })
             .catch((error) => { 
                 console.log(error)
+                reject(error)
             })
-            
-
+        })
         },
         getAllUsersPost: ({commit, state}) => {
             axiosInstance.get('api/mainpage/' + state.user.userId, {withCredentials: true })
@@ -190,6 +178,21 @@ const store = createStore({
                     console.log(response.data)
                 })
         }, 
+        getAllPosts: ({commit}) => {
+            return new Promise((resolve, reject) => {
+                axiosInstance.get('api/mainpage', {withCredentials: true})
+                .then((response) => {
+                    
+                    console.log(response.data)
+                    resolve(response)
+                    
+                }).catch((error) => {
+                    console.log(error)
+                    reject(error)
+                    
+                })          
+            })
+        }
     }
 })
 

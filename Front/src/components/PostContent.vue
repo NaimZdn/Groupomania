@@ -9,7 +9,7 @@
 
         <div class="PostContent__info">
             <h2 id="userPseudo" class="PostContent__info-user">Pseudo</h2>
-            <p id="postDate" class="PostContent__info-date"> il y a environ 2 jours</p>
+            <p id="postDate" class="PostContent__info-date"> {{createdAt}}</p>
         </div>
 
         
@@ -41,9 +41,8 @@
     </div>
 
     <div class="PostContent__content">
-        <p id="postText" class="PostContent__content-text">Yo, voici ma nouvelle création. N'hésitez pas à lacher un
-            like les bg ! </p>
-        <img id="postPicture" class="PostContent__content-picture" src="../assets/images/Geometric abstract-02.jpg"
+        <p id="postText" class="PostContent__content-text">{{message}}</p>
+        <img id="postPicture" class="PostContent__content-picture" :src="picture"
             alt="Image posté par 'pseudo de l'utilisateur'">
     </div>
 
@@ -51,17 +50,18 @@
 
         <div id="showComment" class="PostContent__comment" @click="showComment = !showComment">
             <fa class="PostContent__comment-icon" icon="fa-solid fa-comment-dots" />
-            <span class="PostContent__comment-number"> 7 </span>
+            <span class="PostContent__comment-number">  </span>
         </div>
 
         <div id="addLike" class="PostContent__like">
             <fa class="PostContent__like-icon" icon="fa-solid fa-thumbs-up" />
-            <span class="PostContent__like-number"> 5 </span>
+            <span class="PostContent__like-number"> {{likes}} </span>
         </div>
 
     </div>
-
-    <PostComment v-if="showComment" />
+    <div v-for="comment in comments"> 
+        <PostComment v-if="showComment" :pseudo="comment.pseudo" :comment='comment.comment'/>
+    </div>
     <PostCreateComment></PostCreateComment>
 
 </template>
@@ -75,10 +75,13 @@ export default {
 
     data() {
         return {
+            //comments: [], 
             showComment: false,
             showOption: false,
         }
-    }
+    }, 
+
+     props: ['picture', 'message', 'likes', 'createdAt', 'comments'],
 }
 </script>
 

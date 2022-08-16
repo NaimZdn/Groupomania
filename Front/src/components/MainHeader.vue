@@ -13,8 +13,7 @@
 
             <div class="MainHeader__profil">
                 <div class="MainHeader__anchor" @click="showOption = true">
-                    <img id="userPicture" class="MainHeader__anchor-picture" :src="this.userInfos.picture"
-                        alt="Votre photo de profil">
+                    <img id="userPicture" class="MainHeader__anchor-picture" :src="this.user.picture || this.userInfos.picture" alt="Votre photo de profil">
                 </div>
 
                 <transition name=OptionFade appear>
@@ -50,32 +49,25 @@ import { mapState } from 'vuex';
 
 export default {
     name: 'MainHeader',
+    props: ['picture'], 
 
     data() {
         return {
             userInfos: [],
             showOption: false,
+            
         }
     },
 
     mounted() {
-        if (localStorage.user) {
-            this.userInfos = JSON.parse(localStorage.user)
-            //console.log(this.userInfos)
+        if(localStorage.user) {
+            this.userInfos = JSON.parse(localStorage.getItem('user'))
         }
+           
+        
     },
 
     methods: {
-        getUserInfos() {
-            this.$store.dispatch('getUserInfos', {
-            }).then((response) => {
-                console.log(response.data);
-
-            })
-                .catch((error) => {
-                    console.log('il y a une erreur ');
-                })
-        },
         disconnectUser() {
             this.$store.dispatch('disconnectUser')
                 .then((response) => {
@@ -90,7 +82,7 @@ export default {
 
     computed: {
         ...mapState({
-            //user: 'user'
+            user: 'userInfos'
         })
     }
 

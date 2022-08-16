@@ -30,7 +30,6 @@ export default {
     gap: 20px;
     margin: 0 30px 0 30px;
     align-items: center;
-    position: relative;
     
     @include break-mobile {
        margin: 0 15px 0 15px;

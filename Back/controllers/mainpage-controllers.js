@@ -6,38 +6,56 @@ const fs = require('fs');
 const dbToken = process.env.DB_TOKEN;
 
 exports.readPost = (req, res) => {
-    Post.find() 
+    Post.find().sort({createdAt: -1})
         .then(Post => res.status(200).json(Post))
         .catch(error => res.status(400).json({ error }));
 };
 
 exports.getUsersPosts = (req, res) => {
-    Post.find ({userId: req.params.id})
-    .then(Post => res.status(200).json(Post))
-    .catch(error => res.status(400).json({ error }));
+    Post.find({ userId: req.params.id })
+        .then(Post => res.status(200).json(Post))
+        .catch(error => res.status(400).json({ error }));
 };
 
-
 exports.createPost = async (req, res) => {
-    const token = req.cookies.webToken; 
+    const token = req.cookies.webToken;
     const decodedToken = webToken.verify(token, dbToken);
 
-    const newPost = new Post({
-        userId: decodedToken.id,
-        message: req.body.message,
-        picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}`,
-        likers: [],
-        comments: [],
-        likes: 0,
+    if (req.file === undefined) {
+        const newPost = new Post({
+            userId: decodedToken.id,
+            message: req.body.message,
+            picture: ``,
+            likers: [],
+            comments: [],
+            likes: 0,
 
-    });
-    try {
-        const post = await newPost.save();
-        return res.status(201).json(post);
-    } catch (err) {
-        return res.status(400).send(err)
-    };
+        });
+        try {
+            const post = await newPost.save();
+            return res.status(201).json(post);
+        } catch (err) {
+            return res.status(400).send(err)
+        };
 
+    } else {
+        const newPost = new Post({
+            userId: decodedToken.id,
+            message: req.body.message,
+            picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}`,
+            likers: [],
+            comments: [],
+            likes: 0,
+
+        });
+
+        try {
+            const post = await newPost.save();
+            return res.status(201).json(post);
+        } catch (err) {
+            return res.status(400).send(err)
+        };
+    }
 };
 
 exports.updatePost = (req, res) => {
@@ -59,7 +77,7 @@ exports.updatePost = (req, res) => {
         message: req.body.message,
         picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}`,
     };
-    
+
     delete updatedRecord.userId
     Post.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
         .then(() => res.status(200).json({ message: 'Le post a bien été modifié' }))
@@ -69,23 +87,23 @@ exports.updatePost = (req, res) => {
 
 exports.deletePost = (req, res) => {
     if (!ObjectID.isValid(req.params.id))
-    return res.status(400).send("ID unknown : " + req.params.id);
+        return res.status(400).send("ID unknown : " + req.params.id);
 
-        Post.findOne({ _id: req.params.id })
-            .then((PostArg) => {
-                const filename = PostArg.picture.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () => {
-                    PostArg.deleteOne({ _id: req.params.id })
+    Post.findOne({ _id: req.params.id })
+        .then((PostArg) => {
+            const filename = PostArg.picture.split('/images/')[1];
+            fs.unlink(`images/${filename}`, () => {
+                PostArg.deleteOne({ _id: req.params.id })
                     .then(() => res.status(200).json({ message: 'Le post a bien été supprimé ' }))
                     .catch(error => res.status(400).json({ error }));
-                });
-            })
-            .catch(error => res.status(404).json({ error }));
+            });
+        })
+        .catch(error => res.status(404).json({ error }));
 
 };
 
 exports.likePost = (req, res) => {
-    const token = req.cookies.webToken; 
+    const token = req.cookies.webToken;
     const decodedToken = webToken.verify(token, dbToken);
     const userId = decodedToken.id
 
@@ -94,29 +112,29 @@ exports.likePost = (req, res) => {
 
     Post.findOne({ _id: postId })
         .then(postArg => {
-            if (!postArg.usersLiked.includes(userId) && like === 1 ) {           
-                Post.updateOne({_id : req.params.id},
+            if (!postArg.usersLiked.includes(userId) && like === 1) {
+                Post.updateOne({ _id: req.params.id },
                     {
-                        $inc: {likes: 1},
-                        $push: {usersLiked: userId}
+                        $inc: { likes: 1 },
+                        $push: { usersLiked: userId }
                     })
-                    .then (() => res.status(201).json({message : 'Le post a bien été liké '}))
+                    .then(() => res.status(201).json({ message: 'Le post a bien été liké ' }))
                     .catch(error => res.status(400).json({ error }));
-            } else if (like >= 1 ) {
-                res.status(400).json({ error : "Vous ne pouvez pas liké plusieurs fois un même post" }) 
+            } else if (like >= 1) {
+                res.status(400).json({ error: "Vous ne pouvez pas liké plusieurs fois un même post" })
             }
 
-            if (postArg.usersLiked.includes(userId) && like === 0 ) {
-                
-                Post.updateOne({_id : req.params.id},
+            if (postArg.usersLiked.includes(userId) && like === 0) {
+
+                Post.updateOne({ _id: req.params.id },
                     {
-                        $inc: {likes: -1},
-                        $pull: {usersLiked: userId}
+                        $inc: { likes: -1 },
+                        $pull: { usersLiked: userId }
                     })
-                    .then (() => res.status(201).json({message : 'Votre like a bien été retiré '}))
+                    .then(() => res.status(201).json({ message: 'Votre like a bien été retiré ' }))
                     .catch(error => res.status(400).json({ error }));
-            } else if (like <= 0 ) {
-                res.status(400).json({ error : "Vous ne pouvez pas liké plusieurs fois un même post" }) 
+            } else if (like <= 0) {
+                res.status(400).json({ error: "Vous ne pouvez pas liké plusieurs fois un même post" })
             }
 
         })
@@ -124,12 +142,12 @@ exports.likePost = (req, res) => {
 };
 
 exports.addComment = (req, res) => {
-    const token = req.cookies.webToken; 
+    const token = req.cookies.webToken;
     const decodedToken = webToken.verify(token, dbToken);
-    const userId = decodedToken.id; 
-    const pseudo = decodedToken.pseudo; 
+    const userId = decodedToken.id;
+    const pseudo = decodedToken.pseudo;
     console.log(decodedToken.pseudo)
-     
+
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
 
@@ -184,9 +202,9 @@ exports.editComment = (req, res) => {
 };
 
 exports.deleteComment = (req, res) => {
-    const token = req.cookies.webToken; 
+    const token = req.cookies.webToken;
     const decodedToken = webToken.verify(token, dbToken);
-    const userId = decodedToken.id; 
+    const userId = decodedToken.id;
 
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
@@ -198,7 +216,7 @@ exports.deleteComment = (req, res) => {
                 $pull: {
                     comments: {
                         _id: req.body.commentId,
-                         
+
                     },
                 },
             },

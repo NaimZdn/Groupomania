@@ -3,7 +3,7 @@
 <template>
     <article class="ProfilTabsSettings">
         <div class="ProfilTabsSettings__user">
-            <p id="inscriptionDate" class="ProfilTabsSettings__user-date"> Utilisateur inscrit le 10 juin 2010 </p>
+            <p id="inscriptionDate" class="ProfilTabsSettings__user-date"> Utilisateur enregistré depuis le {{dateTime(userInfos.createdAt)}} </p>
             <div class="ProfilTabsSettings__delete">
                 <button id="deleteUser" class="ProfilTabsSettings__delete-button" @click="confirmation = true"> Supprimer le compte </button>
             </div>
@@ -32,13 +32,21 @@
 </template>
 
 <script>
+import moment from 'moment/min/moment-with-locales';
+
 export default {
     name: "ProfilTabsSettings",
     data() {
         return {
             confirmation: false,
+            userInfos: [], 
         }
     },
+
+    mounted(){
+        let userInfos = JSON.parse(localStorage.getItem('user')); 
+        userInfos = this.UserInfos
+    }, 
 
 
     methods: {
@@ -52,7 +60,11 @@ export default {
                 console.log('error')
             })    
 
-        }
+        }, 
+        dateTime(value) {
+            moment.locale('fr')
+            return moment(value).format('ll')
+    }
 
     }
 }

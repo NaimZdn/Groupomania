@@ -3,8 +3,6 @@ const { MongoClient } = require('mongodb');
 const User = require('../models/user-model');
 const Post = require('../models/post-model');
 const fs = require('fs');
-const sharp = require('sharp');
-const path = require('path');
 
 const bcrypt = require('bcrypt');
 const webToken = require('jsonwebtoken');
@@ -85,6 +83,7 @@ exports.getOneUser = (req, res) => {
                 picture: User.picture, 
                 bio: User.bio, 
                 isAdmin: User.isAdmin, 
+                createdAt: User.createdAt, 
                 
             }
             res.status(200).json({...userInfos})
@@ -148,6 +147,19 @@ exports.updateProfil = (req, res) => {
                 const updatedRecord = {
                     bio: req.body.bio,
                     picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${req.file.filename}`,
+                };
+
+                User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Le profil a bien été modifié', ...updatedRecord }))
+                    .catch(error => res.status(400).json({ error }));
+
+            } 
+            else if (filename != 'random-picture.webp' && req.file === undefined){
+                console.log('nouveau comportement')
+   
+                const updatedRecord = {
+                    bio: req.body.bio,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${filename}`,
                 };
 
                 User.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })

@@ -1,10 +1,3 @@
-<script>
-export default {
-    name: "PostComment",
-
-}
-</script>
-
 <template>
 <transition name="slide2" appear> 
     <div class="PostComment">
@@ -14,17 +7,21 @@ export default {
         </div>
 
         <div class="PostComment__content">
-            <p id="userPseudo" class="PostComment__content-pseudo"> Pseudo</p>
-            <p id="userComment" class="PostComment__content-comment"> Voici mon commentaire </p>
+            <p id="userPseudo" class="PostComment__content-pseudo"> {{pseudo}}</p>
+            <p id="userComment" class="PostComment__content-comment"> {{comment}} </p>
         </div>
 
     </div>
 </transition>
-
-
-
-
 </template>
+
+<script>
+export default {
+    name: "PostComment",
+    props: ['comment', 'pseudo']
+
+}
+</script>
 
 <style lang="scss">
 @import "../assets/sass/main.scss"; 

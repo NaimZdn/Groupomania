@@ -1,6 +1,5 @@
 <template>
 
-
     <div class="ProfilInformation">
         <div class="ProfilInformation__picture">
             <img id="userPicture" class="ProfilInformation__picture-user" :src="this.userData.picture"
@@ -8,18 +7,11 @@
 
         </div>
         <div class="ProfilInformation__pseudo">
-            <p class="ProfilInformation__pseudo-text"> {{this.userData.pseudo}} </p>
-            <p class="ProfilInformation__pseudo-bio"> {{this.userData.bio}} </p>
+            <p class="ProfilInformation__pseudo-text"> {{ this.userData.pseudo }} </p>
+            <p class="ProfilInformation__pseudo-bio"> {{ this.userData.bio }} </p>
 
         </div>
     </div>
-
-
-
-
-
-
-
 
     <div class="ProfilInformationModification__button">
         <button id="modificationButton" class="ProfilInformationModification__button-modification"
@@ -56,14 +48,47 @@
 
             <div class="ProfilInformationModification__save">
 
-                <button class="ProfilInformationModification__save-modification" @click="updateUserProfil"> Modifier
+                <button class="ProfilInformationModification__save-modification" @click="updateUserProfil()"> Modifier
                 </button>
                 <button class="ProfilInformationModification__save-return" @click="displayModification = false"> Annuler
                 </button>
             </div>
         </div>
-    </transition>
+        </transition>
 
+        <section class="test">
+            <transition name=OptionFade appear>
+                <div class="ProfilInformationModification__option-content" v-if="validationMessage">
+                    <div class="ProfilInformationModification__option-button">
+
+                        <router-link to="/profil">
+                            <div class="ProfilInformationModification__option-profil">
+                                <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-check" />
+                                <span class="ProfilInformationModification__option-profil-text"> Votre profil a bien été modifié </span>
+                            </div>
+                        </router-link>
+                    </div>
+                </div>
+            </transition>
+        </section>
+
+         <section class="test">
+            <transition name=OptionFade appear>
+                <div class="ProfilInformationModification__option-content error" v-if="errorMessage">
+                    <div class="ProfilInformationModification__option-button">
+
+                        <router-link to="/profil">
+                            <div class="ProfilInformationModification__option-profil">
+                                <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-xmark" />
+                                <span class="ProfilInformationModification__option-profil-text"> Une erreur est survenue, veuillez réessayer </span>
+                            </div>
+                        </router-link>
+                    </div>
+                </div>
+            </transition>
+        </section>
+
+            
 
 
 </template>
@@ -81,7 +106,9 @@ export default {
             files: true,
             url: null,
             maxLength: 300,
-            userData: [], 
+            userData: [],
+            validationMessage: false, 
+            errorMessage: false, 
 
         }
     },
@@ -89,49 +116,41 @@ export default {
     mounted() {
         if (localStorage.user) {
             this.userData = JSON.parse(localStorage.user)
-            //console.log(this.userInfos)
         }
     },
 
-   
-
     methods: {
         changeFile(fileUpload) {
-            
             this.file = fileUpload.target.files[0];
             this.url = URL.createObjectURL(this.file);
-            //console.log(this.file)
             this.files = false
 
         },
 
-        updateUserProfil() {
-            /*if (this.file === undefined) {
-                this.file = this.userData.picture; }*/
+        reloadStorage() {
+            this.userData = JSON.parse(localStorage.getItem('user'))
+            console.log(this.userData)
+            this.displayModification = false
+        },
+
+        async updateUserProfil() {
             const dataForm = new FormData();
             dataForm.append('image', this.file);
             dataForm.append('bio', this.userData.bio);
-            //console.log(this.file)
-            this.$store.dispatch('updateUserProfil', dataForm)
-                .then((response) => {
-                    
-                    this.displayModification = false
-                    //this.$router.go('/profil')
-                    //this.reloadStorage(response.data)
-                    
-                    
-                  
-                    
+           await this.$store.dispatch('updateUserProfil', dataForm)  
+           .then((response) => {
+            this.validationMessage = true
+            
 
-                })
-                .catch((error) => {
-                   
-                   // console.log('error aie aie ')
-                    //console.log(this.bio)
-                })
-                
-                
-                
+           })
+           .catch((error) => {
+            this.errorMessage = true
+           })
+        
+    
+            this.reloadStorage()
+            this.delayCloseAlert()
+
         },
         resizeTextarea() {
             const element = this.$refs["textarea"];
@@ -140,16 +159,19 @@ export default {
             element.style.height = element.scrollHeight + "px";
         },
 
-        reloadStorage() {
-            this.userData = JSON.parse(localStorage.getItem('user'))
-            console.log(this.userData)
-        }
+        delayCloseAlert() {
+            var self = this;
 
+            setTimeout(function() { 
+                self.validationMessage = false; 
+                self.errorMessage = false; 
+            }, 7000);
+        },
 
     },
     computed: {
         ...mapState({
-           // userInfos: 'userInfos'
+            // userInfos: 'userInfos'
         }),
 
         totalCharacters() {
@@ -342,6 +364,96 @@ export default {
             color: $color-primary;
         }
     }
+
+    &__option {
+
+        &-content {
+            display: flex;
+            gap: 70px;
+            width: 100%;
+
+
+            z-index: 99;
+            flex-direction: column;
+            display: flex;
+            min-width: 10%;
+            max-width: 400px;
+            background-color: #3CA95B;
+            border-radius: 6px;
+            box-shadow: $primary-shadow;
+
+            @include break-tablet {
+                bottom: -211px;
+                left: 0;
+                margin: 0px;
+
+            }
+
+            @include break-mobile {
+                bottom: -193px;
+                left: 0;
+                margin: 0px;
+
+            }
+        }
+
+        &-button {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+        }
+
+        &-profil {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+            cursor: pointer;
+            color: white;
+
+            &-icon {
+
+                font-size: 30px;
+                padding-right: 20px;
+
+            }
+
+            &-text {
+                font-size: 16px;
+                font-weight: bold;
+                
+
+
+            }
+        }
+
+        &-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 98;
+            background-color: rgba(0, 0, 0, 0);
+
+        }
+    }
+};
+
+.error {
+    background-color: $color-primary;
+}
+
+.test {
+    display: flex;
+    margin: 0px 30px 0px 30px;
+    position: fixed;
+    bottom: 15px;
+    left: 5px; 
+
+    @include break-tablet {
+        bottom: 15px;
+    }
+
 }
 
 .fade-enter-active,

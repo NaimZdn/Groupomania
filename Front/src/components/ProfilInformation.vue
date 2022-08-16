@@ -1,55 +1,51 @@
 <template>
     <div class="ProfilInformation">
         <div class="ProfilInformation__picture">
-            <img id="userPicture" class="ProfilInformation__picture-user" :src="this.userData.picture"
-                alt="Votre photo de profil">
-
+            <img id="userPicture" class="ProfilInformation__picture-user" :src="userInfos.picture" alt="Votre photo de profil">
+   
         </div>
         <div class="ProfilInformation__pseudo">
-            <p class="ProfilInformation__pseudo-text"> {{ this.userData.pseudo }} </p>
-            <p class="ProfilInformation__pseudo-bio"> {{ this.user.bio }} </p>
-
+            <p  class="ProfilInformation__pseudo-text"> {{userInfos.pseudo}} </p>
+            <p  class="ProfilInformation__pseudo-bio"> {{userInfos.bio}} </p>
+            
         </div>
     </div>
 
 </template>
 <script>
+import { mapState } from 'vuex'; 
 
 export default {
     name: "ProfilInformation",
-    data() {
+     data() {
         return {
             userData: JSON.parse(localStorage.getItem('user'))
-
+           
         }
     },
 
+    
+
+
+     mounted() {
+        if (localStorage.user) {
+            this.userData = JSON.parse(localStorage.user)
+            //console.log(this.userInfos)
+        }
+    },
 
     computed: {
-        user: {
-            get: function () {
-                return this.userData
-            },
-            set: function (user) {
-                this.userData = user;
-                localStorage.setItem('user', JSON.stringify(user))
-                
-            }
-        }
-    },
-
-    /*computed: {
         ...mapState({
            userInfos: 'userInfos',
             
         })
-    }*/
+    }
 
 }
 </script>
 
 <style lang="scss">
-@import "../assets/sass/main.scss";
+@import "../assets/sass/main.scss"; 
 
 .ProfilInformation {
     display: flex;
@@ -57,7 +53,7 @@ export default {
     align-items: center;
     margin-bottom: 30px;
 
-    @include break-mobile {
+    @include break-mobile{
         flex-direction: column;
 
     }
@@ -70,12 +66,12 @@ export default {
         min-width: 200px;
         border-radius: 100%;
         border: 4px solid $color-primary;
-
-
+        
+        
 
         @include break-mobile {
-            margin-left: 0;
-        }
+            margin-left: 0; 
+            }
 
         &-user {
             width: 100%;
@@ -89,32 +85,32 @@ export default {
 
     &__pseudo {
         font-size: 40px;
-        margin-left: 40px;
+        margin-left: 40px;   
 
         @include break-mobile {
             font-size: 30px;
             margin: 0;
-
+                        
         }
-
-        &-text {
-
+        
+        &-text{
+        
             @include break-mobile {
                 text-align: center;
                 margin-top: 0;
-
-            }
+                        
+            } 
         }
 
         &-bio {
             border-left: 3px solid $color-primary;
             font-size: 16px;
             font-style: italic;
-            padding-left: 10px;
+            padding-left: 10px; 
             margin-right: 30px;
 
-            @include break-mobile {
-                margin: 0 15px 0 15px;
+            @include break-mobile {                
+                margin: 0 15px 0 15px; 
                 text-align: center;
             }
         }
@@ -123,12 +119,12 @@ export default {
     &__button {
         display: flex;
         justify-content: flex-end;
-        margin: 10px 30px 30px 0;
+        margin: 10px 30px 30px 0; 
 
         @include break-mobile {
             justify-content: center;
             margin: 10px 0 30px 0;
-
+    
         }
 
         &-modification {

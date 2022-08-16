@@ -3,9 +3,9 @@ const multer = require('multer');
 
 // Création des extensions des fichiers.
 const MIME_TYPES = {
-  'image/jpg': 'jpg',
-  'image/jpeg': 'jpeg',
-  'image/png': 'png'
+  'image/jpg': 'webp',
+  'image/jpeg': 'webp',
+  'image/png': 'webp'
 };
 
 // On dit un multer que l'on va enregister les images sur notre disque, ici ce sera le dossier images.
