@@ -110,8 +110,12 @@
     font-size: 20px;
     color: $color-primary;
 
-    &[type="pseudo"], &[type="mail"], &[type="password"] {
+    &[type="pseudo"], &[type="mail"], &[type="password"], &[type="text"] {
         padding-left: 70px;
+    }
+
+    &[type="password"], [type="text"] {
+        padding-right: 70px;
     }
 
     &::placeholder {

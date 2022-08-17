@@ -11,21 +11,41 @@
                 <h1 class="LoginMain__form-header"> S'identifier </h1>
 
                 <div class="LoginMain__input">
-                    <input id="mailInput" class="LoginMain__input-type" type="mail" placeholder="Email"
-                        aria-label="Entrez votre adresse mail" v-model="email">
+                    <input id="mailInput" @click='this.emailError = false' class="LoginMain__input-type" type="mail" placeholder="Email" aria-label="Entrez votre adresse mail" v-model="email">
                     <fa class="LoginMain__input-mail" icon="fa-solid fa-at" />
-                    <span class="SignUpMain__input-error" v-if="v$.email.$error"> Veuillez entrer un email valide </span>
+                    <div class="SignUpMain__input-container" v-if="v$.email.$error">
+                        <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="SignUpMain__input-container-error"> Veuillez entrer une adresse mail valide </span>
+                    </div>
+
+                    
+                    <div class="SignUpMain__input-container" v-if="emailError === true">
+                        <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="SignUpMain__input-container-error"> {{this.errorMessage}}</span>
+                    </div>
+
+                    
                 </div>
 
                 <div class="LoginMain__input">
-                    <input id="passwordInput" class="LoginMain__input-type" type='password' placeholder="Mot de passe"
-                        aria-label="Entrez votre mot de passe" v-model="password">
+                    <input id="passwordInput" @click='this.passwordError = false' class="LoginMain__input-type" type='password' placeholder="Mot de passe" aria-label="Entrez votre mot de passe" v-model="password">
                     <fa class="LoginMain__input-password" icon="fa-solid fa-lock" />
-                    <span class="SignUpMain__input-error" v-if="v$.password.$error"> Veuillez entrer un mot de passe  valide </span>
+
+                    <div class="SignUpMain__input-container" v-if="v$.password.$error">
+                        <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="SignUpMain__input-container-error"> Veuillez entrer un mot de passe valide </span>
+                    </div>
+
+                    <div class="SignUpMain__input-container" v-if="passwordError === true">
+                        <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="SignUpMain__input-container-error"> {{this.errorMessage}}</span>
+                    </div>
+
+                    
                 </div>
 
                 <div class="LoginMain__button">
-                    <button id="logButton" class="LoginMain__button-login" @click="login"> Se connecter </button>
+                    <button id="logButton" class="LoginMain__button-login" @click="submitForm"> Se connecter </button>
                 </div>
 
             </div>
@@ -39,7 +59,7 @@
                         <router-link to="/profil">
                             <div class="LoginMain__option-profil">
                                 <fa class="LoginMain__option-profil-icon" icon="fa-solid fa-circle-xmark" />
-                                <span class="LoginMain__option-profil-text"> L'identification a échouée, les informations rensignées ne sont pas valides. </span>
+                                <span class="LoginMain__option-profil-text"> L'identification a échouée.<br>{{errorMessage}} </span>
                             </div>
                         </router-link>
                     </div>
@@ -55,8 +75,6 @@
 import useVuelidate from '@vuelidate/core';
 import { required, email, helpers } from '@vuelidate/validators';
 
-
-
 const regexPassword = helpers.regex(/^[A-z0-9éèôöîïûùü' -/*]{8,}$/);
 
 export default {
@@ -70,6 +88,9 @@ export default {
             password: "",
             error: null,
             popup: false,
+            errorMessage: '', 
+            emailError: false, 
+            passwordError: false, 
 
         };
     },
@@ -87,61 +108,45 @@ export default {
 
 
     methods: {
-        /* submitForm() {
+         submitForm() {
             this.v$.$validate()
             if (!this.v$.$error) {
-                alert("C'est carré ")
-                const dataUser = {
-                    email: this.email,
-                    password: this.password,
-                };
-                console.log(dataUser);
-                axios
-                    .post("http://localhost:3000/api/auth/login", dataUser, {withCredentials: true})
-                    .then((response) => {
-                        console.log(response.data);
-                        this.$router.push("/mainpage");
-
-                    })
-                    .catch((error) => {
-                        alert("L'Email et/ou le Mot de passe est incorrect");
-                        this.popup = true;
-                        console.log(error);
-                    });
-            } else {
-                alert("Pas carré");
-            };
-        }, */
-       /* getUserInfos() {
-            this.$store.dispatch('getUserInfos', {
-            }).then((response) => {
-                console.log(response.data);
-
-            })
-                .catch((error) => {
-                    console.log('il y a une erreur ');
-                })
-        },*/
+                this.login();
+       
+            }; 
+        },
         login: function () {
             this.$store.dispatch('login', {
                 email: this.email,
                 password: this.password,
                 
             }).then((response) => {
-                //this.getUserInfos()
-               
                 this.$router.push("/mainpage") 
                 console.log(response.data);
                 
-                
-
             })
                 .catch((error) => {
-                    alert("L'Email et/ou le Mot de passe est incorrect");
+                    const errorMessage1 =  JSON.stringify(error.response.data).split('{"error":"')
+                    const errorMessage2 = errorMessage1[1].split(' "}')
+                    this.errorMessage = errorMessage2[0]
+                    this.showErrorMessage()
                     this.popup = true;
-                    console.log(error);
+                    
                 })
         }, 
+        showErrorMessage() {
+            if (this.errorMessage === "Utilisateur introuvable"){
+                console.log('cc')
+                this.emailError = true; 
+                this.passwordError = false 
+
+            }
+            else if (this.errorMessage === "Mot de passe invalide") {
+                this.passwordError = true;
+                this.emailError = false; 
+
+            }; 
+        }
     },
 };
 
