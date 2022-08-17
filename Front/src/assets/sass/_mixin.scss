@@ -133,6 +133,71 @@
     }
 };
 
+@mixin MailInput {
+    position: absolute;
+    left: 20px;
+    top: 38px;
+    font-size: 35px;
+    color: $color-primary;
+
+    @include break-mobile {
+        position: absolute;
+        left: 20px;
+        top: 38px;
+        height: 35px;
+
+    }
+
+    &:hover {
+        animation: bubble 0.5s
+    }
+}; 
+
+@mixin PasswordInput {
+    position: absolute;
+    left: 27px;
+    top: 38px;
+    height: 30px;
+    color: $color-primary;
+
+    @include break-mobile {
+        position: absolute;
+        left: 27px;
+        top: 38px;
+        height: 30px;
+    }
+
+    &:hover {
+        animation: bubble 0.5s
+    }
+}; 
+
+@mixin ShowPassword {
+    &-hide {
+        color: $color-primary; 
+        position: absolute;
+        right: 24px; 
+        top: 45px; 
+        height: 20px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &-show {
+        color: $color-primary; 
+        position: absolute;
+        right: 25px; 
+        top: 45px; 
+        height: 20px;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
 @mixin Checkbox {
     width: 20px;
     min-width: 20px;
@@ -161,6 +226,29 @@
 
     &:checked::before {
         transform: scale(1);
+    }
+};
+
+@mixin InputController {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    &-icon {
+        font-size: 20px;
+        padding-right: 10px;
+        color: $color-tertiary;
+    }
+
+    &-error {
+        color: $color-tertiary;
+        font-weight: bold;
+        margin: 0;
+
+        @include break-mobile {
+            text-align: center;
+
+        }
     }
 };
 
@@ -270,9 +358,86 @@
     }
 };
 
+@mixin PopupMessage {
+    display: flex;
+    margin: 0px 30px 0px 30px;
+    position: fixed;
+    bottom: 15px;
+    left: 5px;
 
+    @include break-tablet {
+        bottom: 15px;
+    }
 
+    &-content {
+        display: flex;
+        gap: 70px;
+        width: 100%;
+        z-index: 99;
+        flex-direction: column;
+        display: flex;
+        min-width: 10%;
+        max-width: 400px;
+        background-color: $color-primary;
+        border-radius: 6px;
+        box-shadow: $primary-shadow;
 
+        @include break-tablet {
+            bottom: -211px;
+            left: 0;
+            margin: 0px;
+
+        }
+
+        @include break-mobile {
+            bottom: -193px;
+            left: 0;
+            margin: 0px;
+
+        }
+    }
+
+    &-button {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+    }
+
+    &-profil {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        padding: 20px;
+        cursor: pointer;
+        color: white;
+        gap: 20px;
+
+        &-icon {
+
+            font-size: 30px;
+
+        }
+
+        &-text {
+            font-size: 16px;
+            font-weight: bold;
+
+        }
+
+        &-close {
+            font-size: 19px;
+            border-radius: 100%;
+
+            &:hover {
+
+                color: #DADADA;
+            }
+
+        }
+    }
+}; 
 
 @mixin Fade {
     .OptionFade-enter-active,

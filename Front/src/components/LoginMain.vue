@@ -3,71 +3,69 @@
         <section class="LoginMain">
 
             <div class="LoginMain__illustration ">
-                <img class="LoginMain__illustration-picture" src="../assets/images/Illustration-login.png"
-                    alt="Illustration Login">
+                <img class="LoginMain__illustration-picture" src="../assets/images/Illustration-login.png" alt="Illustration Login">
             </div>
 
             <div class="LoginMain__form">
                 <h1 class="LoginMain__form-header"> S'identifier </h1>
 
                 <div class="LoginMain__input">
-                    <input id="mailInput" @click='this.emailError = false' class="LoginMain__input-type" type="mail" placeholder="Email" aria-label="Entrez votre adresse mail" v-model="email">
+                    <input @click='this.emailError = false' class="LoginMain__input-type" type="mail" placeholder="Email" aria-label="Entrez votre adresse mail" v-model="email">
                     <fa class="LoginMain__input-mail" icon="fa-solid fa-at" />
-                    <div class="SignUpMain__input-container" v-if="v$.email.$error">
-                        <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
-                        <span class="SignUpMain__input-container-error"> Veuillez entrer une adresse mail valide </span>
-                    </div>
 
-                    
-                    <div class="SignUpMain__input-container" v-if="emailError === true">
-                        <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
-                        <span class="SignUpMain__input-container-error"> {{this.errorMessage}}</span>
+                    <div class="LoginMain__input-container" v-if="v$.email.$error">
+                        <fa class="LoginMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="LoginMain__input-container-error"> Veuillez entrer une adresse mail valide </span>
                     </div>
-
-                    
+ 
+                    <div class="LoginMain__input-container" v-if="emailError === true">
+                        <fa class="LoginMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="LoginMain__input-container-error"> {{errorMessageText}}</span>
+                    </div>
+            
                 </div>
 
                 <div class="LoginMain__input">
-                    <input id="passwordInput" @click='this.passwordError = false' class="LoginMain__input-type" type='password' placeholder="Mot de passe" aria-label="Entrez votre mot de passe" v-model="password">
+                    <input v-if='!showPassword' @click='this.passwordError = false' class="LoginMain__input-type" type='password' placeholder="Mot de passe" aria-label="Entrez votre mot de passe" v-model="password">
+                    <input v-if='showPassword' @click='this.passwordError = false' class="LoginMain__input-type" type='text' placeholder="Mot de passe" aria-label="Entrez votre mot de passe" v-model="password">
                     <fa class="LoginMain__input-password" icon="fa-solid fa-lock" />
+                    <fa v-if='showPassword' @click="toggleShow" class="LoginMain__input-show" icon="fa-solid fa-eye" />
+                    <fa v-if='!showPassword' @click="toggleShow" class="LoginMain__input-hide" icon="fa-solid fa-eye-slash" />
 
-                    <div class="SignUpMain__input-container" v-if="v$.password.$error">
-                        <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
-                        <span class="SignUpMain__input-container-error"> Veuillez entrer un mot de passe valide </span>
+                    <div class="LoginMain__input-container" v-if="v$.password.$error">
+                        <fa class="LoginMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="LoginMain__input-container-error"> Veuillez entrer un mot de passe valide </span>
                     </div>
 
-                    <div class="SignUpMain__input-container" v-if="passwordError === true">
-                        <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
-                        <span class="SignUpMain__input-container-error"> {{this.errorMessage}}</span>
+                    <div class="LoginMain__input-container" v-if="passwordError === true">
+                        <fa class="LoginMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="LoginMain__input-container-error"> {{errorMessageText}}</span>
                     </div>
 
-                    
                 </div>
 
                 <div class="LoginMain__button">
-                    <button id="logButton" class="LoginMain__button-login" @click="submitForm"> Se connecter </button>
+                    <button class="LoginMain__button-login" @click="submitForm"> Se connecter </button>
                 </div>
 
             </div>
         </section>
 
-        <section class="test">
-            <transition name=OptionFade appear>
-                <div class="LoginMain__option-content" v-if="popup">
-                    <div class="LoginMain__option-button">
+            <section class="LoginMain__popup">
+                <transition name=OptionFade appear>
+                    <div class="LoginMain__popup-content" v-if="popupError">
+                        <div class="LoginMain__popup-button">
 
-                        <router-link to="/profil">
-                            <div class="LoginMain__option-profil">
-                                <fa class="LoginMain__option-profil-icon" icon="fa-solid fa-circle-xmark" />
-                                <span class="LoginMain__option-profil-text"> L'identification a échouée.<br>{{errorMessage}} </span>
+                            <div class="LoginMain__popup-profil">
+                                <fa class="LoginMain__popup-profil-icon" icon="fa-solid fa-circle-xmark" />
+                                <span class="LoginMain__popup-profil-text"> L'identification a échouée.<br>{{errorMessageText}}</span>
+                                <fa class="LoginMain__popup-profil-close" icon="fa-solid fa-xmark" @click="popupError = false" />
                             </div>
-                        </router-link>
-                    </div>
-                </div>
-            </transition>
 
-            <div class="LoginMain__option-bg" v-if="popup" @click="popup = false"> </div>
-        </section>
+                        </div>
+                    </div>
+                </transition>
+            </section>
     </main>
 </template>
 
@@ -87,10 +85,11 @@ export default {
             email: "",
             password: "",
             error: null,
-            popup: false,
-            errorMessage: '', 
+            popupError: false,
+            errorMessageText: '', 
             emailError: false, 
             passwordError: false, 
+            showPassword: false, 
 
         };
     },
@@ -106,9 +105,8 @@ export default {
         }
     },
 
-
     methods: {
-         submitForm() {
+        submitForm() {
             this.v$.$validate()
             if (!this.v$.$error) {
                 this.login();
@@ -122,30 +120,34 @@ export default {
                 
             }).then((response) => {
                 this.$router.push("/mainpage") 
-                console.log(response.data);
                 
-            })
-                .catch((error) => {
-                    const errorMessage1 =  JSON.stringify(error.response.data).split('{"error":"')
-                    const errorMessage2 = errorMessage1[1].split(' "}')
-                    this.errorMessage = errorMessage2[0]
-                    this.showErrorMessage()
-                    this.popup = true;
-                    
-                })
+            }).catch((error) => {
+                const errorMessageText1 =  JSON.stringify(error.response.data).split('{"error":"')
+                const errorMessageText2 = errorMessageText1[1].split(' "}')
+                this.errorMessageText = errorMessageText2[0]
+                this.showErrorMessage()
+                this.popupError = true; 
+                this.delayCloseAlert()     
+            });
         }, 
         showErrorMessage() {
-            if (this.errorMessage === "Utilisateur introuvable"){
-                console.log('cc')
+            if (this.errorMessageText === "Utilisateur introuvable"){
                 this.emailError = true; 
-                this.passwordError = false 
+                this.passwordError = false;
 
-            }
-            else if (this.errorMessage === "Mot de passe invalide") {
+            } else if (this.errorMessageText === "Mot de passe invalide") {
                 this.passwordError = true;
-                this.emailError = false; 
+                this.emailError = false;
 
             }; 
+        }, 
+        delayCloseAlert() {
+            var self = this;
+            setTimeout(function () { self.popupError = false }, 7000);
+
+        },
+        toggleShow(){
+            this.showPassword = !this.showPassword; 
         }
     },
 };
@@ -213,7 +215,7 @@ export default {
 
             @include break-mobile {
                 font-size: 30px;
-                margin-bottom: 30px
+                margin-bottom: 30px;
             }
         }
     }
@@ -227,43 +229,19 @@ export default {
         }
 
         &-mail {
-            position: absolute;
-            left: 20px;
-            top: 38px;
-            font-size: 35px;
-            color: $color-primary;
-
-            @include break-mobile {
-                position: absolute;
-                left: 20px;
-                top: 38px;
-                height: 35px;
-
-            }
-
-            &:hover {
-                animation: bubble 0.5s
-            }
+            @include MailInput;
         }
 
         &-password {
-            position: absolute;
-            left: 27px;
-            top: 38px;
-            height: 30px;
-            color: $color-primary;
+            @include PasswordInput;
 
-            @include break-mobile {
-                position: absolute;
-                left: 27px;
-                top: 38px;
-                height: 30px;
-            }
-
-            &:hover {
-                animation: bubble 0.5s
-            }
         }
+        &-container {
+            @include InputController; 
+
+        }
+        @include ShowPassword; 
+
     }
 
     &__button {
@@ -278,88 +256,9 @@ export default {
         }
     }
 
-    &__option {
-
-        &-content {
-            display: flex;
-            gap: 70px;
-            width: 100%;
-
-
-            z-index: 99;
-            flex-direction: column;
-            display: flex;
-            min-width: 10%;
-            max-width: 400px;
-            background-color: $color-primary;
-            border-radius: 6px;
-            box-shadow: $primary-shadow;
-
-            @include break-tablet {
-                bottom: -211px;
-                left: 0;
-                margin: 0px;
-
-            }
-
-            @include break-mobile {
-                bottom: -193px;
-                left: 0;
-                margin: 0px;
-
-            }
-        }
-
-        &-button {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-
-        }
-
-        &-profil {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            width: 100%;
-            padding: 20px;
-            cursor: pointer;
-            color: white;
-
-            &-icon {
-
-                font-size: 30px;
-                padding-right: 20px;
-
-            }
-
-            &-text {
-                font-size: 16px;
-                font-weight: bold;
-
-
-            }
-        }
-
-        &-bg {
-            position: fixed;
-            inset: 0;
-            z-index: 98;
-            background-color: rgba(0, 0, 0, 0);
-
-        }
+    &__popup {
+          @include PopupMessage;
+        
     }
-};
-
-.test {
-    display: flex;
-    margin: 0px 30px 0px 30px;
-    position: fixed;
-    bottom: 15px;
-
-    @include break-tablet {
-        bottom: 15px;
-    }
-
 };
 </style>

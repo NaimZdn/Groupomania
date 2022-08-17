@@ -97,15 +97,15 @@
 
             </div>
 
-            <section class="SignUpMain__error">
+            <section class="SignUpMain__popup">
                 <transition name=OptionFade appear>
-                    <div class="SignUpMain__error-content" v-if="errorMessage">
-                        <div class="SignUpMain__error-button">
+                    <div class="SignUpMain__popup-content" v-if="popupError">
+                        <div class="SignUpMain__popup-button">
 
-                            <div class="SignUpMain__error-profil">
-                                <fa class="SignUpMain__error-profil-icon" icon="fa-solid fa-circle-xmark" />
-                                <span class="SignUpMain__error-profil-text"> L'inscription a échoué, le pseudo et/ou l'adresse Mail est déjà utilisé </span>
-                                <fa class="SignUpMain__error-profil-close" icon="fa-solid fa-xmark" @click="errorMessage = false" />
+                            <div class="SignUpMain__popup-profil">
+                                <fa class="SignUpMain__popup-profil-icon" icon="fa-solid fa-circle-xmark" />
+                                <span class="SignUpMain__popup-profil-text"> L'inscription a échoué, le pseudo et/ou l'adresse Mail est déjà utilisé </span>
+                                <fa class="SignUpMain__popup-profil-close" icon="fa-solid fa-xmark" @click="popupError = false" />
                             </div>
 
                         </div>
@@ -113,17 +113,15 @@
                 </transition>
             </section>
 
-            <section class="SignUpMain__error">
+            <section class="SignUpMain__popup">
                 <transition name=OptionFade appear>
-                    <div class="SignUpMain__error-content valid" v-if="validMessage" @click="pushToLoginPage()">
-                        <div class="SignUpMain__error-button">
+                    <div class="SignUpMain__popup-content valid" v-if="popupValid" @click="pushToLoginPage()">
+                        <div class="SignUpMain__popup-button">
 
-                            <div class="SignUpMain__error-profil">
-                                <fa class="SignUpMain__error-profil-icon" icon="fa-solid fa-circle-check" />
-                                <span class="SignUpMain__error-profil-text"> Votre compte a bien été crée <br>
-                                    Cliquez-ici pour vous connecter </span>
-                                <fa class="SignUpMain__error-profil-close" icon="fa-solid fa-xmark"
-                                    @click="errorMessage = false" />
+                            <div class="SignUpMain__popup-profil">
+                                <fa class="SignUpMain__popup-profil-icon" icon="fa-solid fa-circle-check" />
+                                <span class="SignUpMain__popup-profil-text"> Votre compte a bien été crée <br> Cliquez-ici pour vous connecter </span>
+                                <fa class="SignUpMain__popup-profil-close" icon="fa-solid fa-xmark" @click="popupValid = false" />
                             </div>
 
                         </div>
@@ -138,7 +136,7 @@
 <script>
 import useVuelidate from '@vuelidate/core';
 import { required, email, helpers } from '@vuelidate/validators';
-import { containsUppercase, containsLowercase, containsNumber } from "./regexSignUp.js"
+import { containsUppercase, containsLowercase, containsNumber } from "../common/regexSignUp.js"
 
 const regexPseudo = helpers.regex(/^[A-z0-9éèôöîïûùü' -]{8,20}$/);
 const regexPassword = helpers.regex(/^[A-z0-9éèôöîïûùü' -/*]{8,}$/);
@@ -156,8 +154,8 @@ export default {
             password: "",
             acceptTerms: false,
             error: null,
-            errorMessage: false,
-            validMessage: false,
+            popupError: false,
+            popupValid: false,
             showScopInput: false,
             showPassword: false, 
 
@@ -202,12 +200,12 @@ export default {
                 email: this.email,
                 password: this.password,
             }).then((response) => {
-                this.validMessage = true;
+                this.popupValid = true;
                 //this.$router.push("/login");
 
             })
                 .catch((error) => {
-                    this.errorMessage = true;
+                    this.popupError = true;
                 })
             this.delayCloseAlert()
         },
@@ -215,11 +213,11 @@ export default {
             var self = this;
 
             setTimeout(function () {
-                self.errorMessage = false;
+                self.popupError = false;
             }, 7000);
 
             setTimeout(function () {
-                self.validMessage = false;
+                self.popupValid = false;
             }, 10000);
         },
         pushToLoginPage() {
@@ -307,67 +305,15 @@ export default {
         }
 
         &-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-
-            &-icon {
-                font-size: 20px;
-                padding-right: 10px;
-                color: $color-tertiary;
-            }
-
-            &-error {
-                color: $color-tertiary;
-                font-weight: bold;
-                margin: 0;
-
-                @include break-mobile {
-                    text-align: center;
-
-                }
-            }
+            @include InputController;
         }
 
         &-mail {
-            position: absolute;
-            left: 26px;
-            top: 38px;
-            height: 33px;
-            color: $color-primary;
-
-            @include break-mobile {
-                position: absolute;
-                left: 27px;
-                top: 38px;
-                height: 30px;
-
-            }
-
-            &:hover {
-                animation: bubble 0.5s;
-
-            }
+            @include MailInput;
         }
 
         &-password {
-            position: absolute;
-            left: 27px;
-            top: 38px;
-            height: 30px;
-            color: $color-primary;
-
-            @include break-mobile {
-                position: absolute;
-                left: 27px;
-                top: 38px;
-                height: 30px;
-            }
-
-            &:hover {
-                animation: bubble 0.5s;
-
-            }
+            @include PasswordInput;
         }
 
         &-error {
@@ -375,29 +321,7 @@ export default {
             font-weight: bold;
         }
 
-        &-hide {
-            color: $color-primary; 
-            position: absolute;
-            right: 24px; 
-            top: 45px; 
-            height: 20px;
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-
-        &-show {
-            color: $color-primary; 
-            position: absolute;
-            right: 25px; 
-            top: 45px; 
-            height: 20px;
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
+        @include ShowPassword
     }
 
     &__checkbox {
@@ -455,86 +379,9 @@ export default {
         }
     }
 
-    &__error,
-    &__valid {
-        display: flex;
-        margin: 0px 30px 0px 30px;
-        position: fixed;
-        bottom: 15px;
-        left: 5px;
-
-        @include break-tablet {
-            bottom: 15px;
-        }
-
-        &-content {
-            display: flex;
-            gap: 70px;
-            width: 100%;
-            z-index: 99;
-            flex-direction: column;
-            display: flex;
-            min-width: 10%;
-            max-width: 400px;
-            background-color: $color-primary;
-            border-radius: 6px;
-            box-shadow: $primary-shadow;
-
-            @include break-tablet {
-                bottom: -211px;
-                left: 0;
-                margin: 0px;
-
-            }
-
-            @include break-mobile {
-                bottom: -193px;
-                left: 0;
-                margin: 0px;
-
-            }
-        }
-
-        &-button {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-
-        }
-
-        &-profil {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            width: 100%;
-            padding: 20px;
-            cursor: pointer;
-            color: white;
-            gap: 20px;
-
-            &-icon {
-
-                font-size: 30px;
-
-            }
-
-            &-text {
-                font-size: 16px;
-                font-weight: bold;
-
-            }
-
-            &-close {
-                font-size: 19px;
-                border-radius: 100%;
-
-                &:hover {
-
-                    color: #DADADA;
-                }
-
-            }
-        }
+    &__popup {
+        @include PopupMessage
+        
     }
 }
 
