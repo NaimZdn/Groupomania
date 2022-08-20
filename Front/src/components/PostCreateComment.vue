@@ -1,9 +1,3 @@
-<script>
-export default {
-    name: 'PostCreateComment'
-}
-</script>
-
 <template>
     <div class="PostCreateComment__content">
     <div class="PostCreateComment__line"> </div>
@@ -11,7 +5,7 @@ export default {
 
     <div class="PostCreateComment">
         <div class="PostCreateComment__picture line ">
-            <img id="userPicture" class="PostCreateComment__picture-user" src="../assets/images/Photo CV.jpg" alt="Votre photo de profil"> 
+            <img id="userPicture" class="PostCreateComment__picture-user" :src="userInfos.picture" alt="Votre photo de profil"> 
         </div>
         <span id="createComment" class="PostCreateComment__form" role="textbox" contenteditable></span>
     </div>
@@ -20,6 +14,25 @@ export default {
         <button id="commentCreateButton" class="PostCreateComment__button-send">PUBLIER</button>
     </div>
 </template>
+
+<script>
+export default {
+    name: 'PostCreateComment', 
+
+       data() {
+    return {
+        userInfos: '', 
+
+    }
+   }, 
+      mounted() {
+        if (localStorage.user) {
+            this.userInfos = JSON.parse(localStorage.user)
+            //console.log(this.userInfos)
+        }
+    },
+}
+</script>
 
 <style lang="scss">
 @import "../assets/sass/main.scss"; 

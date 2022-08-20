@@ -6,7 +6,7 @@
 
        <div class="Post" v-for="post in posts">
         <PostContent  @getUserInfo='getUserInfo()' @getAllPosts='getAllPosts' :picture='post.picture' :message="post.message" :likes="post.likes" :createdAt="dateTime(post.createdAt)" 
-        :comments="post.comments" :userId="post.userId" :allUsers="allUsers" :userPicture2='this.userPicture2'></PostContent>
+        :comments="post.comments" :userId="post.userId" :allUsers="allUsers" :userPicture2='this.userPicture2' :usersLiked="post.usersLiked" :postId="post._id"></PostContent>
       </div>
      
     </section>
@@ -58,7 +58,7 @@ export default {
   
         
 
-        //console.log(this.posts)
+        console.log(this.posts)
       })
       .catch((error) => {
         console.log(error)
@@ -70,7 +70,7 @@ export default {
       .then((response) => {
         console.log(response.data)
         this.getUserInfo()
-        //console.log(this.posts)
+       
       })
       .catch((error) => {
         console.log(error)
@@ -89,6 +89,8 @@ export default {
       }
     },
     getUserInfo() {
+      console.log('cc')
+      
       this.posts.map(post => {
          this.allUsers?.map((user) => {
                 if (user._id === post.userId) {

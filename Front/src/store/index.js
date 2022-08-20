@@ -240,6 +240,21 @@ const store = createStore({
                 })      
             })
         }, 
+        likePost ({commit, state}) {
+            console.log(state.post)
+            return new Promise ((resolve, reject ) => {
+                axios.post('api/mainpage/' + state.post._id, {withCredentials: true})
+                    .then((response) => {
+                        console.log(response.data)
+                        //commit('postInfo', response.data)
+                        resolve(response)
+                    }).catch((error) => {
+                        console.log('il y a une erreur' + error)
+                        reject(error)
+                    })
+                    
+            })
+        }
 
 
     }

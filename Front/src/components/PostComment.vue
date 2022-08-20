@@ -18,7 +18,7 @@
 <script>
 export default {
     name: "PostComment",
-    props: ['comment', 'pseudo']
+    props: ['comment', 'pseudo'], 
 
 }
 </script>

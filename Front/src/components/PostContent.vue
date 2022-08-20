@@ -1,25 +1,24 @@
 
 <template>
 
-<section v-if="userPicture === userPicture2"></section>
     <div class="PostContent__header">
 
         <div class="PostContent__picture">
-            <router-link to="/profil"> <img id="userPicture" class="PostContent__picture-user" :src='userPicture' alt="Photo de profil de l'utilisateur ayant crée le post">
+            <router-link to="/profil"> <img class="PostContent__picture-user" :src='userPicture  ' alt="Photo de profil de l'utilisateur ayant crée le post">
            </router-link>
         </div>
 
         <div class="PostContent__info">
-            <h2 id="userPseudo" class="PostContent__info-user">{{}}</h2>
+            <h2 id="userPseudo" class="PostContent__info-user">{{userPseudo}}</h2>
             <p id="postDate" class="PostContent__info-date"> {{createdAt}}</p>
         </div>
 
         
-            <div class="PostContent__option">
+            <div v-if="option === true " class="PostContent__option">
                 <fa id="postOption" class="PostContent__option-icon" icon="fa-solid fa-gear"
                     @click="showOption = true" />
 
-                <transition name=OptionFade appear>
+            <transition name=OptionFade appear>
                 <div class="PostContent__option-content" v-if="showOption" @click="showOption = true">
                     <div class="PostContent__option-button">
 
@@ -52,10 +51,10 @@
 
         <div id="showComment" class="PostContent__comment" @click="showComment = !showComment">
             <fa class="PostContent__comment-icon" icon="fa-solid fa-comment-dots" />
-            <span class="PostContent__comment-number">  </span>
+            <span class="PostContent__comment-number"> {{this.comments?.length}} </span>
         </div>
 
-        <div id="addLike" class="PostContent__like">
+        <div id="addLike" class="PostContent__like" @click="checkUserLike()">
             <fa class="PostContent__like-icon" icon="fa-solid fa-thumbs-up" />
             <span class="PostContent__like-number"> {{likes}} </span>
         </div>
@@ -72,6 +71,7 @@
 import { mapState } from 'vuex';
 import PostComment from './PostComment.vue';
 import PostCreateComment from './PostCreateComment.vue';
+import axios from 'axios'
 export default {
     name: "PostContent",
     components: { PostComment, PostCreateComment },
@@ -83,34 +83,111 @@ export default {
             showOption: false,
             showPostPicture: false, 
             userPicture: '',
-            //userPseudo: '',  
+            userPseudo: '',  
             userInfos: '',
+
+            option: false, 
+            like: 0, 
             
         }
     }, 
 
-    props: ['picture', 'message', 'likes', 'createdAt', 'comments', 'userId', 'allUsers','userPicture2' ],
+    props: ['picture', 'message', 'likes', 'createdAt', 'comments', 'userId', 'allUsers','userPicture2', 'usersLiked', 'postId' ],
     emits: ['getUserInfo', 'getAllPosts'],
 
     mounted () {
        //this.$emit('getUserInfo')
-       // this.$emit('getAllPosts')
-        this.getUserPicture ()
+       //this.$emit('getAllPosts')
+       //console.log(this.postId)
+        if (localStorage.user) {
+            this.userInfos = JSON.parse(localStorage.user)
+            //console.log(this.userInfos)
+        }
+       this.getUserPicture ()
+       this.displayOption ()
+       //this.checkUserLike () 
+       
 
     }, 
 
 
     methods: {
-        getUserPicture () {
-            this.allUsers?.map((user) => {
+        getUserPicture () { 
+            
+            if(this.userInfos.userId === this.userId) {
+                console.log('yo')
+                this.userPicture = this.userInfos.picture
+                this.userPseudo = this.userInfos.pseudo
+            }else {
+                
+            this.allUser?.map((user) => {
                 if (user._id === this.userId) {
                     this.userPseudo = user.pseudo
                     this.userPicture = user.picture
                     //console.log(this.userPicture)
+                    //console.log('enfant')
+                    //console.log(this.userPicture)
                 }
             })
+            }
         }, 
+        displayOption() {
+            
+            if(this.userId === this.userInfos.userId) {
+                this.option = true        
+            }
+        }, 
+        likePost () {
+            this.$store.dispatch('likePost', {
+                like: this.like
+            }).then((response) => {
+                console.log(response)
+                this.checkUserLike()
+            }).catch((error) => {
+
+            })
+        }, 
+        checkUserLike () {
+            if (this.usersLiked.includes(this.userInfos.userId)) {
+                this.like = 0
+                console.log('0')
+            }else {
+                console.log('+1')
+                this.like = 1
+                
+
+            }
+            const like = {
+                like: this.like 
+            }
+            //console.log(this.usersLiked.includes(this.userId))
+            //console.log(this.usersLiked)
+            //console.log(this.userId)
+            //console.log(like)
+            //console.log(this.postId)
+
+           return new Promise ((resolve, reject) => {
+            axios.post('http://localhost:3000/api/mainpage/' + this.postId + '/like', like, {withCredentials: true})
+                .then((response) => {
+                    console.log(response.data)
+                    resolve(response.data)
+                    this.$emit('getAllPosts')
+                    
+                }) .catch((error) => {
+                    reject(error)
+                    console.log(error)
+                })
+            })
+
+
+        }
     }, 
+
+    computed: {
+    ...mapState ({
+        allUser: 'allUsers'
+    })
+  }
 
 
 

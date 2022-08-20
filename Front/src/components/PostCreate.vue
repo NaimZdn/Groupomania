@@ -130,10 +130,9 @@ export default {
         submitPost() {
             this.v$.$validate();
             if (!this.v$.$error) {
-                this.$emit('getAllUsers') 
+                //this.$emit('getAllUsers')
+                
                 this.createPost();
-                   
-                this.$emit('getAllPosts')
                
             } else {
                 if (this.v$.message.required.$invalid === true)
@@ -157,9 +156,10 @@ export default {
                     this.showMulterErrorMessage = false
                     this.validationMessage = true 
                     this.delayCloseAlert()
-                    this.$emit('getAllUsers') 
+                    this.$emit('getAllUsers')
                     
-                    //this.$emit('getUserInfo');
+                    this.$emit('getAllPosts')
+                    this.$emit('getUserInfo');
                     //this.$router.go('/mainpage')
                     
                     //this.displayModification = false
