@@ -6,10 +6,16 @@
                 alt="Votre photo de profil">
 
         </div>
-        <div class="ProfilInformation__pseudo">
-            <p class="ProfilInformation__pseudo-text"> {{ this.userData.pseudo }} </p>
-            <p class="ProfilInformation__pseudo-bio"> {{ this.userData.bio }} </p>
+        <div class ="ProfilInformation__content">  
 
+            <div class="ProfilInformation__pseudo">
+                <p class="ProfilInformation__pseudo-text"> {{ this.userData.pseudo }} </p>
+                <p v-if="userData.isAdmin === true" class="ProfilInformation__pseudo-admin"> Admin </p>
+            </div>
+
+            <div class="ProfilInformation__bio"> 
+                <p class="ProfilInformation__pseudo-bio"> {{ this.userData.bio }} </p>
+            </div>
         </div>
     </div>
 
@@ -18,10 +24,7 @@
             @click="displayModification = true"> Modifier vos informations </button>
     </div>
 
-    <transition name="fade" appear>
-        <div class="ProfilInformationModification__bg" v-if="displayModification" @click="displayModification = false">
-        </div>
-    </transition>
+
 
     <transition name="slide" appear>
         <div class="ProfilInformationModification__content" v-if="displayModification">
@@ -34,15 +37,19 @@
                 <label class="ProfilInformationModification__import-file"
                     aria-label="Cliquez pour importer votre image">
                     <fa icon="fa-solid fa-camera" />
-                    <input class="ProfilInformationModification__input" type="file" @change="changeFile">
+                    <input class="ProfilInformationModification__input" type="file" accept="image/*" @change="changeFile">
                 </label>
             </div>
 
 
             <div class="ProfilInformationModification__text">
-                <textarea class="ProfilInformationModification__text-description" role="textbox" placeholder="Bio"
-                    maxlength="300" v-model='this.userData.bio' @input="resizeTextarea()" ref="textarea"> </textarea>
+                <textarea class="ProfilInformationModification__text-description" role="textbox" placeholder="Bio" maxlength="300" v-model='this.userData.bio' @input="resizeTextarea()" ref="textarea"> </textarea>
                 <span class="ProfilInformationModification__text-counter"> {{ totalCharacters }}/300 caractères</span>
+                
+                  <div v-if='multerErrorMessage != ""' class="ProfilInformationModification__text-error"> 
+                    <fa class="ProfilInformationModification__text-error-icon" icon="fa-solid fa-circle-xmark" />
+                    <p class="ProfilInformationModification__text-error-text"> {{this.multerErrorMessage}} </p>
+                </div>
             </div>
 
 
@@ -50,7 +57,7 @@
 
                 <button class="ProfilInformationModification__save-modification" @click="updateUserProfil()"> Modifier
                 </button>
-                <button class="ProfilInformationModification__save-return" @click="displayModification = false"> Annuler
+                <button class="ProfilInformationModification__save-return" @click="hideErrorMessage()"> Annuler
                 </button>
             </div>
         </div>
@@ -61,12 +68,11 @@
                 <div class="ProfilInformationModification__option-content" v-if="validationMessage">
                     <div class="ProfilInformationModification__option-button">
 
-                        <router-link to="/profil">
                             <div class="ProfilInformationModification__option-profil">
                                 <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-check" />
                                 <span class="ProfilInformationModification__option-profil-text"> Votre profil a bien été modifié </span>
                             </div>
-                        </router-link>
+
                     </div>
                 </div>
             </transition>
@@ -77,16 +83,19 @@
                 <div class="ProfilInformationModification__option-content error" v-if="errorMessage">
                     <div class="ProfilInformationModification__option-button">
 
-                        <router-link to="/profil">
                             <div class="ProfilInformationModification__option-profil">
                                 <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-xmark" />
                                 <span class="ProfilInformationModification__option-profil-text"> Une erreur est survenue, veuillez réessayer </span>
                             </div>
-                        </router-link>
                     </div>
                 </div>
             </transition>
         </section>
+
+    <transition name="fade" appear>
+        <div class="ProfilInformationModification__bg" v-if="displayModification" @click="hideErrorMessage()">
+        </div>
+    </transition>
 
             
 
@@ -109,6 +118,7 @@ export default {
             userData: [],
             validationMessage: false, 
             errorMessage: false, 
+            multerErrorMessage: '', 
 
         }
     },
@@ -129,7 +139,7 @@ export default {
 
         reloadStorage() {
             this.userData = JSON.parse(localStorage.getItem('user'))
-            console.log(this.userData)
+            //console.log(this.userData)
             this.displayModification = false
         },
 
@@ -137,18 +147,27 @@ export default {
             const dataForm = new FormData();
             dataForm.append('image', this.file);
             dataForm.append('bio', this.userData.bio);
-           await this.$store.dispatch('updateUserProfil', dataForm)  
-           .then((response) => {
-            this.validationMessage = true
-            
+            await this.$store.dispatch('updateUserProfil', dataForm)  
+                .then((response) => {
+                    this.validationMessage = true
+                    this.multerErrorMessage = ''; 
+                    this.reloadStorage()
+                }).catch((error) => {
+                    const multerError = error.response.data.split(`Error: `)
+                    const multerError2 = multerError[1].split(`<br> &nbsp; `)
 
-           })
-           .catch((error) => {
-            this.errorMessage = true
-           })
-        
-    
-            this.reloadStorage()
+                    this.multerErrorMessage = multerError2[0]
+                    if (this.multerErrorMessage === 'File too large') {
+                        this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
+                    }
+
+                    console.log(this.multerErrorMessage)
+                    this.displayPicture()
+                    
+                    this.errorMessage = true
+                })
+
+           
             this.delayCloseAlert()
 
         },
@@ -167,6 +186,17 @@ export default {
                 self.errorMessage = false; 
             }, 7000);
         },
+
+        displayPicture() {
+            if (this.multerErrorMessage != '') {
+                this.url = null
+                this.files = true
+            }
+        }, 
+        hideErrorMessage() {
+            this.displayModification = false
+            this.multerErrorMessage = ''
+        }
 
     },
     computed: {
@@ -279,15 +309,17 @@ export default {
         flex-direction: column;
         justify-content: flex-start;
         margin-top: -50px;
+        
 
         &-description {
 
             @include input-add;
             margin: 15px 0px 15px 0;
             height: 30px;
+             font-size: 15px;
 
             &::placeholder {
-                font-size: 14px;
+                font-size: 15px;
                 font-weight: bold;
                 color: $color-primary;
 
@@ -299,6 +331,28 @@ export default {
             font-size: 13px;
             color: $color-tertiary;
             font-weight: bold;
+        }
+
+        &-error {
+            display: flex;
+            align-items:center; 
+            margin-top: 5px;
+            
+            font-size: 16px;
+            color: $color-primary;
+            font-weight: bold;
+
+             &-icon{
+                font-size: 20px;
+                color: $color-primary; 
+                padding-right: 10px;
+                margin: 10px 0 4px 0; 
+            }
+
+            &-text {
+                margin: 10px 0 4px 0; 
+            }
+
         }
     }
 
@@ -373,7 +427,7 @@ export default {
             width: 100%;
 
 
-            z-index: 99;
+            
             flex-direction: column;
             display: flex;
             min-width: 10%;
@@ -428,14 +482,6 @@ export default {
 
             }
         }
-
-        &-bg {
-            position: fixed;
-            inset: 0;
-            z-index: 98;
-            background-color: rgba(0, 0, 0, 0);
-
-        }
     }
 };
 
@@ -444,6 +490,7 @@ export default {
 }
 
 .test {
+    z-index: 1000;
     display: flex;
     margin: 0px 30px 0px 30px;
     position: fixed;

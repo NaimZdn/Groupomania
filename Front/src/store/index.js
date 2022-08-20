@@ -44,6 +44,17 @@ const store = createStore({
             createdAt: '', 
          
         },
+        post: {
+            userId : '', 
+            _id: '', 
+            
+        }, 
+        allUsers: {
+           _id: '', 
+           picture: '', 
+           pseudo: '', 
+           isAdmin: '',  
+        }
     },
     mutations: {
         setStatus: function(state, status){
@@ -65,7 +76,6 @@ const store = createStore({
             localStorage.setItem('user', JSON.stringify(userData));
             state.userInfos = userData
         },
-        
         disconnectUser: function(state, user) {
             localStorage.clear()
             state.user = user; 
@@ -74,8 +84,10 @@ const store = createStore({
             localStorage.clear()
         },
         postInfo: function(state, post) {
-            localStorage.setItem('post', JSON.stringify(post))
             state.post = post
+        }, 
+        allUsersInfo: function (state, allUsers) {
+            state.allUsers = allUsers
         }
     },
 
@@ -172,18 +184,24 @@ const store = createStore({
             })
         }, 
         createPost: ({commit}, post) => {
+            return new Promise ((resolve, reject) => {
             axiosInstance.post('api/mainpage/',post, {withCredentials: true })
                 .then((response) => {
-                    commit('postInfo', response.data)
                     console.log(response.data)
-                })
-        }, 
-        getAllPosts: ({commit}) => {
-            return new Promise((resolve, reject) => {
-                axiosInstance.get('api/mainpage', {withCredentials: true})
-                .then((response) => {
+                    resolve(response)
+                }).catch ((error) =>  {
                     
-                    console.log(response.data)
+                    reject(error)
+                })
+            });
+        }, 
+        getAllPosts: ({state, commit}) => {
+            return new Promise((resolve, reject,) => {
+                axiosInstance.get('api/mainpage', {withCredentials: true}, state)
+                .then((response) => {
+                    commit('postInfo', response.data)
+      
+                   
                     resolve(response)
                     
                 }).catch((error) => {
@@ -192,7 +210,38 @@ const store = createStore({
                     
                 })          
             })
-        }
+        },
+        deleteOnePost: ({commit}) => {
+            return new Promise ((resolve, reject) => {
+                axiosInstance.delete('api/mainpage', {withCredentials: true})
+                .then((response) => {
+                    console.log(response.data)
+                    resolve(response)
+                    
+                }).catch((error) => {
+                    console.log(error)
+                    reject(error)
+                    
+                })      
+            })
+        },
+        getAllUsers: ({commit}) => {
+            return new Promise ((resolve, reject) => {
+                axiosInstance.get('api/auth/users', {withCredentials: true})
+                .then((response) => {
+                    commit('allUsersInfo', response.data)
+                    //console.log(response.data)
+                    resolve(response)
+                    
+                }).catch((error) => {
+                    console.log(error)
+                    reject(error)
+                    
+                })      
+            })
+        }, 
+
+
     }
 })
 

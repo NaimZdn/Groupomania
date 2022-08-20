@@ -30,7 +30,6 @@ exports.signup = (req, res, next) => {
                 bio: "",
                 isAdmin: false,
 
-
             });
             user.save()
                 .then(() => res.status(201).json({ message: "Utilisateur enregistré ! " }))
@@ -102,6 +101,32 @@ exports.getAllUsers = (req, res) => {
 
 
 exports.updateProfil = (req, res) => {
+  
+if (req.file != undefined) {
+    try {
+        if (
+            req.file.mimetype != 'image/png' && 
+            req.file.mimetype != 'image/jpeg' &&
+            req.file.mimetype != 'image/jpg' && 
+            req.file.mimetype != 'image/webp' &&
+            req.file.mimetype != 'image/svg' 
+        ) throw Error('invalid file')
+
+        if (req.file.size > 500000  ) throw Error('max size')
+        console.log('cc')
+    } catch (err) {
+        let errors = {format: "", maxSize: ""}; 
+
+        if(err.message.includes('invalid file'))
+        errors.format = `Seulement les images au format .PNG, .JPEG, .JPG, .SVG et .WEBP sont autorisée`; 
+
+        if (err.message.includes('max size'))
+        errors.maxSize = `Ficher supérieur a 5mo`; 
+
+        console.log(errors)
+        return res.status(400).json({errors})
+    }
+}
 
     User.findOne({ _id: req.params.id })
         .then((user) => {

@@ -10,20 +10,32 @@
                 <h1 class="SignUpMain__form-header"> Créez votre compte</h1>
 
                 <div class="SignUpMain__input">
-                    <input id="pseudoInput" class="SignUpMain__input-type" type="pseudo" placeholder="Pseudo" aria-label="Entrez votre pseudo"  maxlength="20" v-model="pseudo" v-on:keydown="regex = false">
+                    <input @click='this.pseudoError = false' class="SignUpMain__input-type" type="pseudo" placeholder="Pseudo" aria-label="Entrez votre pseudo"  maxlength="20" v-model="pseudo" v-on:keydown="regex = false">
                     <fa class="SignUpMain__input-pseudo" icon="fa-solid fa-user" />
+
                     <div class="SignUpMain__input-container" v-if="v$.pseudo.$error">
                         <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
                         <span class="SignUpMain__input-error"> Veuillez entrer un pseudo valide </span>
                     </div>
+
+                     <div class="LoginMain__input-container" v-if="pseudoError === true">
+                        <fa class="LoginMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="LoginMain__input-container-error"> Le pseudo est déjà utilisé</span>
+                    </div>
                 </div>
 
                 <div class="SignUpMain__input">
-                    <input id="mailInput" class="SignUpMain__input-type" type="mail" placeholder="Email" aria-label="Entrez votre adresse mail" maxlength="70" v-model="email">
+                    <input @click='this.emailError = false' class="SignUpMain__input-type" type="mail" placeholder="Email" aria-label="Entrez votre adresse mail" maxlength="70" v-model="email">
                     <fa class="SignUpMain__input-mail" icon="fa-solid fa-at" />
+
                     <div class="SignUpMain__input-container" v-if="v$.email.$error">
                         <fa class="SignUpMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
                         <span class="SignUpMain__input-error"> Veuillez entrer une adresse mail valide </span>
+                    </div>
+
+                    <div class="LoginMain__input-container" v-if="emailError === true">
+                        <fa class="LoginMain__input-container-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="LoginMain__input-container-error"> L'adresse e-mail est déjà utilisée </span>
                     </div>
                 </div>
 
@@ -104,7 +116,7 @@
 
                             <div class="SignUpMain__popup-profil">
                                 <fa class="SignUpMain__popup-profil-icon" icon="fa-solid fa-circle-xmark" />
-                                <span class="SignUpMain__popup-profil-text"> L'inscription a échoué, le pseudo et/ou l'adresse Mail est déjà utilisé </span>
+                                <span class="SignUpMain__popup-profil-text"> L'inscription a échouée. <br> L'adresse Mail et/ou le pseudo est déjà utilisé </span>
                                 <fa class="SignUpMain__popup-profil-close" icon="fa-solid fa-xmark" @click="popupError = false" />
                             </div>
 
@@ -158,6 +170,11 @@ export default {
             popupValid: false,
             showScopInput: false,
             showPassword: false, 
+            pseudoError: false, 
+            emailError: false, 
+            pseudoErrorMessage: ``,  
+            pseudoErrorText: '', 
+            emailErrorText:'', 
 
         };
     },
@@ -183,8 +200,8 @@ export default {
                 required,
                 checked: value => value === true
 
-            }
-        }
+            },
+        };
     },
 
     methods: {
@@ -201,24 +218,24 @@ export default {
                 password: this.password,
             }).then((response) => {
                 this.popupValid = true;
-                //this.$router.push("/login");
+
+            }).catch((error) => {
+
+                this.pseudoErrorText = error.response.data.error.errors.pseudo 
+                this.emailErrorText = error.response.data.error.errors.email 
+
+                this.showErrorMessage(); 
+                this.popupError = true;
 
             })
-                .catch((error) => {
-                    this.popupError = true;
-                })
+
             this.delayCloseAlert()
         },
         delayCloseAlert() {
             var self = this;
+            setTimeout(function () {self.popupError = false}, 7000);
+            setTimeout(function () {self.popupValid = false}, 10000);
 
-            setTimeout(function () {
-                self.popupError = false;
-            }, 7000);
-
-            setTimeout(function () {
-                self.popupValid = false;
-            }, 10000);
         },
         pushToLoginPage() {
             this.$router.push('/login');
@@ -230,7 +247,17 @@ export default {
         }, 
         toggleShow() {
             this.showPassword = !this.showPassword; 
-        }
+        }, 
+        showErrorMessage() {
+            if (this.emailErrorText != undefined){
+                this.emailError = true; 
+
+            } 
+            if (this.pseudoErrorText != undefined) {
+                this.pseudoError = true;
+
+            }; 
+        }, 
     },
 };
 </script>

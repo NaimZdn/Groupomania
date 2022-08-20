@@ -43,7 +43,7 @@ export default {
         }
     },
 
-    mounted(){
+    mounted(){  
         let userInfos = JSON.parse(localStorage.getItem('user')); 
         userInfos = this.UserInfos
     }, 

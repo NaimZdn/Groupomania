@@ -2,10 +2,13 @@
     <div class="ProfilInformation">
         <div class="ProfilInformation__picture">
             <img id="userPicture" class="ProfilInformation__picture-user" :src="userInfos.picture" alt="Votre photo de profil">
+            
    
         </div>
         <div class="ProfilInformation__pseudo">
             <p  class="ProfilInformation__pseudo-text"> {{userInfos.pseudo}} </p>
+            
+          
             <p  class="ProfilInformation__pseudo-bio"> {{userInfos.bio}} </p>
             
         </div>
@@ -23,9 +26,6 @@ export default {
            
         }
     },
-
-    
-
 
      mounted() {
         if (localStorage.user) {
@@ -83,12 +83,23 @@ export default {
         }
     }
 
+    &__content {
+        display: flex;
+        flex-direction: column;
+    }
+
     &__pseudo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px; 
         font-size: 40px;
         margin-left: 40px;   
 
         @include break-mobile {
-            font-size: 30px;
+            gap: 15px;
+            margin: 0 15px 0 15px; 
+            font-size: 25px;
             margin: 0;
                         
         }
@@ -102,12 +113,28 @@ export default {
             } 
         }
 
+        &-admin {
+            font-size: 20px; 
+            font-weight: bold; 
+            padding: 7px 15px 7px 15px;
+            background-color: $color-primary;
+            border-radius: 10px;
+            color: white; 
+            
+            @include break-mobile {
+                margin-top: -10px;
+                font-size: 15px;
+                
+            }
+        }
+
         &-bio {
             border-left: 3px solid $color-primary;
             font-size: 16px;
             font-style: italic;
             padding-left: 10px; 
             margin-right: 30px;
+            margin-left: 40px;
 
             @include break-mobile {                
                 margin: 0 15px 0 15px; 

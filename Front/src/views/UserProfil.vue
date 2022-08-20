@@ -5,7 +5,8 @@ import ProfilTabs from '../components/ProfilTabs.vue';
 import ProfilInformationDelete from '../components/ProfilInformationDelete.vue';
 export default {
     name: "UserProfil",
-    components: { MainHeader, ProfilInformation, ProfilTabs, ProfilInformationDelete }
+    components: { MainHeader, ProfilInformation, ProfilTabs, ProfilInformationDelete },
+
 }
 
 </script>

@@ -1,14 +1,16 @@
 
 <template>
+
+<section v-if="userPicture === userPicture2"></section>
     <div class="PostContent__header">
 
         <div class="PostContent__picture">
-            <router-link to="/profil"> <img id="userPicture" class="PostContent__picture-user" src="../assets/images/Photo CV.jpg" alt="Photo de profil de l'utilisateur ayant crée le post">
+            <router-link to="/profil"> <img id="userPicture" class="PostContent__picture-user" :src='userPicture' alt="Photo de profil de l'utilisateur ayant crée le post">
            </router-link>
         </div>
 
         <div class="PostContent__info">
-            <h2 id="userPseudo" class="PostContent__info-user">Pseudo</h2>
+            <h2 id="userPseudo" class="PostContent__info-user">{{}}</h2>
             <p id="postDate" class="PostContent__info-date"> {{createdAt}}</p>
         </div>
 
@@ -42,8 +44,8 @@
 
     <div class="PostContent__content">
         <p id="postText" class="PostContent__content-text">{{message}}</p>
-        <img id="postPicture" class="PostContent__content-picture" :src="picture"
-            alt="Image posté par 'pseudo de l'utilisateur'">
+        <img v-if="picture != '' " class="PostContent__content-picture" :src="picture" alt="Image posté par 'pseudo de l'utilisateur'">
+        
     </div>
 
     <div class="PostContent__footer">
@@ -62,11 +64,12 @@
     <div v-for="comment in comments"> 
         <PostComment v-if="showComment" :pseudo="comment.pseudo" :comment='comment.comment'/>
     </div>
-    <PostCreateComment></PostCreateComment>
+    <PostCreateComment v-if="showComment"></PostCreateComment>
 
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import PostComment from './PostComment.vue';
 import PostCreateComment from './PostCreateComment.vue';
 export default {
@@ -78,10 +81,39 @@ export default {
             //comments: [], 
             showComment: false,
             showOption: false,
+            showPostPicture: false, 
+            userPicture: '',
+            //userPseudo: '',  
+            userInfos: '',
+            
         }
     }, 
 
-     props: ['picture', 'message', 'likes', 'createdAt', 'comments'],
+    props: ['picture', 'message', 'likes', 'createdAt', 'comments', 'userId', 'allUsers','userPicture2' ],
+    emits: ['getUserInfo', 'getAllPosts'],
+
+    mounted () {
+       //this.$emit('getUserInfo')
+       // this.$emit('getAllPosts')
+        this.getUserPicture ()
+
+    }, 
+
+
+    methods: {
+        getUserPicture () {
+            this.allUsers?.map((user) => {
+                if (user._id === this.userId) {
+                    this.userPseudo = user.pseudo
+                    this.userPicture = user.picture
+                    //console.log(this.userPicture)
+                }
+            })
+        }, 
+    }, 
+
+
+
 }
 </script>
 
@@ -235,6 +267,7 @@ export default {
     }
 
     &__content {
+        
 
         &-text {
             margin: 25px 30px 25px 30px;
@@ -248,11 +281,14 @@ export default {
         }
 
         &-picture {
+          
             width: 100%;
-            height: 300px;
+            max-height: 720px;
             object-fit: cover;
             border: 1px solid rgb($color-secondary, 0.5);
-
+            border-right: 0;
+            
+            
         }
     }
 
@@ -315,8 +351,10 @@ export default {
     }
 
     &__footer {
+        border-top: 2px solid $color-primary;
         display: flex;
         margin: 15px 30px 15px 30px;
+        padding-top: 15px;
         justify-content: center;
 
         @include break-mobile {
