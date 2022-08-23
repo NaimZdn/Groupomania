@@ -8,10 +8,7 @@ import store from './store';
 import router from './router/routes';
 import App from './App.vue';
 
-
-
 library.add(fas, fab);
-
 
 const app = createApp(App);
 app.use(store)

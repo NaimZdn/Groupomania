@@ -3,7 +3,6 @@
 import ProfilTabsVue from './components/ProfilTabs.vue';
 import Login from './views/Login.vue';
 
-
 export default {
   name: 'App', 
   
@@ -12,8 +11,6 @@ export default {
     ProfilTabsVue
   }
 }
-
-
 
 </script>
 

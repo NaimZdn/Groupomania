@@ -36,7 +36,7 @@ export default {
             this.userInfos = JSON.parse(localStorage.user)
             //console.log(this.userInfos)
         }
-        console.log(this.postId)
+        
     },
     methods: {
         createComment () {

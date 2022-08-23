@@ -451,3 +451,28 @@
         opacity: 0;
     }
 };
+
+
+@mixin Fade-0-5 {
+    .OptionFade-enter-active,
+    .OptionFade-leave-active {
+        transition: opacity .5s;
+
+    }
+    .OptionFade-enter-from,
+    .OptionFade-leave-to {
+        opacity: 0;
+    }
+};
+
+@mixin Slide {
+    .OptionSlide-enter-active,
+    .OptionSlide-leave-active {
+        transition: transform .5s;
+    }
+
+    .OptionSlide-enter-from,
+    .OptionSlide-leave-to {
+        transform: translateY(-50%) translateX(100vw);
+    }
+}

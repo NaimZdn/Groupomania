@@ -6,8 +6,7 @@
 
        <div class="Post" v-for="post in posts">
         <PostContent  @getUserInfo='getUserInfo()' @getAllPosts='getAllPosts' :picture='post.picture' :message="post.message" :likes="post.likes" :createdAt="dateTime(post.createdAt)" 
-        :comments="post.comments" :userId="post.userId" :allUsers="allUsers" :userPicture2='this.userPicture2' :usersLiked="post.usersLiked" :postId="post._id"
-         >
+        :comments="post.comments" :userId="post.userId" :allUsers="allUsers" :userPicture2='this.userPicture2' :usersLiked="post.usersLiked" :postId="post._id">
        
           
 

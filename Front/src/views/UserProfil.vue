@@ -1,28 +1,24 @@
 <script>
 import MainHeader from '../components/MainHeader.vue';
-import ProfilInformation from '../components/ProfilInformation.vue';
 import ProfilTabs from '../components/ProfilTabs.vue';
-import ProfilInformationDelete from '../components/ProfilInformationDelete.vue';
+import ProfilInformation from '../components/ProfilInformation.vue';
 export default {
     name: "UserProfil",
-    components: { MainHeader, ProfilInformation, ProfilTabs, ProfilInformationDelete },
+    components: { MainHeader, ProfilTabs, ProfilInformation },
 
 }
 
 </script>
 
 <template>
-    
     <MainHeader></MainHeader>
-    
 
     <main class="container-flex">
-        <section class="Profil">
-            
-            <ProfilInformationDelete/>
-            <ProfilTabs></ProfilTabs>
-
+        <section class="Profil">   
+            <ProfilInformation/>
+            <ProfilTabs/>
         </section>
+
     </main>
 </template>
 
