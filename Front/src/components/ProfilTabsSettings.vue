@@ -77,7 +77,7 @@ export default {
     display: flex;
     justify-content: center; 
     background-color: $color-primary;
-    border-radius: 6px; 
+    border-radius: 0 6px 6px 6px; 
 
     &__user{
         margin: 20px;

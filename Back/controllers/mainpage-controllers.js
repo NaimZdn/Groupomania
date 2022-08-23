@@ -66,22 +66,44 @@ exports.updatePost = (req, res) => {
         Post.findOne({ _id: req.params.id })
             .then((PostArg) => {
                 const filename = PostArg.picture.split('/images/uploads/posts/')[1];
+                if (filename != undefined)
                 fs.unlink(`images/uploads/posts/${filename}`, (error) => {
                     if (error) throw error;
                 });
             })
             .catch(error => res.status(404).json({ error }));
-    };
 
-    const updatedRecord = {
-        message: req.body.message,
-        picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}`,
-    };
+            const updatedRecord = {
+                message: req.body.message,
+                picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${req.file.filename}`,
+            };
+        
+            delete updatedRecord.userId
+            Post.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'Le post a bien été modifié' }))
+                .catch(error => res.status(400).json({ error }));
+    } else {
+        Post.findOne({ _id: req.params.id })
+            .then((PostArg) => {
+                const filename = PostArg.picture.split('/images/uploads/posts/')[1];
 
-    delete updatedRecord.userId
-    Post.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Le post a bien été modifié' }))
-        .catch(error => res.status(400).json({ error }));
+                const updatedRecord = {
+                    message: req.body.message,
+                    picture: `${req.protocol}://${req.get('host')}/images/uploads/posts/${filename}`,
+                };
+            
+                delete updatedRecord.userId
+                Post.updateOne({ _id: req.params.id }, { ...updatedRecord, _id: req.params.id })
+                    .then(() => res.status(200).json({ message: 'Le post a bien été modifié' }))
+                    .catch(error => res.status(400).json({ error }));
+    
+            })
+
+            .catch(error => res.status(404).json({ error }));
+
+            
+
+    } 
 
 };
 

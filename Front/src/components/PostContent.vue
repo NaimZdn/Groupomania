@@ -4,140 +4,306 @@
     <div class="PostContent__header">
 
         <div class="PostContent__picture">
-            <router-link to="/profil"> <img class="PostContent__picture-user" :src='userPicture  ' alt="Photo de profil de l'utilisateur ayant crée le post">
-           </router-link>
+            <router-link to="/profil"> <img class="PostContent__picture-user" :src='userPicture'
+                    alt="Photo de profil de l'utilisateur ayant crée le post">
+            </router-link>
         </div>
 
         <div class="PostContent__info">
-            <h2 id="userPseudo" class="PostContent__info-user">{{userPseudo}}</h2>
-            <p id="postDate" class="PostContent__info-date"> {{createdAt}}</p>
+            <h2 id="userPseudo" class="PostContent__info-user">{{ userPseudo }}</h2>
+            <p id="postDate" class="PostContent__info-date"> {{ createdAt }}</p>
         </div>
 
-        
-            <div v-if="option === true " class="PostContent__option">
-                <fa id="postOption" class="PostContent__option-icon" icon="fa-solid fa-gear"
-                    @click="showOption = true" />
+
+        <div v-if="option === true" class="PostContent__option">
+            <fa id="postOption" class="PostContent__option-icon" icon="fa-solid fa-gear" @click="showOption = true" />
 
             <transition name=OptionFade appear>
                 <div class="PostContent__option-content" v-if="showOption" @click="showOption = true">
                     <div class="PostContent__option-button">
 
-                        <div class="PostContent__modification">
+                        <div class="PostContent__modification" @click="displayModification = true">
                             <fa class="PostContent__modification-icon" icon="fa-solid fa-pen" />
                             <span class="PostContent__modification-text"> Modifier </span>
                         </div>
 
-                        <div class="PostContent__delete">
+                        <div class="PostContent__delete" @click="deletePost()">
                             <fa class="PostContent__delete-icon" icon="fa-solid fa-trash-can" />
                             <span class="PostContent__delete-text"> Supprimer </span>
                         </div>
 
                     </div>
                 </div>
-                </transition>
-            </div>
-    
+            </transition>
+        </div>
+
         <div class="PostContent__option-bg" v-if="showOption" @click="showOption = false"> </div>
 
     </div>
 
     <div class="PostContent__content">
-        <p id="postText" class="PostContent__content-text">{{message}}</p>
-        <img v-if="picture != '' " class="PostContent__content-picture" :src="picture" alt="Image posté par 'pseudo de l'utilisateur'">
-        
+        <p id="postText" class="PostContent__content-text">{{ message }}</p>
+        <img v-if="picture != ''" class="PostContent__content-picture" :src="picture"
+            alt="Image posté par 'pseudo de l'utilisateur'">
+
     </div>
 
     <div class="PostContent__footer">
 
         <div id="showComment" class="PostContent__comment" @click="showComment = !showComment">
             <fa class="PostContent__comment-icon" icon="fa-solid fa-comment-dots" />
-            <span class="PostContent__comment-number"> {{this.comments?.length}} </span>
+            <span class="PostContent__comment-number"> {{ this.comments?.length }} </span>
         </div>
 
         <div id="addLike" class="PostContent__like" @click="checkUserLike()">
             <fa class="PostContent__like-icon" icon="fa-solid fa-thumbs-up" />
-            <span class="PostContent__like-number"> {{likes}} </span>
+            <span class="PostContent__like-number"> {{ likes }} </span>
         </div>
 
     </div>
-    <div v-for="comment in comments"> 
-        <PostComment v-if="showComment" :pseudo="comment.pseudo" :comment='comment.comment'/>
+
+    <transition name="slide" appear>
+        <div v-if='displayModification === true' class="PostContent__update">
+            <div class="PostContent__update-text">
+                <textarea class="PostContent__update-message" role="textbox" placeholder="Ajoutez un message"
+                    maxlength="300" ref="textarea" v-model="messageUpdate" @input="resizeTextarea()"
+                    @click="hiddeError()"> {{ message }}</textarea>
+
+                <span class="PostContent__update-counter"> {{ totalCharacters }}/300 caractères</span>
+            </div>
+
+            <div v-if="showValidatorError === true" class="PostContent__feature-error">
+                <fa class="PostContent__feature-error-icon" icon="fa-solid fa-circle-xmark" />
+                <p class="PostContent__feature-error-text"> {{ this.v$.messageUpdate.required.$message }} </p>
+            </div>
+
+            <div v-if="showLengthError === true" class="PostContent__feature-error">
+                <fa class="PostContent__feature-error-icon" icon="fa-solid fa-circle-xmark" />
+                <p class="PostContent__feature-error-text"> {{ this.v$.messageUpdate.minLength.$message }} </p>
+            </div>
+
+            <div v-if='files === true || url != null || picture != ""' class="PostContent__updatepicture">
+                <div class="PostContent__updatepicture-container">
+
+                </div>
+                <img v-if='files' class="PostContent__updatepicture-preview" :src="picture">
+                <img v-if="url" class="PostContent__updatepicture-preview" :src="url">
+            </div>
+
+            <div v-if="showMulterErrorMessage === true" class="PostContent__feature-error">
+                <fa class="PostContent__feature-error-icon" icon="fa-solid fa-circle-xmark" />
+                <p class="PostContent__feature-error-text"> {{ this.multerErrorMessage }} </p>
+            </div>
+
+            <div class="PostContent__send">
+                <label class="PostContent__import-file" aria-label="Cliquez pour importer votre image">
+                    <fa icon="fa-solid fa-image" />
+                    <input class="PostContent__input" type="file" accept="image/*" aria-label="Importez votre image"
+                        @change="changeFile">
+                </label>
+                <button class="PostContent__button-modification" @click="submitPostUpdate()">Modifier</button>
+                <button class="PostContent__button-cancel" @click="hiddeUpdate">Annuler</button>
+            </div>
+        </div>
+    </transition>
+
+
+    <section class="test">
+        <transition name=OptionFade appear>
+            <div class="ProfilInformationModification__option-content" v-if="validationMessage">
+                <div class="ProfilInformationModification__option-button">
+
+                    <div class="ProfilInformationModification__option-profil">
+                        <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-check" />
+                        <span class="ProfilInformationModification__option-profil-text"> Votre post a bien été modifié
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </transition>
+    </section>
+
+    <section class="test">
+        <transition name=OptionFade appear>
+            <div class="ProfilInformationModification__option-content error" v-if="errorMessage">
+                <div class="ProfilInformationModification__option-button">
+
+                    <div class="ProfilInformationModification__option-profil">
+                        <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-xmark" />
+                        <span class="ProfilInformationModification__option-profil-text"> Une erreur est survenue,
+                            veuillez réessayer </span>
+                    </div>
+                </div>
+            </div>
+        </transition>
+    </section>
+
+
+    <transition name="fade" appear>
+        <div v-if='displayModification === true' class="PostContent__bg" @click="hiddeUpdate">
+        </div>
+    </transition>
+
+    <div v-for="comment in comments">
+        <PostComment v-if="showComment" :pseudo="comment.pseudo" :comment='comment.comment' :userId="comment.userId"  :createdAt="dateTime(comment.createdAt)" 
+        :commentId="comment._id" :postId="this.postDataId" />
     </div>
-    <PostCreateComment v-if="showComment"></PostCreateComment>
+
+<div v-if="showComment">
+    <div class="PostCreateComment__content">
+        <div class="PostCreateComment__line"> </div>
+    </div>
+
+    <div class="PostCreateComment">
+        <div class="PostCreateComment__picture line ">
+            <img class="PostCreateComment__picture-user" :src="userInfos.picture"
+                alt="Votre photo de profil">
+        </div>
+        
+        <textarea class="PostCreateComment__comment" ref='textarea' role="textbox" placeholder="Ajoutez un commentaire" maxlength="300" v-model='commentText' @input="resizeTextarea()" ></textarea>
+    </div>
+
+    <div class="PostCreateComment__button">
+        <button class="PostCreateComment__button-send" @click="createComment()">PUBLIER</button>
+    </div>
+ </div>
+
+
 
 </template>
 
 <script>
+import useVuelidate from '@vuelidate/core';
+import { required, minLength, helpers } from '@vuelidate/validators';
 import { mapState } from 'vuex';
 import PostComment from './PostComment.vue';
 import PostCreateComment from './PostCreateComment.vue';
 import axios from 'axios'
+import moment from 'moment/min/moment-with-locales';
 export default {
     name: "PostContent",
     components: { PostComment, PostCreateComment },
+
+    setup() {
+        return { v$: useVuelidate() }
+    },
 
     data() {
         return {
             //comments: [], 
             showComment: false,
             showOption: false,
-            showPostPicture: false, 
+            showPostPicture: false,
             userPicture: '',
-            userPseudo: '',  
+            userPseudo: '',
             userInfos: '',
 
-            option: false, 
-            like: 0, 
-            
-        }
-    }, 
 
-    props: ['picture', 'message', 'likes', 'createdAt', 'comments', 'userId', 'allUsers','userPicture2', 'usersLiked', 'postId' ],
+            option: false,
+            like: 0,
+            displayModification: false,
+            messageModification: '',
+            files: true,
+            url: null,
+            multerErrorMessage: '',
+            showMulterErrorMessage: false,
+            messageUpdate: this.message + '',
+            showValidatorError: false,
+            showLengthError: false,
+            file: this.picture,
+            errorMessage: false,
+            validationMessage: false,
+            postIdComment: this.postId, 
+
+            commentText: '', 
+            postDataId: this.postId
+
+
+
+
+        }
+    },
+
+    validations() {
+        return {
+            messageUpdate: {
+                required: helpers.withMessage('Votre message doit contenir au moins 2 caractères', required),
+                minLength: helpers.withMessage('Votre message doit contenir au moins 2 caractères', minLength(2))
+            }
+
+        }
+    },
+
+    props: ['picture', 'message', 'likes', 'createdAt', 'comments', 'userId', 'allUsers', 'userPicture2', 'usersLiked', 'postId', 'userData'],
     emits: ['getUserInfo', 'getAllPosts'],
 
-    mounted () {
-       //this.$emit('getUserInfo')
-       //this.$emit('getAllPosts')
-       //console.log(this.postId)
+    mounted() {
+        //this.$emit('getUserInfo')
+        //this.$emit('getAllPosts')
+        //console.log(this.postId)
         if (localStorage.user) {
             this.userInfos = JSON.parse(localStorage.user)
             //console.log(this.userInfos)
         }
-       this.getUserPicture ()
-       this.displayOption ()
-       //this.checkUserLike () 
-       
+        this.getUserPicture()
+        this.displayOption()
+        
+        
 
-    }, 
+        //this.checkUserLike () 
+
+    },
 
 
     methods: {
-        getUserPicture () { 
-            
-            if(this.userInfos.userId === this.userId) {
-                console.log('yo')
+        changeFile(fileUpload) {
+            if (this.file === undefined) {
+                this.file = this.picture
+            }
+            this.file = fileUpload.target.files[0];
+            this.url = URL.createObjectURL(this.file);
+            this.files = false
+
+        },
+        deletePicturePreview() {
+            this.url = null;
+            this.file = null;
+            this.files = false;
+            this.showMulterErrorMessage = false
+
+        },
+        getUserPicture() {
+
+            if (this.userInfos.userId === this.userId) {
+                //console.log('yo')
                 this.userPicture = this.userInfos.picture
                 this.userPseudo = this.userInfos.pseudo
-            }else {
-                
-            this.allUser?.map((user) => {
-                if (user._id === this.userId) {
-                    this.userPseudo = user.pseudo
-                    this.userPicture = user.picture
-                    //console.log(this.userPicture)
-                    //console.log('enfant')
-                    //console.log(this.userPicture)
-                }
-            })
+            } else {
+
+                this.allUser?.map((user) => {
+                    if (user._id === this.userId) {
+                        this.userPseudo = user.pseudo
+                        this.userPicture = user.picture
+                        //console.log(this.userPicture)
+                        //console.log('enfant')
+                        //console.log(this.userPicture)
+                    }
+                })
             }
-        }, 
+        },
         displayOption() {
-            
-            if(this.userId === this.userInfos.userId) {
-                this.option = true        
+            if (this.userId === this.userInfos.userId) {
+                this.option = true
             }
-        }, 
-        likePost () {
+        },
+        resizeTextarea() {
+            const element = this.$refs["textarea"];
+
+            element.style.height = "18px";
+            element.style.height = element.scrollHeight + "px";
+        },
+        likePost() {
             this.$store.dispatch('likePost', {
                 like: this.like
             }).then((response) => {
@@ -146,48 +312,169 @@ export default {
             }).catch((error) => {
 
             })
-        }, 
-        checkUserLike () {
+        },
+        checkUserLike() {
             if (this.usersLiked.includes(this.userInfos.userId)) {
                 this.like = 0
                 console.log('0')
-            }else {
+            } else {
                 console.log('+1')
                 this.like = 1
-                
 
             }
             const like = {
-                like: this.like 
+                like: this.like
             }
-            //console.log(this.usersLiked.includes(this.userId))
-            //console.log(this.usersLiked)
-            //console.log(this.userId)
-            //console.log(like)
-            //console.log(this.postId)
+            return new Promise((resolve, reject) => {
+                axios.post('http://localhost:3000/api/mainpage/' + this.postId + '/like', like, { withCredentials: true })
+                    .then((response) => {
+                        console.log(response.data)
+                        resolve(response.data)
+                        this.$emit('getAllPosts')
 
-           return new Promise ((resolve, reject) => {
-            axios.post('http://localhost:3000/api/mainpage/' + this.postId + '/like', like, {withCredentials: true})
+                    }).catch((error) => {
+                        reject(error)
+                        console.log(error)
+                    })
+            })
+        },
+        deletePost() {
+            return new Promise((resolve, reject) => {
+                axios.delete('http://localhost:3000/api/mainpage/' + this.postId, { withCredentials: true })
+                    .then((response) => {
+                        console.log(response.data)
+                        resolve(response.data)
+                        this.$emit('getAllPosts')
+
+                    }).catch((error) => {
+                        reject(error)
+                        console.log(error)
+                    })
+            })
+        },
+        displayUpdate() {
+            this.displayModification = true
+            this.showOption = false
+
+        },
+        submitPostUpdate() {
+            this.v$.$validate();
+            if (!this.v$.$error) {
+                //this.$emit('getAllUsers')
+
+                this.updatePost();
+
+            } else {
+                if (this.v$.messageUpdate.required.$invalid === true)
+
+                    this.showValidatorError = true
+
+
+                if (this.v$.messageUpdate.minLength.$invalid === true)
+                    this.showLengthError = true
+            }
+        },
+        updatePost() {
+            console.log(this.file)
+            console.log(this.picture)
+            const dataForm = new FormData();
+            if (this.file === this.picture && this.messageUpdate === this.message) {
+                this.displayModification = false
+            } else if (this.file === this.picture || this.file === undefined || null) {
+                dataForm.append('image', this.file);
+                dataForm.append('message', this.messageUpdate)
+
+                axios.patch('http://localhost:3000/api/mainpage/' + this.postId, dataForm, { withCredentials: true })
+                    .then((response) => {
+                        console.log(response.data)
+                        this.validationMessage = true
+                        this.displayModification = false
+                        this.$emit('getAllPosts')
+
+                    }).catch((error) => {
+                        const multerError = error.response.data.split(`Error: `)
+                        const multerError2 = multerError[1].split(`<br> &nbsp; `)
+
+                        this.multerErrorMessage = multerError2[0]
+                        console.log(this.multerErrorMessage)
+                        if (this.multerErrorMessage === 'File too large') {
+                            this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
+                        }
+                        this.showMulterErrorMessage = true
+                        this.errorMessage = false
+
+                    })
+            } else {
+                dataForm.append('image', this.file);
+                dataForm.append('message', this.messageUpdate)
+
+                axios.patch('http://localhost:3000/api/mainpage/' + this.postId, dataForm, { withCredentials: true })
+                    .then((response) => {
+                        console.log(response.data)
+                        this.validationMessage = true
+                        this.displayModification = false
+
+                        this.$emit('getAllPosts')
+
+                    }).catch((error) => {
+                        const multerError = error.response.data.split(`Error: `)
+                        const multerError2 = multerError[1].split(`<br> &nbsp; `)
+
+                        this.multerErrorMessage = multerError2[0]
+                        console.log(this.multerErrorMessage)
+                        if (this.multerErrorMessage === 'File too large') {
+                            this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
+                        }
+                        this.showMulterErrorMessage = true
+                        this.errorMessage = false
+
+
+                    })
+            }
+
+        },
+        hiddeUpdate() {
+            this.displayModification = false
+            this.files = true
+            this.url = null
+            this.showOption = false
+            this.showMulterErrorMessage = false
+        },
+        hiddeError() {
+            this.showLengthError = false;
+            this.showValidatorError = false;
+
+        },
+        displayModificationFile() {
+            this.displayModification = true
+        },
+        createComment () {
+            const dataComment = {
+                comment: this.commentText
+            }
+            axios.patch('http://localhost:3000/api/mainpage/comment/' + this.postId, dataComment, { withCredentials: true })
                 .then((response) => {
-                    console.log(response.data)
-                    resolve(response.data)
+                    console.log(response)
                     this.$emit('getAllPosts')
-                    
-                }) .catch((error) => {
-                    reject(error)
+                    this.commentText = '';
+                }).catch((error) => {
                     console.log(error)
                 })
-            })
-
-
-        }
-    }, 
+        },
+        dateTime(value) {
+            return moment(value).fromNow()
+        },
+         
+    },
 
     computed: {
-    ...mapState ({
-        allUser: 'allUsers'
-    })
-  }
+        ...mapState({
+            allUser: 'allUsers'
+        }),
+        totalCharacters() {
+            return this.messageUpdate.length
+        }
+    }
 
 
 
@@ -273,7 +560,6 @@ export default {
             display: flex;
             flex-direction: column;
             gap: 5px
-
         }
 
         &-bg {
@@ -333,7 +619,6 @@ export default {
             font-size: 18px;
             padding-right: 13px;
 
-
         }
 
         &-text {
@@ -344,7 +629,7 @@ export default {
     }
 
     &__content {
-        
+
 
         &-text {
             margin: 25px 30px 25px 30px;
@@ -358,14 +643,13 @@ export default {
         }
 
         &-picture {
-          
+
             width: 100%;
             max-height: 720px;
             object-fit: cover;
             border: 1px solid rgb($color-secondary, 0.5);
             border-right: 0;
-            
-            
+
         }
     }
 
@@ -447,7 +731,186 @@ export default {
     &__like {
         @include CommentOrLike__button;
 
-    } 
+    }
+
+    &__bg {
+        position: fixed;
+        inset: 0;
+        z-index: 98;
+        background-color: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+    }
+
+    &__update {
+        margin-top: 40px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 99;
+
+        flex-direction: column;
+        display: flex;
+        min-width: 500px;
+        max-width: 600px;
+
+        background-color: white;
+        padding: 30px;
+        border-radius: 6px;
+        box-shadow: $primary-shadow;
+
+
+        @include break-mobile {
+            min-width: 67%;
+            margin-top: 50px;
+        }
+
+        &-message {
+
+            @include input-add;
+            margin: 15px 0px 15px 0;
+            height: 30px;
+            font-size: 15px;
+
+
+            &::placeholder {
+                font-size: 15px;
+                font-weight: bold;
+                color: $color-primary;
+
+            }
+        }
+
+        &-counter {
+            font-size: 13px;
+            color: $color-tertiary;
+            font-weight: bold;
+        }
+    }
+
+    &__updatepicture {
+
+        justify-content: center;
+        margin-bottom: 15px;
+        position: relative;
+
+        &-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        &-preview {
+            object-fit: cover;
+            width: 100%;
+            max-height: 720px;
+            padding: 20px (30px)
+        }
+
+        &-delete {
+            margin-right: 5px;
+
+
+            font-size: 25px;
+            color: $color-tertiary;
+
+
+            &:hover {
+                cursor: pointer;
+                color: #2D3043;
+
+            }
+        }
+    }
+
+    &__feature {
+        display: flex;
+        flex-direction: column;
+
+        &-error {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            color: $color-primary;
+            font-weight: bold;
+            font-size: 16px;
+
+
+            &-icon {
+                font-size: 20px;
+                color: $color-primary;
+                padding-right: 10px;
+                margin: 10px 0 4px 0;
+            }
+
+            &-text {
+                margin: 10px 0 4px 0;
+            }
+        }
+    }
+
+    &__text {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-top: -50px;
+    }
+
+    &__send {
+        display: flex;
+        justify-content: flex-end;
+        margin: 10px 0 0 0;
+        gap: 10px;
+
+        @include break-mobile {
+            margin: 20px 0 0 0;
+
+        }
+    }
+
+    &__import-file {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        padding: 5px 8px 3px 8px;
+
+        &:hover {
+            background-color: rgb($color-secondary, 0.5);
+            border-radius: 30px;
+            animation: bubble 0.5s;
+
+        }
+
+        & .fa-image {
+            font-size: 25px;
+            color: $color-primary;
+        }
+    }
+
+    &__button {
+
+        &-modification {
+            @include send-button;
+            background-color: $color-secondary;
+            color: $color-primary;
+
+            &:hover {
+                background-color: #FED8D0;
+
+            }
+
+        }
+
+        &-cancel {
+            @include send-button;
+
+        }
+
+    }
+
 }
-@include Fade; 
+
+
+
+@include Fade;
 </style>

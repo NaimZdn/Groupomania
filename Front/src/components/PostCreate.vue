@@ -8,15 +8,20 @@
                 </div>
                 <textarea class="PostCreate__comment" ref='textarea' role="textbox" placeholder="Ajoutez un post" maxlength="300" v-model='message' @input="resizeTextarea()" @focus="hideError" ></textarea>
             </div>
+            <span class="PostCreate__counter"> {{ totalCharacters }}/300 caractères</span>
 
             <div v-if="files" class="PostCreate__addpicture">
-                <fa class="PostCreate__addpicture-delete" icon="fa-solid fa-xmark" @click="deletePicturePreview" />
-                <img class="PostCreate__addpicture-preview" :src="url">
+                <div class="PostCreate__addpicture-container">
+                    
+                
+                    <fa class="PostCreate__addpicture-delete" icon="fa-solid fa-xmark" @click="deletePicturePreview" />
+                </div>
+                    <img class="PostCreate__addpicture-preview" :src="url">
                 
             </div>
 
             <div class='PostCreate__feature'> 
-                <span class="PostCreate__counter"> {{ totalCharacters }}/300 caractères</span>
+                
 
                 <div v-if="showValidatorError === true" class="PostCreate__feature-error"> 
                     <fa class="PostCreate__feature-error-icon" icon="fa-solid fa-circle-xmark" />
@@ -285,21 +290,27 @@ export default {
     }
 
     &__addpicture {
-        
+        position: relative;
         justify-content: center;
         margin-bottom: 15px;
+
+        &-container{
+            display: flex;
+            justify-content: flex-end;
+            
+        }
 
         &-preview {
             object-fit: cover;
             width: 100%;
             max-height: 720px;
-            padding: 15px (70px);
+            padding: 20px (60px)
         }
 
         &-delete {
-            position: relative;
-            left: 703px;
-            top: 5px;
+            margin-right: 30px;
+            
+            
             font-size: 25px;
             color: $color-tertiary;
 

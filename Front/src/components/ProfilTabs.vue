@@ -1,12 +1,12 @@
 <template>
     <div class="ProfilTabs">
-        <div id="activityTabs" class="ProfilTabs__activity" v-on:click="addClassActivity"  v-bind:class="{'ActiveTabs': ActiveTabsActivity }"> Activité</div>
-        <div id="settingsTabs" class="ProfilTabs__settings" v-on:click="addClassSettings" v-bind:class="{'ActiveTabs': ActiveTabsSettings }" > Paramètres </div>
+       <!-- <div id="activityTabs" class="ProfilTabs__activity" v-on:click="addClassActivity"  v-bind:class="{'ActiveTabs': ActiveTabsActivity }"> Activité</div>-->
+        <div id="settingsTabs" class="ProfilTabs__settings ActiveTabs" > Paramètres </div>
     </div>
 
     <div class="Profil__tabs">
-        <ProfilTabsActivity v-if="!ActiveTabsSettings"/>
-        <ProfilTabsSettings v-if="!ActiveTabsActivity"/>
+        <!--<ProfilTabsActivity v-if="!ActiveTabsSettings"/>-->
+        <ProfilTabsSettings/>
     </div>
 
 </template>
