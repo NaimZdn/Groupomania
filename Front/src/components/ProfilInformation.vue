@@ -178,8 +178,8 @@ export default {
             this.multerErrorMessage = '';
 
         }
-
     },
+    
     computed: {
         ...mapState({
             // userInfos: 'userInfos'
