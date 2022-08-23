@@ -66,10 +66,12 @@ exports.updatePost = (req, res) => {
         Post.findOne({ _id: req.params.id })
             .then((PostArg) => {
                 const filename = PostArg.picture.split('/images/uploads/posts/')[1];
-                if (filename != undefined)
-                fs.unlink(`images/uploads/posts/${filename}`, (error) => {
-                    if (error) throw error;
-                });
+                console.log(filename)
+                if (filename !== undefined) {
+                    fs.unlink(`images/uploads/posts/${filename}`, (error) => {
+                        if (error) throw error;
+                    });
+                }
             })
             .catch(error => res.status(404).json({ error }));
 
@@ -100,8 +102,6 @@ exports.updatePost = (req, res) => {
             })
 
             .catch(error => res.status(404).json({ error }));
-
-            
 
     } 
 

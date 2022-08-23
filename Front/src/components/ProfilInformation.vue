@@ -10,7 +10,7 @@
 
             <div class="ProfilInformation__pseudo">
                 <h1 class="ProfilInformation__pseudo-text"> {{ this.userData.pseudo }} </h1>
-                <p v-if="userData.isAdmin === true" class="ProfilInformation__pseudo-admin"> Admin </p>
+                
             </div>
 
             <div class="ProfilInformation__bio"> 
@@ -179,7 +179,7 @@ export default {
 
         }
     },
-    
+
     computed: {
         ...mapState({
             // userInfos: 'userInfos'

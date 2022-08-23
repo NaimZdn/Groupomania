@@ -4,25 +4,24 @@
     <div class="PostContent__header">
 
         <div class="PostContent__picture">
-            <router-link to="/profil"> <img class="PostContent__picture-user" :src='userPicture'
-                    alt="Photo de profil de l'utilisateur ayant crée le post">
-            </router-link>
+            <img class="PostContent__picture-user" :src='userPicture' :alt="'Photo de profil de ' + userPseudo">    
         </div>
 
         <div class="PostContent__info">
-            <h2 id="userPseudo" class="PostContent__info-user">{{ userPseudo }}</h2>
-            <p id="postDate" class="PostContent__info-date"> {{ createdAt }}</p>
+            <div class="PostContent__info-content">
+                <h2 id="userPseudo" class="PostContent__info-user">{{ userPseudo }}</h2>
+                <p v-if="isAdmin === true" class="PostContent__info-isadmin"> Admin </p>
+            </div>
+            <p class="PostContent__info-date"> {{ createdAt }}</p>
         </div>
 
-
         <div v-if="option === true" class="PostContent__option">
-            <fa id="postOption" class="PostContent__option-icon" icon="fa-solid fa-gear" @click="showOption = true" />
-
+            <fa class="PostContent__option-icon" icon="fa-solid fa-gear" @click="showOption = true" />
             <transition name=OptionFade appear>
-                <div class="PostContent__option-content" v-if="showOption" @click="showOption = true">
+                <div class="PostContent__option-content" v-if="showOption === true" >
                     <div class="PostContent__option-button">
 
-                        <div class="PostContent__modification" @click="displayModification = true">
+                        <div class="PostContent__modification" @click="displayModification = true, showOption = false ">
                             <fa class="PostContent__modification-icon" icon="fa-solid fa-pen" />
                             <span class="PostContent__modification-text"> Modifier </span>
                         </div>
@@ -43,14 +42,13 @@
 
     <div class="PostContent__content">
         <p id="postText" class="PostContent__content-text">{{ message }}</p>
-        <img v-if="picture != ''" class="PostContent__content-picture" :src="picture"
-            alt="Image posté par 'pseudo de l'utilisateur'">
+        <img v-if="picture != '' && picture != undefinedPicture" class="PostContent__content-picture" :src="picture" :alt="'Image posté par ' + userPseudo ">
 
     </div>
 
     <div class="PostContent__footer">
 
-        <div id="showComment" class="PostContent__comment" @click="showComment = !showComment">
+        <div class="PostContent__comment" @click="showComment = !showComment">
             <fa class="PostContent__comment-icon" icon="fa-solid fa-comment-dots" />
             <span class="PostContent__comment-number"> {{ this.comments?.length }} </span>
         </div>
@@ -66,7 +64,7 @@
         <div v-if='displayModification === true' class="PostContent__update">
             <div class="PostContent__update-text">
                 <textarea class="PostContent__update-message" role="textbox" placeholder="Ajoutez un message"
-                    maxlength="300" ref="textarea" v-model="messageUpdate" @input="resizeTextarea()"
+                    maxlength="300" aria-label="Modifiez le texte de votre post" ref="textarea" v-model="messageUpdate" @input="resizeTextarea()"
                     @click="hiddeError()"> {{ message }}</textarea>
 
                 <span class="PostContent__update-counter"> {{ totalCharacters }}/300 caractères</span>
@@ -82,12 +80,9 @@
                 <p class="PostContent__feature-error-text"> {{ this.v$.messageUpdate.minLength.$message }} </p>
             </div>
 
-            <div v-if='files === true || url != null || picture != ""' class="PostContent__updatepicture">
-                <div class="PostContent__updatepicture-container">
-
-                </div>
-                <img v-if='files' class="PostContent__updatepicture-preview" :src="picture">
-                <img v-if="url" class="PostContent__updatepicture-preview" :src="url">
+            <div v-if='files && picture != "" && picture != undefinedPicture || url != null' class="PostContent__updatepicture">
+                <img v-if='files && picture != "" && picture != undefinedPicture' class="PostContent__updatepicture-preview" :src="picture" alt="L'image de votre post">
+                <img v-if="url" class="PostContent__updatepicture-preview" :src="url" alt="L'image que vous venez d'upload">
             </div>
 
             <div v-if="showMulterErrorMessage === true" class="PostContent__feature-error">
@@ -98,8 +93,7 @@
             <div class="PostContent__send">
                 <label class="PostContent__import-file" aria-label="Cliquez pour importer votre image">
                     <fa icon="fa-solid fa-image" />
-                    <input class="PostContent__input" type="file" accept="image/*" aria-label="Importez votre image"
-                        @change="changeFile">
+                    <input class="PostContent__input" type="file" accept="image/*" aria-label="Importez votre image" @change="changeFile">
                 </label>
                 <button class="PostContent__button-modification" @click="submitPostUpdate()">Modifier</button>
                 <button class="PostContent__button-cancel" @click="hiddeUpdate">Annuler</button>
@@ -107,43 +101,31 @@
         </div>
     </transition>
 
-
     <section class="test">
         <transition name=OptionFade appear>
-            <div class="ProfilInformationModification__option-content" v-if="validationMessage">
+            <div class="ProfilInformationModification__option-content valid" v-if="validationMessage">
                 <div class="ProfilInformationModification__option-button">
 
                     <div class="ProfilInformationModification__option-profil">
                         <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-check" />
-                        <span class="ProfilInformationModification__option-profil-text"> Votre post a bien été modifié
-                        </span>
+                        <span class="ProfilInformationModification__option-profil-text"> Votre post a bien été modifié </span>
+                        <fa class="ProfilInformationModification__option-profil-close" icon="fa-solid fa-xmark" @click="validationMessage = false" />
                     </div>
 
                 </div>
             </div>
         </transition>
     </section>
-
-    <section class="test">
-        <transition name=OptionFade appear>
-            <div class="ProfilInformationModification__option-content error" v-if="errorMessage">
-                <div class="ProfilInformationModification__option-button">
-
-                    <div class="ProfilInformationModification__option-profil">
-                        <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-xmark" />
-                        <span class="ProfilInformationModification__option-profil-text"> Une erreur est survenue,
-                            veuillez réessayer </span>
-                    </div>
-                </div>
-            </div>
-        </transition>
-    </section>
-
 
     <transition name="fade" appear>
         <div v-if='displayModification === true' class="PostContent__bg" @click="hiddeUpdate">
         </div>
     </transition>
+
+
+
+    
+
 
     <div v-for="comment in comments">
         <PostComment v-if="showComment" :pseudo="comment.pseudo" :comment='comment.comment' :userId="comment.userId"  :createdAt="dateTime(comment.createdAt)" 
@@ -191,33 +173,47 @@ export default {
 
     data() {
         return {
-            //comments: [], 
-            showComment: false,
-            showOption: false,
-            showPostPicture: false,
             userPicture: '',
             userPseudo: '',
             userInfos: '',
-
-
+            isAdmin: true || false,  
             option: false,
+            showOption: false,
+            showComment: false,
             like: 0,
             displayModification: false,
-            messageModification: '',
-            files: true,
-            url: null,
-            multerErrorMessage: '',
-            showMulterErrorMessage: false,
-            messageUpdate: this.message + '',
             showValidatorError: false,
             showLengthError: false,
+            files: true,
+            url: null,
+            undefinedPicture: 'http://localhost:3000/images/uploads/posts/undefined',
             file: this.picture,
-            errorMessage: false,
+            showMulterErrorMessage: false,
             validationMessage: false,
+
+
+            
+            showPostPicture: false,
+            
+
+
+            
+            
+            
+            messageModification: '',
+            
+            
+            multerErrorMessage: '',
+            messageUpdate: this.message + '',
+            
+            
+            file: this.picture,
+            
             postIdComment: this.postId, 
 
             commentText: '', 
             postDataId: this.postId
+
 
 
 
@@ -231,7 +227,6 @@ export default {
                 required: helpers.withMessage('Votre message doit contenir au moins 2 caractères', required),
                 minLength: helpers.withMessage('Votre message doit contenir au moins 2 caractères', minLength(2))
             }
-
         }
     },
 
@@ -239,40 +234,17 @@ export default {
     emits: ['getUserInfo', 'getAllPosts'],
 
     mounted() {
-        //this.$emit('getUserInfo')
-        //this.$emit('getAllPosts')
-        //console.log(this.postId)
         if (localStorage.user) {
             this.userInfos = JSON.parse(localStorage.user)
-            //console.log(this.userInfos)
+
         }
         this.getUserPicture()
+        this.getIsAdmin()
         this.displayOption()
-        
-        
-
-        //this.checkUserLike () 
 
     },
 
-
-    methods: {
-        changeFile(fileUpload) {
-            if (this.file === undefined) {
-                this.file = this.picture
-            }
-            this.file = fileUpload.target.files[0];
-            this.url = URL.createObjectURL(this.file);
-            this.files = false
-
-        },
-        deletePicturePreview() {
-            this.url = null;
-            this.file = null;
-            this.files = false;
-            this.showMulterErrorMessage = false
-
-        },
+    methods: { 
         getUserPicture() {
 
             if (this.userInfos.userId === this.userId) {
@@ -292,25 +264,34 @@ export default {
                 })
             }
         },
+        getIsAdmin () {
+            this.allUser?.map((user) => {
+                if (this.userId === user._id)
+                this.isAdmin = user.isAdmin;
+            })
+
+        },
         displayOption() {
-            if (this.userId === this.userInfos.userId) {
+            if (this.userId === this.userInfos.userId || this.userInfos.isAdmin === true) {
                 this.option = true
             }
-        },
-        resizeTextarea() {
-            const element = this.$refs["textarea"];
 
-            element.style.height = "18px";
-            element.style.height = element.scrollHeight + "px";
         },
-        likePost() {
-            this.$store.dispatch('likePost', {
-                like: this.like
-            }).then((response) => {
-                console.log(response)
-                this.checkUserLike()
-            }).catch((error) => {
+        dateTime(value) {
+            return moment(value).fromNow()
 
+        },
+        deletePost() {
+            return new Promise((resolve, reject) => {
+                axios.delete('http://localhost:3000/api/mainpage/' + this.postId, { withCredentials: true })
+                .then((response) => {
+                    window.location.reload()
+                    resolve(response)
+                        
+                }).catch((error) => {
+                    reject(error)
+
+                })
             })
         },
         checkUserLike() {
@@ -338,116 +319,122 @@ export default {
                     })
             })
         },
-        deletePost() {
-            return new Promise((resolve, reject) => {
-                axios.delete('http://localhost:3000/api/mainpage/' + this.postId, { withCredentials: true })
-                    .then((response) => {
-                        console.log(response.data)
-                        resolve(response.data)
-                        this.$emit('getAllPosts')
+        resizeTextarea() {
+            const element = this.$refs["textarea"];
 
-                    }).catch((error) => {
-                        reject(error)
-                        console.log(error)
-                    })
-            })
-        },
-        displayUpdate() {
-            this.displayModification = true
-            this.showOption = false
-
-        },
-        submitPostUpdate() {
-            this.v$.$validate();
-            if (!this.v$.$error) {
-                //this.$emit('getAllUsers')
-
-                this.updatePost();
-
-            } else {
-                if (this.v$.messageUpdate.required.$invalid === true)
-
-                    this.showValidatorError = true
-
-
-                if (this.v$.messageUpdate.minLength.$invalid === true)
-                    this.showLengthError = true
-            }
-        },
-        updatePost() {
-            console.log(this.file)
-            console.log(this.picture)
-            const dataForm = new FormData();
-            if (this.file === this.picture && this.messageUpdate === this.message) {
-                this.displayModification = false
-            } else if (this.file === this.picture || this.file === undefined || null) {
-                dataForm.append('image', this.file);
-                dataForm.append('message', this.messageUpdate)
-
-                axios.patch('http://localhost:3000/api/mainpage/' + this.postId, dataForm, { withCredentials: true })
-                    .then((response) => {
-                        console.log(response.data)
-                        this.validationMessage = true
-                        this.displayModification = false
-                        this.$emit('getAllPosts')
-
-                    }).catch((error) => {
-                        const multerError = error.response.data.split(`Error: `)
-                        const multerError2 = multerError[1].split(`<br> &nbsp; `)
-
-                        this.multerErrorMessage = multerError2[0]
-                        console.log(this.multerErrorMessage)
-                        if (this.multerErrorMessage === 'File too large') {
-                            this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
-                        }
-                        this.showMulterErrorMessage = true
-                        this.errorMessage = false
-
-                    })
-            } else {
-                dataForm.append('image', this.file);
-                dataForm.append('message', this.messageUpdate)
-
-                axios.patch('http://localhost:3000/api/mainpage/' + this.postId, dataForm, { withCredentials: true })
-                    .then((response) => {
-                        console.log(response.data)
-                        this.validationMessage = true
-                        this.displayModification = false
-
-                        this.$emit('getAllPosts')
-
-                    }).catch((error) => {
-                        const multerError = error.response.data.split(`Error: `)
-                        const multerError2 = multerError[1].split(`<br> &nbsp; `)
-
-                        this.multerErrorMessage = multerError2[0]
-                        console.log(this.multerErrorMessage)
-                        if (this.multerErrorMessage === 'File too large') {
-                            this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
-                        }
-                        this.showMulterErrorMessage = true
-                        this.errorMessage = false
-
-
-                    })
-            }
-
-        },
-        hiddeUpdate() {
-            this.displayModification = false
-            this.files = true
-            this.url = null
-            this.showOption = false
-            this.showMulterErrorMessage = false
+            element.style.height = "18px";
+            element.style.height = element.scrollHeight + "px";
         },
         hiddeError() {
             this.showLengthError = false;
             this.showValidatorError = false;
 
         },
-        displayModificationFile() {
-            this.displayModification = true
+        changeFile(fileUpload) {
+            if (this.file === undefined) {
+                this.file = this.picture
+            }
+            this.file = fileUpload.target.files[0];
+            this.url = URL.createObjectURL(this.file);
+            this.files = false
+
         },
+        displayPicture() {
+            if (this.multerErrorMessage != '') {
+                this.url = null;
+                this.files = true;
+            }
+        },
+        updatePost() {
+            const dataForm = new FormData();
+            if (this.file === this.picture && this.messageUpdate === this.message) {
+                this.displayModification = false
+            } else if (this.file === this.picture || this.file === undefined || null ) {
+                dataForm.append('image', this.file);
+                dataForm.append('message', this.messageUpdate)
+
+                axios.patch('http://localhost:3000/api/mainpage/' + this.postId, dataForm, { withCredentials: true })
+                    .then((response) => {
+                        this.validationMessage = true
+                        this.displayModification = false
+                        this.$emit('getAllPosts')
+
+                    }).catch((error) => {
+                        const multerError = error.response.data.split(`Error: `)
+                        const multerError2 = multerError[1].split(`<br> &nbsp; `)
+
+                        this.multerErrorMessage = multerError2[0]
+                        if (this.multerErrorMessage === 'File too large') {
+                            this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
+                        }
+                        this.showMulterErrorMessage = true
+                        this.displayPicture() 
+                    })
+            } else {
+
+                dataForm.append('image', this.file);
+                dataForm.append('message', this.messageUpdate)
+                axios.patch('http://localhost:3000/api/mainpage/' + this.postId, dataForm, { withCredentials: true })
+                    .then((response) => {
+                        console.log(response.data)
+                        this.validationMessage = true
+                        this.displayModification = false
+                        this.$emit('getAllPosts')
+
+                    }).catch((error) => {
+                        const multerError = error.response.data.split(`Error: `)
+                        const multerError2 = multerError[1].split(`<br> &nbsp; `)
+
+                        this.multerErrorMessage = multerError2[0]
+                        console.log(this.multerErrorMessage)
+                        if (this.multerErrorMessage === 'File too large') {
+                            this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
+                        }
+                        this.showMulterErrorMessage = true
+                        this.displayPicture()
+                    })
+            }
+            this.delayCloseAlert()
+        },
+        submitPostUpdate() {
+            this.v$.$validate();
+            if (!this.v$.$error) {
+                this.updatePost();
+
+            } else {
+                if (this.v$.messageUpdate.required.$invalid === true)
+                    this.showValidatorError = true
+
+                if (this.v$.messageUpdate.minLength.$invalid === true)
+                    this.showLengthError = true
+            }
+        },
+        hiddeUpdate() {
+            this.displayModification = false
+            this.files = true
+            this.file = false, 
+            this.url = null
+            this.showOption = false
+            this.showMulterErrorMessage = false
+
+        },
+        delayCloseAlert() {
+            var self = this;
+            setTimeout(function() { 
+                self.validationMessage = false; 
+                self.errorMessage = false; 
+            }, 7000);
+
+        },
+
+
+
+
+
+
+
+
+
         createComment () {
             const dataComment = {
                 comment: this.commentText
@@ -461,9 +448,8 @@ export default {
                     console.log(error)
                 })
         },
-        dateTime(value) {
-            return moment(value).fromNow()
-        },
+        
+        
          
     },
 
@@ -475,9 +461,6 @@ export default {
             return this.messageUpdate.length
         }
     }
-
-
-
 }
 </script>
 
@@ -510,6 +493,23 @@ export default {
     &__info {
         padding-left: 20px;
         flex: 75%;
+
+        &-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px
+
+        }
+
+        &-isadmin{
+            margin: 0; 
+            font-weight: bold;
+            padding: 5px; 
+            background-color: $color-primary;
+            border-radius: 7px;
+            color: white; 
+        }
 
         &-user {
             font-size: 16px;
@@ -839,11 +839,11 @@ export default {
                 font-size: 20px;
                 color: $color-primary;
                 padding-right: 10px;
-                margin: 10px 0 4px 0;
+                margin: 0 0 4px 0;
             }
 
             &-text {
-                margin: 10px 0 4px 0;
+                margin: 0 0 4px 0;
             }
         }
     }
@@ -905,9 +905,13 @@ export default {
             @include send-button;
 
         }
-
     }
+}
 
+.test {
+    position: fixed; 
+    bottom: 10px;
+    left: 30px 
 }
 
 

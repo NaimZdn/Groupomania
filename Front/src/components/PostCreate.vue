@@ -1,28 +1,23 @@
 <template>
     <section class="container-flex">
         <div class="PostCreate">
-
             <div class="PostCreate__form">
                 <div class="PostCreate__picture">
                     <img class="PostCreate__picture-user" :src="this.userInfos.picture" alt="Votre photo de profil">
                 </div>
-                <textarea class="PostCreate__comment" ref='textarea' role="textbox" placeholder="Ajoutez un post" maxlength="300" v-model='message' @input="resizeTextarea()" @focus="hideError" ></textarea>
+                <textarea class="PostCreate__comment" ref='textarea' role="textbox" placeholder="Ajoutez un post" maxlength="300" aria-label="Ajoutez un post" v-model='message' @input="resizeTextarea()" @focus="hideError" ></textarea>
             </div>
             <span class="PostCreate__counter"> {{ totalCharacters }}/300 caractères</span>
 
             <div v-if="files" class="PostCreate__addpicture">
                 <div class="PostCreate__addpicture-container">
-                    
-                
                     <fa class="PostCreate__addpicture-delete" icon="fa-solid fa-xmark" @click="deletePicturePreview" />
                 </div>
-                    <img class="PostCreate__addpicture-preview" :src="url">
-                
+                    <img class="PostCreate__addpicture-preview" :src="url" alt="L'image que vous venez d'importer">
             </div>
 
             <div class='PostCreate__feature'> 
-                
-
+            
                 <div v-if="showValidatorError === true" class="PostCreate__feature-error"> 
                     <fa class="PostCreate__feature-error-icon" icon="fa-solid fa-circle-xmark" />
                     <p class="PostCreate__feature-error-text"> {{this.v$.message.required.$message}} </p>
@@ -50,31 +45,9 @@
         </div>
     </section>
 
-
-
-<section class="test">
-            <transition name=OptionFade appear>
-                <div class="ProfilInformationModification__option-content" v-if="validationMessage">
-                    <div class="ProfilInformationModification__option-button">
-
-                            <div class="ProfilInformationModification__option-profil">
-                                <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-check" />
-                                <span class="ProfilInformationModification__option-profil-text"> Votre post a bien été crée </span>
-                            </div>
-
-                    </div>
-                </div>
-            </transition>
-        </section>
-
-
-
-
-
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import useVuelidate from '@vuelidate/core';
 import { required, minLength, helpers } from '@vuelidate/validators';
 
@@ -83,7 +56,6 @@ export default {
         return {v$: useVuelidate()}
     }, 
     name: 'PostCreate',
-    emits: ['getAllPosts', 'getAllUsers', 'getUserInfo'],
     data() {
         return {
             message: '',
@@ -98,7 +70,6 @@ export default {
             showLengthError: false, 
             multerErrorMessage: '', 
             showMulterErrorMessage: false,  
-            validationMessage: false,
             
         }
     },
@@ -107,8 +78,8 @@ export default {
         return {
             message: {
                 required: helpers.withMessage('Votre message doit contenir au moins 2 caractères', required),
-                minLength: helpers.withMessage( 'Votre message doit contenir au moins 2 caractères', minLength(2))
-            }
+                minLength: helpers.withMessage( 'Votre message doit contenir au moins 2 caractères', minLength(2)),
+            },
 
         }
     }, 
@@ -116,8 +87,7 @@ export default {
     mounted() {
         if (localStorage.user) {
             this.userInfos = JSON.parse(localStorage.user)
-            //console.log(this.userInfos)
-        }
+        };
     },
 
     methods: {
@@ -135,63 +105,37 @@ export default {
         submitPost() {
             this.v$.$validate();
             if (!this.v$.$error) {
-                //this.$emit('getAllUsers')
-                
                 this.createPost();
                
             } else {
                 if (this.v$.message.required.$invalid === true)
-                this.showValidatorError = true
+                this.showValidatorError = true;
 
                 if (this.v$.message.minLength.$invalid === true)
-                this.showLengthError = true
+                this.showLengthError = true;
             }
         },
 
         createPost() {
-            
             const dataForm = new FormData();
             dataForm.append('image', this.file);
             dataForm.append('message', this.message);
             this.$store.dispatch('createPost', dataForm)
                 .then((response) => {
-                    console.log(response)
-                    this.message = '', 
-                    this.files = false
-                    this.showMulterErrorMessage = false
-                    this.validationMessage = true 
-                    this.delayCloseAlert()
-                    this.$emit('getAllUsers')
-                    
-                    this.$emit('getAllPosts')
-                    this.$emit('getUserInfo');
-                    //this.$router.go('/mainpage')
-                    
-                    //this.displayModification = false
+                    window.location.reload();
 
                 })
                 .catch((error) => {
-                    const multerError = error.response.data.split(`Error: `)
-                    const multerError2 = multerError[1].split(`<br> &nbsp; `)
+                    const multerError = error.response.data.split(`Error: `);
+                    const multerError2 = multerError[1].split(`<br> &nbsp; `);
 
-                    this.multerErrorMessage = multerError2[0]
+                    this.multerErrorMessage = multerError2[0];
                     if (this.multerErrorMessage === 'File too large') {
                         this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
-                    }
+                    };
                     
-                    console.log(this.multerErrorMessage)
-                    this.showMulterErrorMessage = true 
-                    this.hideErrorContent()
-                    //console.log(this.bio)
-                })
-        },
-        getAllPosts() {
-            this.$store.dispatch('getAllPosts')
-                .then((response) => {
-                     console.log(response.data)
-                })
-                .catch((error) => {
-                    console.log(error)
+                    this.showMulterErrorMessage = true;
+                    this.hideErrorContent();
                 })
         },
         deletePicturePreview() {
@@ -201,8 +145,8 @@ export default {
 
         }, 
         hideError(){
-            this.showValidatorError = false
-            this.showLengthError = false 
+            this.showValidatorError = false;
+            this.showLengthError = false; 
             
         },
         hideErrorContent() {
@@ -211,28 +155,14 @@ export default {
             }
 
         }, 
-        delayCloseAlert() {
-            var self = this;
-
-            setTimeout(function() { 
-                self.validationMessage = false; 
-            }, 7000);
-        },
     },
 
     computed: {
-        ...mapState({
-            //userInfos: 'userInfos'
-        }),
-
         totalCharacters() {
-            return this.message.length
+            return this.message.length;
         },
-
     },
 }
-
-
 </script>
 
 <style lang='scss'>
@@ -323,30 +253,7 @@ export default {
     }
 
     &__feature {
-        display: flex;
-        flex-direction: column;
-
-        &-error {
-            display: flex;
-            align-items:center; 
-            margin-left: 100px; 
-            margin-top: 10px;
-            color: $color-primary; 
-            font-weight: bold;
-            font-size: 16px;
-        
-
-            &-icon{
-                font-size: 20px;
-                color: $color-primary; 
-                padding-right: 10px;
-                margin: 10px 0 4px 0; 
-            }
-
-            &-text {
-                margin: 10px 0 4px 0; 
-            }
-        }
+        @include PostController; 
     }
 
     &__counter {
@@ -359,9 +266,7 @@ export default {
         @include break-mobile {
             margin-left: 85px;
         }
-
     }
-
 
     &__send {
         display: flex;
@@ -372,7 +277,6 @@ export default {
             margin: 20px 15px 0 0;
 
         }
-
     }
 
     &__import-file {
@@ -400,7 +304,6 @@ export default {
 
     }
 }
-
 
 input[type="file"] {
     position: absolute;

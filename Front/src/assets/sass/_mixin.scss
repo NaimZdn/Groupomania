@@ -439,6 +439,32 @@
     }
 }; 
 
+@mixin PostController {
+    display: flex;
+    flex-direction: column;
+
+    &-error {
+        display: flex;
+        align-items:center; 
+        margin-left: 100px; 
+        margin-top: 10px;
+        color: $color-primary; 
+        font-weight: bold;
+        font-size: 16px;
+        
+        &-icon{
+            font-size: 20px;
+            color: $color-primary; 
+            padding-right: 10px;
+            margin: 10px 0 4px 0; 
+        }
+
+        &-text {
+            margin: 10px 0 4px 0; 
+        }
+    }
+}
+
 @mixin Fade {
     .OptionFade-enter-active,
     .OptionFade-leave-active {
@@ -451,28 +477,3 @@
         opacity: 0;
     }
 };
-
-
-@mixin Fade-0-5 {
-    .OptionFade-enter-active,
-    .OptionFade-leave-active {
-        transition: opacity .5s;
-
-    }
-    .OptionFade-enter-from,
-    .OptionFade-leave-to {
-        opacity: 0;
-    }
-};
-
-@mixin Slide {
-    .OptionSlide-enter-active,
-    .OptionSlide-leave-active {
-        transition: transform .5s;
-    }
-
-    .OptionSlide-enter-from,
-    .OptionSlide-leave-to {
-        transform: translateY(-50%) translateX(100vw);
-    }
-}
