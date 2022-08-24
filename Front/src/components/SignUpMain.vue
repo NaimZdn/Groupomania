@@ -150,7 +150,7 @@ import useVuelidate from '@vuelidate/core';
 import { required, email, helpers } from '@vuelidate/validators';
 import { containsUppercase, containsLowercase, containsNumber } from "../common/regexSignUp.js"
 
-const regexPseudo = helpers.regex(/^[A-z0-9éèôöîïûùü' -]{8,20}$/);
+const regexPseudo = helpers.regex(/^[A-z0-9éèôöîïûùü' -]{4,20}$/);
 const regexPassword = helpers.regex(/^[A-z0-9éèôöîïûùü' -/*]{8,}$/);
 
 

@@ -26,7 +26,7 @@
                             <span class="PostContent__modification-text"> Modifier </span>
                         </div>
 
-                        <div class="PostContent__delete" @click="deletePost()">
+                        <div class="PostContent__delete" @click="deletePost(), showOption = false">
                             <fa class="PostContent__delete-icon" icon="fa-solid fa-trash-can" />
                             <span class="PostContent__delete-text"> Supprimer </span>
                         </div>
@@ -101,7 +101,7 @@
         </div>
     </transition>
 
-    <section class="test">
+    <section class="ProfilInformationModification__container">
         <transition name=OptionFade appear>
             <div class="ProfilInformationModification__option-content valid" v-if="validationMessage">
                 <div class="ProfilInformationModification__option-button">
@@ -117,39 +117,60 @@
         </transition>
     </section>
 
+    <section class="ProfilInformationModification__container">
+        <transition name=OptionFade appear>
+            <div class="ProfilInformationModification__option-content" v-if="errorMessagePost">
+                <div class="ProfilInformationModification__option-button">
+
+                    <div class="ProfilInformationModification__option-profil">
+                        <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-check" />
+                        <span class="ProfilInformationModification__option-profil-text"> Vous ne pouvez pas modifiez et/ou supprimer ce post </span>
+                        <fa class="ProfilInformationModification__option-profil-close" icon="fa-solid fa-xmark" @click="errorMessagePost = false" />
+                    </div>
+
+                </div>
+            </div>
+        </transition>
+    </section>
+
     <transition name="fade" appear>
         <div v-if='displayModification === true' class="PostContent__bg" @click="hiddeUpdate">
         </div>
     </transition>
-
-
-
-    
-
 
     <div v-for="comment in comments">
         <PostComment v-if="showComment" :pseudo="comment.pseudo" :comment='comment.comment' :userId="comment.userId"  :createdAt="dateTime(comment.createdAt)" 
         :commentId="comment._id" :postId="this.postDataId" />
     </div>
 
-<div v-if="showComment">
-    <div class="PostCreateComment__content">
-        <div class="PostCreateComment__line"> </div>
-    </div>
-
-    <div class="PostCreateComment">
-        <div class="PostCreateComment__picture line ">
-            <img class="PostCreateComment__picture-user" :src="userInfos.picture"
-                alt="Votre photo de profil">
+    <div v-if="showComment">
+        <div class="PostCreateComment__content">
+            <div class="PostCreateComment__line"> </div>
         </div>
-        
-        <textarea class="PostCreateComment__comment" ref='textarea' role="textbox" placeholder="Ajoutez un commentaire" maxlength="300" v-model='commentText' @input="resizeTextarea()" ></textarea>
-    </div>
 
-    <div class="PostCreateComment__button">
-        <button class="PostCreateComment__button-send" @click="createComment()">PUBLIER</button>
+        <div class="PostCreateComment">
+            <div class="PostCreateComment__picture line ">
+                <img class="PostCreateComment__picture-user" :src="userInfos.picture"
+                    alt="Votre photo de profil">
+            </div>
+            
+            <textarea class="PostCreateComment__comment" ref='textarea' role="textbox" placeholder="Ajoutez un commentaire" maxlength="300" v-model='commentText' @input="resizeTextarea()" @click=" hiddeCommentValidator ()" ></textarea>
+        </div>
+
+        <div v-if="showValidatorErrorComment === true" class="PostCreateComment__feature-error">
+            <fa class="PostCreateComment__feature-error-icon" icon="fa-solid fa-circle-xmark" />
+            <p class="PostCreateComment__feature-error-text"> {{ this.v$.messageUpdate.required.$message }} </p>
+        </div>
+
+        <div v-if="showLengthErrorComment === true" class="PostCreateComment__feature-error">
+            <fa class="PostCreateComment__feature-error-icon" icon="fa-solid fa-circle-xmark" />
+            <p class="PostCreateComment__feature-error-text"> {{ this.v$.messageUpdate.minLength.$message }} </p>
+        </div>
+
+        <div class="PostCreateComment__button">
+            <button class="PostCreateComment__button-send" @click="submitComment()">PUBLIER</button>
+        </div>
     </div>
- </div>
 
 
 
@@ -160,12 +181,11 @@ import useVuelidate from '@vuelidate/core';
 import { required, minLength, helpers } from '@vuelidate/validators';
 import { mapState } from 'vuex';
 import PostComment from './PostComment.vue';
-import PostCreateComment from './PostCreateComment.vue';
 import axios from 'axios'
 import moment from 'moment/min/moment-with-locales';
 export default {
     name: "PostContent",
-    components: { PostComment, PostCreateComment },
+    components: { PostComment},
 
     setup() {
         return { v$: useVuelidate() }
@@ -189,35 +209,16 @@ export default {
             undefinedPicture: 'http://localhost:3000/images/uploads/posts/undefined',
             file: this.picture,
             showMulterErrorMessage: false,
-            validationMessage: false,
-
-
-            
-            showPostPicture: false,
-            
-
-
-            
-            
-            
-            messageModification: '',
-            
-            
             multerErrorMessage: '',
             messageUpdate: this.message + '',
-            
-            
-            file: this.picture,
-            
-            postIdComment: this.postId, 
-
+            validationMessage: false,
+            errorMessagePost: false, 
+            postDataId: this.postId,
             commentText: '', 
-            postDataId: this.postId
-
-
-
-
-
+            showValidatorErrorComment: false, 
+            showLengthErrorComment: false, 
+            
+            
         }
     },
 
@@ -226,7 +227,13 @@ export default {
             messageUpdate: {
                 required: helpers.withMessage('Votre message doit contenir au moins 2 caractères', required),
                 minLength: helpers.withMessage('Votre message doit contenir au moins 2 caractères', minLength(2))
-            }
+            }, 
+            commentText : {
+                required: helpers.withMessage('Votre commentaire doit contenir au moins 2 caractères', required),
+                minLength: helpers.withMessage('Votre commentaire doit contenir au moins 2 caractères', minLength(2))
+                
+            }, 
+
         }
     },
 
@@ -248,7 +255,6 @@ export default {
         getUserPicture() {
 
             if (this.userInfos.userId === this.userId) {
-                //console.log('yo')
                 this.userPicture = this.userInfos.picture
                 this.userPseudo = this.userInfos.pseudo
             } else {
@@ -257,9 +263,7 @@ export default {
                     if (user._id === this.userId) {
                         this.userPseudo = user.pseudo
                         this.userPicture = user.picture
-                        //console.log(this.userPicture)
-                        //console.log('enfant')
-                        //console.log(this.userPicture)
+
                     }
                 })
             }
@@ -282,17 +286,21 @@ export default {
 
         },
         deletePost() {
-            return new Promise((resolve, reject) => {
+         
                 axios.delete('http://localhost:3000/api/mainpage/' + this.postId, { withCredentials: true })
                 .then((response) => {
                     window.location.reload()
-                    resolve(response)
+                    
                         
                 }).catch((error) => {
-                    reject(error)
-
+                    if (error.response.data.message === 'Requête non autorisée') {
+                            this.errorMessagePost = true 
+                        }
+                    console.log(error)
                 })
-            })
+                this.delayCloseAlert()
+       
+         
         },
         checkUserLike() {
             if (this.usersLiked.includes(this.userInfos.userId)) {
@@ -360,6 +368,9 @@ export default {
                         this.$emit('getAllPosts')
 
                     }).catch((error) => {
+                        if (error.response.data.message === 'Requête non autorisée') {
+                            this.errorMessagePost = true 
+                        } 
                         const multerError = error.response.data.split(`Error: `)
                         const multerError2 = multerError[1].split(`<br> &nbsp; `)
 
@@ -368,10 +379,10 @@ export default {
                             this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
                         }
                         this.showMulterErrorMessage = true
+                        
                         this.displayPicture() 
                     })
             } else {
-
                 dataForm.append('image', this.file);
                 dataForm.append('message', this.messageUpdate)
                 axios.patch('http://localhost:3000/api/mainpage/' + this.postId, dataForm, { withCredentials: true })
@@ -382,6 +393,9 @@ export default {
                         this.$emit('getAllPosts')
 
                     }).catch((error) => {
+                        if (error.response.data.message === 'Requête non autorisée') {
+                            this.errorMessagePost = true 
+                        } 
                         const multerError = error.response.data.split(`Error: `)
                         const multerError2 = multerError[1].split(`<br> &nbsp; `)
 
@@ -391,17 +405,22 @@ export default {
                             this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
                         }
                         this.showMulterErrorMessage = true
+                        
                         this.displayPicture()
                     })
             }
             this.delayCloseAlert()
         },
         submitPostUpdate() {
+        
             this.v$.$validate();
-            if (!this.v$.$error) {
+            //console.log('coucou')
+            if (this.v$.messageUpdate.required.$invalid === false && this.v$.messageUpdate.minLength.$invalid === false) {
+
                 this.updatePost();
 
             } else {
+                
                 if (this.v$.messageUpdate.required.$invalid === true)
                     this.showValidatorError = true
 
@@ -422,19 +441,28 @@ export default {
             var self = this;
             setTimeout(function() { 
                 self.validationMessage = false; 
-                self.errorMessage = false; 
+                self.errorMessagePost = false; 
+                self.errorMessageComment = false
             }, 7000);
 
         },
+        submitComment() {
+            this.v$.$validate();
+            if (!this.v$.$error) {
+                this.createComment();
 
+            } else {
+                if (this.v$.commentText.required.$invalid === true)
+                    this.showValidatorErrorComment = true
 
-
-
-
-
-
-
-
+                if (this.v$.commentText.minLength.$invalid === true)
+                    this.showLengthErrorComment = true
+            }
+        },
+        hiddeCommentValidator () {
+            this.showLengthErrorComment = false, 
+            this.showValidatorErrorComment = false 
+        }, 
         createComment () {
             const dataComment = {
                 comment: this.commentText
@@ -447,10 +475,7 @@ export default {
                 }).catch((error) => {
                     console.log(error)
                 })
-        },
-        
-        
-         
+        },      
     },
 
     computed: {
@@ -908,13 +933,106 @@ export default {
     }
 }
 
-.test {
+.ProfilInformationModification__container {
+    z-index: 1000; 
     position: fixed; 
     bottom: 10px;
     left: 30px 
 }
-
-
-
 @include Fade;
+
+
+.PostCreateComment {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    margin: 15px 30px 0 30px;
+    align-items: center;
+   
+
+    @include break-mobile {
+        margin: 0 15px 0 15px;
+    }
+
+    &__content {
+        display: flex;
+        justify-content: center;
+    }
+
+
+    &__picture {
+        @include profil-picture__container;
+
+        &-user {
+            @include profil-picture;
+
+        }
+    }
+
+    &__comment {
+        align-items: center;
+        height: 30px;
+        font-size: 15px;
+        @include input-add;
+
+        @include break-mobile {
+            margin: 0;
+
+        }
+
+        &::placeholder {
+            font-size: 15px;
+            font-weight: bold;
+            color: $color-primary;
+        }
+    }
+
+    &__button {
+        display: flex;
+        justify-content: flex-end;
+        margin: 15px 30px 30px 0;
+
+        @include break-mobile {
+            margin: 0 15px 30px 0;
+        }
+
+        &-send {
+            @include send-button;
+
+        }
+    }
+
+    &__feature {
+        display: flex;
+        flex-direction: column;
+   
+        &-error {
+            margin-left: 100px;
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            color: $color-primary;
+            font-weight: bold;
+            font-size: 16px;
+
+            @include break-mobile {
+                margin-left: 80px;
+
+            }
+            
+            &-icon {
+                
+                font-size: 20px;
+                color: $color-primary;
+                padding-right: 10px;
+                margin: 0 0 4px 0;
+            }
+
+            &-text {
+                margin: 0 0 4px 0;
+            }
+        }
+    }
+}
+
 </style>

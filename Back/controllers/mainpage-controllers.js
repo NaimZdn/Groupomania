@@ -201,16 +201,22 @@ exports.addComment = (req, res) => {
 
 
 exports.editComment = (req, res) => {
+    const token = req.cookies.webToken;
+    const decodedToken = webToken.verify(token, dbToken);
+    const userId = decodedToken.id;
+    const isAdmin = decodedToken.isAdmin;
+
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
 
     try {
         return Post.findById(req.params.id, (err, docs) => {
             const theComment = docs.comments.find((comment) =>
-                comment._id.equals(req.body.commentId)
+                comment._id.equals(req.body.commentId) && comment.userId === userId || 
+                comment._id.equals(req.body.commentId) && isAdmin === true 
             );
 
-            if (!theComment) return res.status(404).send("Comment not found");
+            if (!theComment) return res.status(404).json({error : `Vous ne pouvez pas modifier ce commentaire`});
             theComment.comment = req.body.comment;
 
             return docs.save((err) => {
@@ -227,28 +233,39 @@ exports.deleteComment = (req, res) => {
     const token = req.cookies.webToken;
     const decodedToken = webToken.verify(token, dbToken);
     const userId = decodedToken.id;
+    const isAdmin = decodedToken.isAdmin;
 
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
 
-    try {
-        return Post.findByIdAndUpdate(
-            req.params.id,
-            {
-                $pull: {
-                    comments: {
-                        _id: req.body.commentId,
 
+        try {
+            return Post.findById(req.params.id, (err, docs) => {
+                const theComment = docs.comments.find((comment) =>
+                    comment._id.equals(req.body.commentId) && comment.userId === userId || 
+                    comment._id.equals(req.body.commentId) && isAdmin === true 
+                );
+    
+                if (!theComment) return res.status(404).json({error : `Vous ne pouvez pas supprimer ce commentaire`});
+                if(theComment) return Post.findByIdAndUpdate(
+                    req.params.id,
+                    {
+                        $pull: {
+                            comments: {
+                                _id: req.body.commentId,
+        
+                            },
+                        },
                     },
-                },
-            },
-            { new: true },
-            (err, docs) => {
-                if (!err) return res.send(docs);
-                else return res.status(400).send(err)
-            }
-        );
-    } catch (err) {
-        return res.status(400).send(err);
-    }
+                    { new: true },
+                    (err, docs) => {
+                        if (!err) return res.send(docs);
+                        else return res.status(400).send(err)
+                    }
+                );
+            });
+        } catch (err) {
+            return res.status(400).send(err);
+        }
+
 }; 

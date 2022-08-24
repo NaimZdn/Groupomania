@@ -10,6 +10,7 @@
 
             <div class="ProfilInformation__pseudo">
                 <h1 class="ProfilInformation__pseudo-text"> {{ this.userData.pseudo }} </h1>
+                <p v-if="userData.isAdmin === true" class="ProfilInformation__pseudo-admin"> Admin </p>
                 
             </div>
 
@@ -239,7 +240,11 @@ export default {
     }
 
     &__pseudo {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
         margin-left: 40px;    
+        gap: 20px;
 
         @include break-mobile {
             margin: 0 15px 0 15px; 
@@ -249,7 +254,7 @@ export default {
         &-text{
             font-weight: 400;
             margin: 40 0 40 0; 
-            font-size: 40px;
+            font-size: 30px;
             
             @include break-mobile {
                 font-weight: 400;
@@ -260,7 +265,7 @@ export default {
         }
 
         &-admin {
-            font-size: 20px; 
+            font-size: 15px; 
             font-weight: bold; 
             padding: 7px 15px 7px 15px;
             background-color: $color-primary;

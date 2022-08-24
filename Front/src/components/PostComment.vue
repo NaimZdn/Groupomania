@@ -3,11 +3,10 @@
         <div class="PostComment">
 
             <div class="PostComment__picture">
-                <a href=""> <img id="userPicture" class="PostComment__picture-user" :src="userPicture"> </a>
+                <img class="PostComment__picture-user" :src="userPicture" :alt="'Photo de profil de ' + pseudo"> 
             </div>
 
             <div class="PostComment__content">
-
                 <div class="PostComment__content-header">
 
                     <div class="PostComment__content-container">
@@ -15,21 +14,20 @@
                         <p class="PostComment__content-time"> {{ createdAt }}</p>
                     </div>
 
-                    <div class="PostComment__content-option">
-                        <fa class="PostComment__content-icon" icon="fa-solid fa-ellipsis-vertical"
-                            @click="showOption = true" />
+                    <div v-if='option === true' class="PostComment__content-option">
+                        <fa class="PostComment__content-icon" icon="fa-solid fa-ellipsis-vertical" @click="showOption = true" />
+
                         <transition name=OptionFade appear>
-                            <div class="PostComment__option-content" v-if="showOption" @click="showOption = true">
+                            <div class="PostComment__option-content" v-if="showOption === true" >
 
                                 <div class="PostComment__option-button">
 
-                                    <div class="PostComment__modification" @click="showUpdateComment = true">
+                                    <div class="PostComment__modification" @click="showUpdateComment = true, showOption = false">
                                         <fa class="PostComment__modification-icon" icon="fa-solid fa-pen" />
-                                        <span class="PostComment__modification-text">
-                                            Modifier </span>
+                                        <span class="PostComment__modification-text"> Modifier </span>
                                     </div>
 
-                                    <div class="PostComment__delete" @click="deleteComment()">
+                                    <div class="PostComment__delete" @click="deleteComment(), showOption = false">
                                         <fa class="PostComment__delete-icon" icon="fa-solid fa-trash-can" />
                                         <span class="PostComment__delete-text"> Supprimer </span>
                                     </div>
@@ -50,69 +48,119 @@
 
             <transition name="slide" apeear>
                 <div v-if='showUpdateComment === true' class="PostContent__update">
-            <div class="PostContent__update-text">
-                <textarea class="PostContent__update-message" role="textbox" placeholder="Modifier votre commentaire"
-                    maxlength="300" ref="textarea" v-model="commentUpdate" @input="resizeTextarea()"> {{ comment }}</textarea>
+                    <div class="PostContent__update-text">
+                        <textarea class="PostContent__update-message" role="textbox"
+                            placeholder="Modifiez votre commentaire" maxlength="300" aria-label="Modifiez votre commentaire" ref="textarea"
+                            v-model="commentUpdate" @input="resizeTextarea()" @click="hideValidatorError()"> {{ comment }}</textarea>
 
-                <span class="PostContent__update-counter"> {{ totalCharacters }}/300 caractères</span>
-            </div>
+                        <span class="PostContent__update-counter"> {{ totalCharacters }}/300 caractères</span>
+                    </div>
 
-           <!-- <div v-if="showValidatorError === true" class="PostContent__feature-error">
-                <fa class="PostContent__feature-error-icon" icon="fa-solid fa-circle-xmark" />
-                <p class="PostContent__feature-error-text"> {{ this.v$.messageUpdate.required.$message }} </p>
-            </div>
+                    <div v-if="showValidatorError === true" class="PostContent__feature-error">
+                        <fa class="PostContent__feature-error-icon" icon="fa-solid fa-circle-xmark" />
+                        <p class="PostContent__feature-error-text"> {{ this.v$.commentUpdate.required.$message }} </p>
+                    </div>
 
-            <div v-if="showLengthError === true" class="PostContent__feature-error">
-                <fa class="PostContent__feature-error-icon" icon="fa-solid fa-circle-xmark" />
-                <p class="PostContent__feature-error-text"> {{ this.v$.messageUpdate.minLength.$message }} </p>
-            </div>
-
-            <div v-if="showMulterErrorMessage === true" class="PostContent__feature-error">
-                <fa class="PostContent__feature-error-icon" icon="fa-solid fa-circle-xmark" />
-                <p class="PostContent__feature-error-text"> {{ this.multerErrorMessage }} </p>
-            </div>-->
-
-            <div class="PostContent__send">
-                <button class="PostContent__button-modification" @click="updateComment()">Modifier</button>
-                <button class="PostContent__button-cancel" @click="showUpdateComment = false">Annuler</button>
-            </div>
-        </div>
-
-
-
-
+                    <div v-if="showLengthError === true" class="PostContent__feature-error">
+                        <fa class="PostContent__feature-error-icon" icon="fa-solid fa-circle-xmark" />
+                        <p class="PostContent__feature-error-text"> {{ this.v$.commentUpdate.minLength.$message }} </p>
+                    </div> 
+                    
+                    <div class="PostContent__send">
+                        <button class="PostContent__button-modification" @click="submitUpdateComment()">Modifier</button>
+                        <button class="PostContent__button-cancel" @click="showUpdateComment = false">Annuler</button>
+                    </div>
+                </div>
             </transition>
 
             <transition name="fade" appear>
-                <div v-if='showUpdateComment === true' class="PostContent__bg" >
-                </div>
+                <div v-if='showUpdateComment === true' @click="showUpdateComment = false " class="PostContent__bg"></div>
             </transition>
 
         </div>
     </transition>
+
+    <section class="ProfilInformationModification__container">
+        <transition name=OptionFade appear>
+            <div class="ProfilInformationModification__option-content" v-if="errorMessageCommentDelete">
+                <div class="ProfilInformationModification__option-button">
+
+                    <div class="ProfilInformationModification__option-profil">
+                        <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-check" />
+                        <span class="ProfilInformationModification__option-profil-text"> Vous ne pouvez supprimer ce commentaire </span>
+                        <fa class="ProfilInformationModification__option-profil-close" icon="fa-solid fa-xmark" @click="errorMessageCommentDelete = false" />
+                    </div>
+
+                </div>
+            </div>
+        </transition>
+    </section>
+
+    <section class="ProfilInformationModification__container">
+        <transition name=OptionFade appear>
+            <div class="ProfilInformationModification__option-content" v-if="errorMessageCommentUpdate">
+                <div class="ProfilInformationModification__option-button">
+
+                    <div class="ProfilInformationModification__option-profil">
+                        <fa class="ProfilInformationModification__option-profil-icon" icon="fa-solid fa-circle-check" />
+                        <span class="ProfilInformationModification__option-profil-text"> Vous ne pouvez modifier ce commentaire </span>
+                        <fa class="ProfilInformationModification__option-profil-close" icon="fa-solid fa-xmark" @click="errorMessageCommentUpdate = false" />
+                    </div>
+
+                </div>
+            </div>
+        </transition>
+    </section>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+
+import useVuelidate from '@vuelidate/core';
+import { required, minLength, helpers } from '@vuelidate/validators';
 import axios from 'axios';
+import { mapState } from 'vuex';
 
 export default {
     name: "PostComment",
     props: ['comment', 'pseudo', 'userId', 'createdAt', 'commentId', 'postId'],
 
+    setup() {
+        return { v$: useVuelidate() }
+    },
+
     data() {
         return {
+            userInfos: '', 
             userPicture: '',
+            option: false, 
             showOption: false,
             showUpdateComment: false,
-            commentUpdate: '', 
+            commentUpdate: this.comment + '',
 
+            showLengthError: false,
+            showValidatorError: false,
+            errorMessageCommentDelete: false, 
+            errorMessageCommentUpdate: false, 
+
+        }
+    },
+    validations() {
+        return {
+            commentUpdate : {
+                required: helpers.withMessage('Votre commentaire doit contenir au moins 2 caractères', required),
+                minLength: helpers.withMessage('Votre commentaire doit contenir au moins 2 caractères', minLength(2))
+
+            }, 
         }
     },
 
     mounted() {
         this.getUserInfo()
-        console.log(this.postId)
+        if (localStorage.user) {
+            this.userInfos = JSON.parse(localStorage.user)
+
+        }
+        this.displayOption()
 
     },
 
@@ -121,10 +169,15 @@ export default {
             this.allUsers?.map((user) => {
                 if (user._id === this.userId) {
                     this.userPicture = user.picture
-                    //console.log(this.userPicture2)
 
                 }
             })
+        },
+        displayOption() {
+            if (this.userId === this.userInfos.userId || this.userInfos.isAdmin === true) {
+                this.option = true
+            }
+
         },
         deleteComment() {
             const dataDeleteComment = {
@@ -133,18 +186,35 @@ export default {
             axios.patch('http://localhost:3000/api/mainpage/delete-comment/' + this.postId, dataDeleteComment, { withCredentials: true })
                 .then((response) => {
                     console.log(response)
+                    window.location.reload()
                 }).catch((error) => {
                     console.log(error)
+                    if (error.response.data.error === 'Vous ne pouvez pas supprimer ce commentaire') {
+                            this.errorMessageCommentDelete = true 
+                    }
                 })
+            this.delayCloseAlert()
         },
-        displayUpdateComment() {
-            this.showUpdateComment = true 
+        delayCloseAlert() {
+            var self = this;
+            setTimeout(function() { 
+                self.errorMessageCommentUpdate = false
+                self.errorMessageCommentDelete = false
+            }, 7000);
 
-        }, 
-        resizeTextarea() {
-            const element = this.$refs["textarea"];
-            element.style.height = "18px";
-            element.style.height = element.scrollHeight + "px";
+        },
+        submitUpdateComment() {
+            this.v$.$validate();
+            if (!this.v$.$error) {
+                this. updateComment();
+
+            } else {
+                if (this.v$.commentUpdate.required.$invalid === true)
+                    this.showValidatorError = true
+
+                if (this.v$.commentUpdate.minLength.$invalid === true)
+                    this.showLengthError = true
+            }
         },
         updateComment() {
             const dataUpdateComment = {
@@ -154,26 +224,36 @@ export default {
             axios.patch('http://localhost:3000/api/mainpage/edit-comment/' + this.postId, dataUpdateComment, { withCredentials: true })
                 .then((response) => {
                     console.log(response)
+                    window.location.reload()
                 }).catch((error) => {
                     console.log(error)
+                    if (error.response.data.error === 'Vous ne pouvez pas modifier ce commentaire') {
+                            this.errorMessageCommentUpdate = true 
+                            
+                    }
                 })
+            this.delayCloseAlert()
 
-        }
-        
-
-
+        },
+        hideValidatorError (){
+            this.showLengthError = false; 
+            this.showValidatorError = false; 
+        }, 
+        resizeTextarea() {
+            const element = this.$refs["textarea"];
+            element.style.height = "18px";
+            element.style.height = element.scrollHeight + "px";
+        },
     },
 
     computed: {
         ...mapState({
             allUsers: 'allUsers'
-        }), 
+        }),
         totalCharacters() {
             return this.commentUpdate.length
         }
-        
     }
-
 }
 </script>
 
@@ -189,7 +269,6 @@ export default {
     @include break-mobile {
         margin: 0 15px 0 15px;
     }
-
 
     &__picture {
         min-width: 40px;
@@ -250,9 +329,7 @@ export default {
                 cursor: pointer;
                 color: #2D3043;
             }
-
         }
-
 
         &-pseudo,
         &-comment {

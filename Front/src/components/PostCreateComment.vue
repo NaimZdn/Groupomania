@@ -123,5 +123,39 @@ export default {
 
         }
     }
+
+    &__feature {
+        display: flex;
+        flex-direction: column;
+   
+        
+
+        &-error {
+            margin-left: 100px;
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            color: $color-primary;
+            font-weight: bold;
+            font-size: 16px;
+
+            @include break-mobile {
+                margin-left: 80px;
+
+            }
+            
+            &-icon {
+                
+                font-size: 20px;
+                color: $color-primary;
+                padding-right: 10px;
+                margin: 0 0 4px 0;
+            }
+
+            &-text {
+                margin: 0 0 4px 0;
+            }
+        }
+    }
 }
 </style>

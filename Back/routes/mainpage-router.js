@@ -4,7 +4,6 @@ const multer = require('../middlewares/multer-configPost');
 
 const auth = require('../middlewares/auth'); 
 const idComparePost = require('../middlewares/idComparePost');
-const idCompareComment = require ('../middlewares/idCompareComment'); 
 
 const postCrtl = require ('../controllers/mainpage-controllers'); 
 
@@ -17,6 +16,6 @@ router.post('/:id/like', auth, postCrtl.likePost);
 
 // comments
 router.patch('/comment/:id', auth, postCrtl.addComment); 
-router.patch('/edit-comment/:id', auth, idCompareComment, postCrtl.editComment); 
-router.patch('/delete-comment/:id', auth, idCompareComment, postCrtl.deleteComment); 
+router.patch('/edit-comment/:id', auth, postCrtl.editComment); 
+router.patch('/delete-comment/:id', auth, postCrtl.deleteComment); 
 module.exports = router; 
