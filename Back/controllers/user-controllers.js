@@ -17,7 +17,6 @@ const createToken = (id, isAdmin, pseudo) => {
 }
 
 exports.signup = (req, res, next) => {
-
     const emailCryptoJs = cryptoJs.HmacSHA256(req.body.email, dbCryptoJs).toString();
 
     bcrypt.hash(req.body.password, 10)
@@ -36,11 +35,9 @@ exports.signup = (req, res, next) => {
                 .catch(error => res.status(400).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
-
 };
 
 exports.login = (req, res, next) => {
-
     const emailCryptoJs = cryptoJs.HmacSHA256(req.body.email, dbCryptoJs).toString();
 
     User.findOne({ email: emailCryptoJs })
@@ -73,7 +70,6 @@ exports.logout = (req, res) => {
 }
 
 exports.getOneUser = (req, res) => {
-
     User.findOne({ _id: req.params.id })
         .then(User => {
             const userInfos = {
@@ -86,11 +82,8 @@ exports.getOneUser = (req, res) => {
                 
             }
             res.status(200).json({...userInfos})
-
-        }
-            )
+        })
         .catch(error => res.status(400).json({ message: 'Utilisateur introuvable' }));
-
 }
 
 exports.getAllUsers = (req, res) => {
@@ -98,7 +91,6 @@ exports.getAllUsers = (req, res) => {
         .then(User => res.status(200).json(User))
         .catch(error => res.status(400).json({ error }))
 }
-
 
 exports.updateProfil = (req, res) => {
   
@@ -113,7 +105,6 @@ if (req.file != undefined) {
         ) throw Error('invalid file')
 
         if (req.file.size > 500000  ) throw Error('max size')
-        console.log('cc')
     } catch (err) {
         let errors = {format: "", maxSize: ""}; 
 
@@ -132,11 +123,7 @@ if (req.file != undefined) {
         .then((user) => {
             const filename = user.picture.split('/images/uploads/profil/')[1];
 
-            if (filename == "random-picture.webp" && req.file !== undefined) {
-                console.log('test')
-                console.log(req.file === undefined)
-                console.log(req.file)
-                
+            if (filename == "random-picture.webp" && req.file !== undefined) {          
                 const updatedRecord = {
                     bio: req.body.bio,
                     picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${req.file.filename}`,
@@ -148,10 +135,7 @@ if (req.file != undefined) {
                     .catch(error => res.status(400).json({ error }));
 
 
-            } else if (filename == "random-picture.webp" && req.file === undefined) {
-                console.log('undefined + photo de base')
-                console.log(req.body.bio)
-                
+            } else if (filename == "random-picture.webp" && req.file === undefined) {               
                 const updatedRecord = {
                     bio: req.body.bio,
                     picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${filename}`,
@@ -162,9 +146,7 @@ if (req.file != undefined) {
                     .then(() => res.status(200).json({ message: 'Le profil a bien été modifié', ...updatedRecord }))
                     .catch(error => res.status(400).json({ error }));
                     
-
             } else if (filename != 'random-picture.webp' && req.file != undefined){
-                console.log('test2')
                 fs.unlink(`images/uploads/profil/${filename}`, (error) => {
                     if (error) throw error;
                 });
@@ -180,8 +162,7 @@ if (req.file != undefined) {
 
             } 
             else if (filename != 'random-picture.webp' && req.file === undefined){
-                console.log('nouveau comportement')
-   
+  
                 const updatedRecord = {
                     bio: req.body.bio,
                     picture: `${req.protocol}://${req.get('host')}/images/uploads/profil/${filename}`,
@@ -197,18 +178,14 @@ if (req.file != undefined) {
 };
 
 exports.deleteAccount = (req, res, next) => {
-
     const uri = dbUrl;
     const client = new MongoClient(uri);
 
     try {
-
         client.connect(function deletePicture(err, client) {
             if (err) throw err;
             client.db("test").collection('posts').find({ userId: req.params.id }).toArray((err, result) => {
-
                 if (err) throw err;
-
                 for (res of result)  {
                     const filename = res.picture.split('/images/uploads/posts')[1];
                 
@@ -229,53 +206,32 @@ exports.deleteAccount = (req, res, next) => {
             client.db("test").collection('users').find().toArray((err, result) => {
                 if (err) throw err;
 
-                result.forEach(res => {
-                    console.log(res)
-                                   
+                result.forEach(res => {                             
                     const userId = res._id.valueOf();
                     const isAdmin = res.isAdmin;
-                    const userPicture = res.picture.split('http://localhost:3000/images/uploads/profil/')[1];
-                    console.log(userPicture)
-                    const userIdFinal = userId === req.params.id; 
-                    console.log('user final', userIdFinal)
-                   
-                
-
-                    if (userId === req.params.id || isAdmin === true  ) {
-                        //console.log('good');
-                        //console.log(userId)
-                        
-
+                    const userPicture = res.picture.split('http://localhost:3000/images/uploads/profil/')[1];           
+                    if (userId === req.params.id) {
                         if (userPicture === 'random-picture.webp') {
-                            console.log('photo de profil basique');
-                            //console.log({ _id: userId })
                           User.deleteOne({ _id: req.params.id })
                             .then()
                             .catch()
-
-                            //console.log('delete')
                             
                         }else {
                             console.log('photo de profil modifiée');
                             fs.unlink(`./images/uploads/profil/${userPicture}`, ()=> {
                                 if (err) throw error;
                             })
-                            //console.log(userId)
 
                             User.deleteOne({ _id: req.params.id })
                             .then()
-                            .catch()
-
-                           // console.log('delete')        
+                            .catch()   
                         };     
-                    } else return console.log('non');
+                    } else return console.log(`Vous n'êtes pas autorisé `)
                 });
             });
         });
         client.close(); 
-        
         res.status(202).clearCookie('webToken').send({ message: 'Votre compte a bien été supprimé' })
-
 
     } catch (err) {
         return res.status(400).send(err);

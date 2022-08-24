@@ -8,7 +8,6 @@ const passwordValidator = require('../middlewares/password-validator');
 const emailValidator = require('../middlewares/email-validator');
 const idCompareUser = require('../middlewares/idCompareUser'); 
 
-
 router.post('/login', emailValidator, userCtrl.login); 
 router.post('/signup', emailValidator, passwordValidator, userCtrl.signup);
 router.get('/logout', auth, userCtrl.logout); 

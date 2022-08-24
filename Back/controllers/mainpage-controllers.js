@@ -66,7 +66,6 @@ exports.updatePost = (req, res) => {
         Post.findOne({ _id: req.params.id })
             .then((PostArg) => {
                 const filename = PostArg.picture.split('/images/uploads/posts/')[1];
-                console.log(filename)
                 if (filename !== undefined) {
                     fs.unlink(`images/uploads/posts/${filename}`, (error) => {
                         if (error) throw error;
@@ -102,9 +101,7 @@ exports.updatePost = (req, res) => {
             })
 
             .catch(error => res.status(404).json({ error }));
-
     } 
-
 };
 
 exports.deletePost = (req, res) => {
@@ -121,7 +118,6 @@ exports.deletePost = (req, res) => {
             });
         })
         .catch(error => res.status(404).json({ error }));
-
 };
 
 exports.likePost = (req, res) => {
@@ -158,7 +154,6 @@ exports.likePost = (req, res) => {
             } else if (like <= 0) {
                 res.status(400).json({ error: "Vous ne pouvez pas liké plusieurs fois un même post" })
             }
-
         })
         .catch(error => res.status(500).json({ error }));
 };
@@ -168,7 +163,6 @@ exports.addComment = (req, res) => {
     const decodedToken = webToken.verify(token, dbToken);
     const userId = decodedToken.id;
     const pseudo = decodedToken.pseudo;
-    console.log(decodedToken.pseudo)
 
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
@@ -198,7 +192,6 @@ exports.addComment = (req, res) => {
 
     };
 };
-
 
 exports.editComment = (req, res) => {
     const token = req.cookies.webToken;
@@ -238,7 +231,6 @@ exports.deleteComment = (req, res) => {
     if (!ObjectID.isValid(req.params.id))
         return res.status(400).send("ID unknown : " + req.params.id);
 
-
         try {
             return Post.findById(req.params.id, (err, docs) => {
                 const theComment = docs.comments.find((comment) =>
@@ -267,5 +259,4 @@ exports.deleteComment = (req, res) => {
         } catch (err) {
             return res.status(400).send(err);
         }
-
 }; 
