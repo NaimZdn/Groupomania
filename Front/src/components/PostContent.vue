@@ -305,9 +305,7 @@ export default {
         checkUserLike() {
             if (this.usersLiked.includes(this.userInfos.userId)) {
                 this.like = 0
-                console.log('0')
             } else {
-                console.log('+1')
                 this.like = 1
 
             }
@@ -387,7 +385,6 @@ export default {
                 dataForm.append('message', this.messageUpdate)
                 axios.patch('http://localhost:3000/api/mainpage/' + this.postId, dataForm, { withCredentials: true })
                     .then((response) => {
-                        console.log(response.data)
                         this.validationMessage = true
                         this.displayModification = false
                         this.$emit('getAllPosts')
@@ -400,7 +397,6 @@ export default {
                         const multerError2 = multerError[1].split(`<br> &nbsp; `)
 
                         this.multerErrorMessage = multerError2[0]
-                        console.log(this.multerErrorMessage)
                         if (this.multerErrorMessage === 'File too large') {
                             this.multerErrorMessage = 'Le fichier est supérieur à 1mo'
                         }
@@ -412,9 +408,7 @@ export default {
             this.delayCloseAlert()
         },
         submitPostUpdate() {
-        
             this.v$.$validate();
-            //console.log('coucou')
             if (this.v$.messageUpdate.required.$invalid === false && this.v$.messageUpdate.minLength.$invalid === false) {
 
                 this.updatePost();

@@ -1,15 +1,3 @@
-<script>
-import MainHeader from '../components/MainHeader.vue';
-import ProfilTabs from '../components/ProfilTabs.vue';
-import ProfilInformation from '../components/ProfilInformation.vue';
-export default {
-    name: "UserProfil",
-    components: { MainHeader, ProfilTabs, ProfilInformation },
-
-}
-
-</script>
-
 <template>
     <MainHeader></MainHeader>
 
@@ -21,6 +9,32 @@ export default {
 
     </main>
 </template>
+
+<script>
+import MainHeader from '../components/MainHeader.vue';
+import ProfilTabs from '../components/ProfilTabs.vue';
+import ProfilInformation from '../components/ProfilInformation.vue';
+import { mapState } from 'vuex';
+export default {
+    name: "UserProfil",
+    components: { MainHeader, ProfilTabs, ProfilInformation },
+
+    mounted () {
+    if (this.user.userId === ''){
+      this.$router.push('/')
+    }
+    }, 
+    computed : {
+        ...mapState ({
+            user: 'user'
+        })
+    }
+}
+
+</script>
+
+
+
 
 <style lang="scss">
 @import "../assets/sass/main.scss"; 

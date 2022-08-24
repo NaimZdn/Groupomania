@@ -62,9 +62,7 @@ export default {
     mounted() {
         if(localStorage.user) {
             this.userInfos = JSON.parse(localStorage.getItem('user'))
-        }
-           
-        
+        } 
     },
 
     methods: {
@@ -85,10 +83,6 @@ export default {
             user: 'userInfos'
         })
     }
-
-
-
-
 }
 </script>
 

@@ -18,15 +18,13 @@
 <script>
 import MainHeader from '../components/MainHeader.vue';
 import PostCreate from '../components/PostCreate.vue';
-import PostComment from '../components/PostComment.vue';
 import PostContent from '../components/PostContent.vue';
-import PostCreateComment from '../components/PostCreateComment.vue';
 import moment from 'moment/min/moment-with-locales';
 import { mapState } from 'vuex';
 
 export default {
   name: "Mainpage",
-  components: { MainHeader, PostCreate, PostComment, PostContent, PostCreateComment, PostComment, PostCreateComment },
+  components: { MainHeader, PostCreate, PostContent },
 
   data() {
     return {
@@ -43,6 +41,10 @@ export default {
 
 
   mounted() {
+   
+    if (this.user.userId === ''){
+      this.$router.push('/')
+    }
     this.getAllPosts()
     this.getAllUsers()
     moment.locale('fr')
@@ -65,7 +67,6 @@ export default {
     getAllUsers() {
       this.$store.dispatch('getAllUsers')
         .then((response) => {
-          //console.log(response.data)
 
         })
         .catch((error) => {
@@ -91,6 +92,7 @@ export default {
 
   computed: {
     ...mapState({
+      user: 'user',
       allUsers: 'allUsers'
     })
   }

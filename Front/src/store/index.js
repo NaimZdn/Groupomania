@@ -62,7 +62,6 @@ const store = createStore({
         },
         logUser: function (state, user) {
             localStorage.setItem('user', JSON.stringify(user));
-            console.log(user)
             state.user = user; 
         },
         userInfos: function(state, userInfos) {
@@ -103,7 +102,6 @@ const store = createStore({
                     .catch((error) => {
                         reject(error)
                     })
-                //console.log(userInfos)
 
             })
         },
@@ -113,15 +111,12 @@ const store = createStore({
                     .then((response) => {
                         commit('logUser', response.data)
                         dispatch('getUserInfos')         
-                        console.log(response.data)
                         resolve(response)
 
                     })
                     .catch((error) => {
                         reject(error)
                     });
-                console.log(userInfos)
-
             });
 
         },
@@ -130,7 +125,6 @@ const store = createStore({
                 axiosInstance.get(`/api/auth/user/` + state.user.userId, {withCredentials: true})
                     .then((response) => {
                         commit('userInfos', response.data)
-                        console.log(response.data)
                         resolve(response)
 
                     })
@@ -143,24 +137,16 @@ const store = createStore({
             axiosInstance.get('api/auth/logout', {withCredentials: true })
             .then((response ) => {
                 commit('disconnectUser', response.data)
-                console.log(response.data);
-                console.log(response)
-                
             })
             .catch((error) => { 
-                console.log(error)
             })
         }, 
         deleteAccount: ({state, commit}) => {
             axiosInstance.delete('api/auth/' + state.user.userId + '/delete', {withCredentials: true })
             .then((response ) => {
-                commit('deleteAccount', response.data)
-                console.log(response.data);
-                console.log(response)
-                
+                commit('deleteAccount', response.data) 
             })
             .catch((error) => { 
-                console.log(error)
             })
         }, 
         updateUserProfil: ({state, commit}, dataForm) => {
@@ -172,7 +158,6 @@ const store = createStore({
     
             })
             .catch((error) => { 
-                console.log(error)
                 reject(error)
             })
         })
@@ -180,14 +165,12 @@ const store = createStore({
         getAllUsersPost: ({commit, state}) => {
             axiosInstance.get('api/mainpage/' + state.user.userId, {withCredentials: true })
             .then((response) => {
-                console.log(response.data)
             })
         }, 
         createPost: ({commit}, post) => {
             return new Promise ((resolve, reject) => {
             axiosInstance.post('api/mainpage/',post, {withCredentials: true })
                 .then((response) => {
-                    console.log(response.data)
                     resolve(response)
                 }).catch ((error) =>  {
                     
@@ -200,12 +183,9 @@ const store = createStore({
                 axiosInstance.get('api/mainpage', {withCredentials: true}, state)
                 .then((response) => {
                     commit('postInfo', response.data)
-      
-                   
                     resolve(response)
                     
                 }).catch((error) => {
-                    console.log(error)
                     reject(error)
                     
                 })          
@@ -215,11 +195,9 @@ const store = createStore({
             return new Promise ((resolve, reject) => {
                 axiosInstance.delete('api/mainpage', {withCredentials: true})
                 .then((response) => {
-                    console.log(response.data)
                     resolve(response)
                     
                 }).catch((error) => {
-                    console.log(error)
                     reject(error)
                     
                 })      
@@ -230,26 +208,20 @@ const store = createStore({
                 axiosInstance.get('api/auth/users', {withCredentials: true})
                 .then((response) => {
                     commit('allUsersInfo', response.data)
-                    //console.log(response.data)
                     resolve(response)
                     
                 }).catch((error) => {
-                    console.log(error)
                     reject(error)
                     
                 })      
             })
         }, 
         likePost ({commit, state}) {
-            console.log(state.post)
             return new Promise ((resolve, reject ) => {
                 axios.post('api/mainpage/' + state.post._id, {withCredentials: true})
                     .then((response) => {
-                        console.log(response.data)
-                        //commit('postInfo', response.data)
                         resolve(response)
                     }).catch((error) => {
-                        console.log('il y a une erreur' + error)
                         reject(error)
                     })
                     
