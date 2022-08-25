@@ -41,7 +41,6 @@ export default {
 
 
   mounted() {
-   
     if (this.user.userId === ''){
       this.$router.push('/')
     }
@@ -117,7 +116,7 @@ export default {
   box-shadow: $primary-shadow;
   border-radius: 12px;
   flex-direction: column;
-  max-width: 748px;
+  max-width: 600px;
   width: 100%;
   gap: 20px;
 

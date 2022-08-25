@@ -664,7 +664,7 @@ export default {
         &-picture {
 
             width: 100%;
-            max-height: 720px;
+            max-height: 600px;
             object-fit: cover;
             border: 1px solid rgb($color-secondary, 0.5);
             border-right: 0;
@@ -770,8 +770,8 @@ export default {
 
         flex-direction: column;
         display: flex;
-        min-width: 500px;
-        max-width: 600px;
+        min-width: 200px;
+        max-width: 400px;
 
         background-color: white;
         padding: 30px;
@@ -821,7 +821,7 @@ export default {
         &-preview {
             object-fit: cover;
             width: 100%;
-            max-height: 720px;
+            max-height: 400px;
             padding: 20px (30px)
         }
 

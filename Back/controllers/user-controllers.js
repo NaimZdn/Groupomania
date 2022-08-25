@@ -114,7 +114,6 @@ if (req.file != undefined) {
         if (err.message.includes('max size'))
         errors.maxSize = `Ficher supérieur a 5mo`; 
 
-        console.log(errors)
         return res.status(400).json({errors})
     }
 }
@@ -217,7 +216,6 @@ exports.deleteAccount = (req, res, next) => {
                             .catch()
                             
                         }else {
-                            console.log('photo de profil modifiée');
                             fs.unlink(`./images/uploads/profil/${userPicture}`, ()=> {
                                 if (err) throw error;
                             })

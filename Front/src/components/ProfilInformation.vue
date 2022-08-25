@@ -126,7 +126,6 @@ export default {
         },
         reloadStorage() {
             this.userData = JSON.parse(localStorage.getItem('user'));
-            //console.log(this.userData)
             this.displayModification = false;
 
         },
@@ -187,11 +186,10 @@ export default {
         }),
 
         totalCharacters() {
-            return this.userData.bio.length
+            return this.bioUpdateText.length
         }
     }
 }
-
 
 </script>
 
@@ -237,14 +235,16 @@ export default {
     &__content {
         display: flex;
         flex-direction: column;
+        
     }
 
     &__pseudo {
         display: flex;
         flex-direction: row;
-        align-items: center;
+        justify-content: center;
         margin-left: 40px;    
         gap: 20px;
+        
 
         @include break-mobile {
             margin: 0 15px 0 15px; 
@@ -280,6 +280,7 @@ export default {
         }
 
         &-bio {
+            
             border-left: 3px solid $color-primary;
             font-size: 16px;
             font-style: italic;

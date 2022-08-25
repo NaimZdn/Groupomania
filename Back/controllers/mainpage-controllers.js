@@ -66,7 +66,7 @@ exports.updatePost = (req, res) => {
         Post.findOne({ _id: req.params.id })
             .then((PostArg) => {
                 const filename = PostArg.picture.split('/images/uploads/posts/')[1];
-                if (filename !== undefined) {
+                if (filename !== 'undefined') {
                     fs.unlink(`images/uploads/posts/${filename}`, (error) => {
                         if (error) throw error;
                     });

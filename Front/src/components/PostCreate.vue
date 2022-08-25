@@ -177,7 +177,7 @@ export default {
     box-shadow: $primary-shadow;
     border-radius: 12px;
     padding-bottom: 30px;
-    max-width: 748px;
+    max-width: 600px;
     width: 100%;
 
     &__form {
@@ -233,7 +233,7 @@ export default {
         &-preview {
             object-fit: cover;
             width: 100%;
-            max-height: 720px;
+            max-height: 600px;
             padding: 20px (60px)
         }
 
