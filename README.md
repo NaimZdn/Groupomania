@@ -26,4 +26,15 @@ Futhermore, be sure to inform, inside <strong>'.env'</strong> folder, the keys y
 (<strong>Important :</strong> For more security it's advisable to enter a key with at least 20 characters) <br>
 Make sure that the URL of your MongoDB database is correct inside <strong>'.env'</strong> folder. 
 
+After this checking you can go to <strong>'Back'</strong> folder and execute this command : 
+```sh 
+npm run start
+```
+
+After that, inside the <strong>'Front'</strong> folder execute this following command : 
+```sh 
+npm run dev
+```
+
+
 Welcome to the social network of Groupomania company !
