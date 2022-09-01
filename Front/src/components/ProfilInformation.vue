@@ -241,20 +241,23 @@ export default {
     &__pseudo {
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        text-align: center;
         margin-left: 40px;    
         gap: 20px;
+        margin-bottom: 20px;
+        
         
 
         @include break-mobile {
-            margin: 0 15px 0 15px; 
+            margin-bottom: 20px;
                                 
         }
         
         &-text{
             font-weight: 400;
-            margin: 40 0 40 0; 
+            margin: 0 0 0 0; 
             font-size: 30px;
+            
             
             @include break-mobile {
                 font-weight: 400;
@@ -271,9 +274,9 @@ export default {
             background-color: $color-primary;
             border-radius: 10px;
             color: white; 
+            margin: 0; 
             
             @include break-mobile {
-                margin-top: -10px;
                 font-size: 15px;
                 
             }
