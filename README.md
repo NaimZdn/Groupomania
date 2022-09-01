@@ -1,6 +1,9 @@
 # Groupomania 
 
-Starting by cloning the project at this adress : [Groupomania](https://github.com/Namsco/Groupomania.git)
+Starting by cloning the project with this URL : 
+```sh 
+https://github.com/Namsco/Groupomania.git
+```
 
 After that, go to <strong>'Back'</strong> folder and execute this command :
 ```sh 
@@ -35,5 +38,7 @@ After that, inside the <strong>'Front'</strong> folder execute this following co
 ```sh 
 npm run dev
 ```
+
+Open your browser and go to this adress : [Groupomania](http://localhost:8080/signup)
 
 Welcome to the social network of Groupomania company !

@@ -137,6 +137,7 @@ const store = createStore({
             axiosInstance.get('api/auth/logout', {withCredentials: true })
             .then((response ) => {
                 commit('disconnectUser', response.data)
+                
             })
             .catch((error) => { 
             })
